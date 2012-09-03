@@ -1,0 +1,11 @@
+Package: BoostHeaders
+Type: Package
+Title: The Boost C++ Libraries
+Version: XXX
+Date: YYY
+Author: John W. Emerson, Michael J. Kane and Dirk Eddelbuettel
+Maintainer: Jay Emerson <john.emerson@yale.edu>
+Description: Boost provides free peer-reviewed portable C++ source
+  libraries.  We place them in this package as a more efficient
+  distribution system for CRAN.
+License: LGPL-3 + file LICENSE
