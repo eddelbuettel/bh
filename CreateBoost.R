@@ -1,6 +1,8 @@
 ## Jay Emerson
 ## September 2, 2012
 
+## TODO(DE): Are we sure this isn't more easily written as a shell script?
+
 ## First, download the new version of the Boost Libraries and
 ## set the variables boostall and version, here:
 boostall <- 'boost_1_51_0.tar.gz'
