@@ -26,8 +26,7 @@ if (file.exists(pkgdir)) {
 # and build the supporting infrastructure of the package.
 
 if (!file.exists(boostroot)) {
-  system(paste('gunzip', boostall))
-  system(paste('tar -xf', gsub('.gz', '', boostall)))
+  system(paste('tar -zxf', boostall))
 }
 
 system(paste('mkdir', pkgdir))
@@ -53,7 +52,7 @@ system(paste('sed -i "s/YYY/', date, '/g" ', pkgdir, '/DESCRIPTION',
              sep=""))
 system(paste('sed -i "s/XXX/', version,
              '/g" ', pkgdir, '/man/BoostHeaders-package.Rd', sep=""))
-system(paste('sed -i "s/YYY/', date, 
+system(paste('sed -i "s/YYY/', date,
              '/g" ', pkgdir, '/man/BoostHeaders-package.Rd', sep=""))
 
 ########################################################################
