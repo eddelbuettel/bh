@@ -6,7 +6,7 @@
 ## First, download the new version of the Boost Libraries and
 ## set the variables boostall and version, here:
 boostall <- 'boost_1_51_0.tar.gz'
-version <- '1.51.0.0'
+version <- '1.51.0-0'
 date <- '2012-09-03'
 pkgdir <- 'pkg/BoostHeaders'          # No trailing slash
 
@@ -23,6 +23,8 @@ if (file.exists(pkgdir)) {
   cat("Then when this is done and tested, add it back into the svn\n")
   stop('Move aside the old BoostHeaders')
 }
+
+
 ########################################################################
 # Unpack, copy from boost to BoostHeaders/inst/include,
 # and build the supporting infrastructure of the package.
@@ -33,20 +35,30 @@ if (!file.exists(boostroot)) {
 
 system(paste('mkdir', pkgdir))
 system(paste('mkdir ', pkgdir, '/inst', sep=""))
+system(paste('mkdir ', pkgdir, '/man', sep=""))
 system(paste('mkdir ', pkgdir, '/inst/include', sep=""))
 
 # bcp --scan --boost=boost_1_51_0 ../bigmemory/pkg/bigmemory/src/*.cpp test
+
+# The bigmemory Boost dependencies:
 system(paste('bcp --scan --boost=', boostroot,
              ' ../bigmemory/pkg/bigmemory/src/*.cpp ',
              pkgdir, '/inst/include > bcp.log', sep=''))
 
+# Plus filesystem
+system(paste('bcp --boost=', boostroot,
+             ' filesystem ',
+             pkgdir, '/inst/include >> bcp.log', sep=''))
+
 system(paste('/bin/rm -r ', pkgdir, '/inst/include/libs', sep=''))
 system(paste('/bin/rm -r ', pkgdir, '/inst/include/Jamroot', sep=''))
+system(paste('/bin/rm -r ', pkgdir, '/inst/include/boost.png', sep=''))
+system(paste('/bin/rm -r ', pkgdir, '/inst/include/doc', sep=''))
 
 system(paste('cp BoostHeadersROOT/DESCRIPTION', pkgdir))
 system(paste('cp BoostHeadersROOT/LICENSE*', pkgdir))
 system(paste('cp BoostHeadersROOT/NAMESPACE', pkgdir))
-system(paste('cp -rp BoostHeadersROOT/man', pkgdir))
+system(paste('cp -p BoostHeadersROOT/man/*.Rd ', pkgdir, '/man', sep=''))
 
 system(paste('sed -i "s/XXX/', version, '/g" ', pkgdir, '/DESCRIPTION',
              sep=""))
