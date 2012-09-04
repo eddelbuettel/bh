@@ -1,6 +1,6 @@
 Package: BoostHeaders
 Type: Package
-Title: The Boost C++ Libraries Headers
+Title: The Boost C++ Libraries
 Version: 1.51.0-0
 Date: 2012-09-03
 Author: John W. Emerson, Michael J. Kane and Dirk Eddelbuettel
