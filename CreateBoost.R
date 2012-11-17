@@ -7,7 +7,7 @@
 ## set the variables boostall and version, here:
 boostall <- 'boost_1_51_0.tar.gz'
 version <- '1.51.0-0'
-date <- '2012-09-03'
+date <- '2012-11-17'
 pkgdir <- 'pkg/BoostHeaders'          # No trailing slash
 
 boostroot <- gsub('.tar.gz', '', boostall)
@@ -19,7 +19,8 @@ if (!file.exists(boostall) && !file.exists(boostroot)) {
   stop('That Boost input does not exist')
 }
 if (file.exists(pkgdir)) {
-  cat("svn rmdir pkg/BoostHeaders\n")
+  cat("svn rm pkg/BoostHeaders\n")
+  cat("/bin/rm -rf pkg/BoostHeaders\n")
   cat("Then when this is done and tested, add it back into the svn\n")
   stop('Move aside the old BoostHeaders')
 }
@@ -44,16 +45,19 @@ system(paste('mkdir ', pkgdir, '/inst/include', sep=""))
 system(paste('bcp --scan --boost=', boostroot,
              ' ../bigmemory/pkg/bigmemory/src/*.cpp ',
              pkgdir, '/inst/include > bcp.log', sep=''))
+system(paste('bcp --scan --boost=', boostroot,
+             ' ../bigmemory/pkg/synchronicity/src/*.cpp ',
+             pkgdir, '/inst/include > bcp.log', sep=''))
 
 # Plus filesystem
 system(paste('bcp --boost=', boostroot,
              ' filesystem ',
              pkgdir, '/inst/include >> bcp.log', sep=''))
 
-system(paste('/bin/rm -r ', pkgdir, '/inst/include/libs', sep=''))
-system(paste('/bin/rm -r ', pkgdir, '/inst/include/Jamroot', sep=''))
-system(paste('/bin/rm -r ', pkgdir, '/inst/include/boost.png', sep=''))
-system(paste('/bin/rm -r ', pkgdir, '/inst/include/doc', sep=''))
+system(paste('/bin/rm -rf ', pkgdir, '/inst/include/libs', sep=''))
+system(paste('/bin/rm -rf ', pkgdir, '/inst/include/Jamroot', sep=''))
+system(paste('/bin/rm -rf ', pkgdir, '/inst/include/boost.png', sep=''))
+system(paste('/bin/rm -rf ', pkgdir, '/inst/include/doc', sep=''))
 
 system(paste('cp BoostHeadersROOT/DESCRIPTION', pkgdir))
 system(paste('cp BoostHeadersROOT/LICENSE*', pkgdir))
@@ -69,8 +73,8 @@ system(paste('sed -i "s/XXX/', version,
 system(paste('sed -i "s/YYY/', date,
              '/g" ', pkgdir, '/man/BoostHeaders-package.Rd', sep=""))
 
-########################################################################
-# Now fix up things that don't work.  Here, we need to stay
+#########################################################################
+# Now fix up things that don't work, if necessary.  Here, we need to stay
 # organized and decide who is the maintainer of what, but this script
 # is the master record of any changes made to the boost tree.
 
@@ -79,5 +83,6 @@ system(paste('sed -i "s/YYY/', date,
 
 ## We'll invite co-maintainers who identify changes needed to support
 ## their specific libraries.
+
 
 
