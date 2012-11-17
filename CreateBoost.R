@@ -73,6 +73,9 @@ system(paste('sed -i "s/XXX/', version,
 system(paste('sed -i "s/YYY/', date,
              '/g" ', pkgdir, '/man/BoostHeaders-package.Rd', sep=""))
 
+cat("\n\nNow svn add pkg/BoostHeaders\n")
+cat("and svn commit\n")
+
 #########################################################################
 # Now fix up things that don't work, if necessary.  Here, we need to stay
 # organized and decide who is the maintainer of what, but this script
