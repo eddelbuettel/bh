@@ -20,7 +20,7 @@ if (!file.exists(boostall) && !file.exists(boostroot)) {
 }
 if (file.exists(pkgdir)) {
   cat("svn rm pkg/BoostHeaders\n")
-  cat("/bin/rm -rf pkg/BoostHeaders\n")
+  cat("svn commit\n")
   cat("Then when this is done and tested, add it back into the svn\n")
   stop('Move aside the old BoostHeaders')
 }
