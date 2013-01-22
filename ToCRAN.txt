@@ -1,0 +1,43 @@
+CRAN submission BoostHeaders 1.15.0-0
+
+We have read and agreed to the CRAN policies.  We note that
+the package is larger than usually recommended, and explain
+the reason for this, below.  In particular, it will ultimately
+lead to saving space on CRAN and improving package efficiency.
+
+Overview: This package aims to provide the most useful subset
+of Boost libraries for template use among CRAN packages.  This
+offers a more efficient distribution system for CRAN because
+replication of this code is avoided.
+
+Benefits: 
+
+(1) Immediately: packages bigmemory and synchronicity
+currently distribute large chunks of the libraries.
+With BoostHeaders on CRAN, this will no longer be necessary,
+with savings not just for the packages, but for all future
+updates of the packages.  We have tested this for bigmemory
+and synchronicity and can upload the revisions as soon as
+BoostHeaders is available.  Package mspath also distributes
+a large Boost tree, and we hope similar trivial changes
+will contribute similar efficiencies.
+
+(2) About a dozen other packages (including GUTS, MBA, RcppBDT,
+and more) rely upon system versions of Boost.  We hope these
+might become "easier" to use and maintain and more portable
+by use of the BoostHeaders package.  This should be as simple as
+taking advantage of LinkingTo: as provided by CRAN.
+
+(3) "Out of box" Boost libraries sometimes require "patches"
+for Windows; thus, relying on user-installed libraries does
+not provide portability.  This is partly the reason for
+the current version of bigmemory not supporting Windows.
+
+(4) The future: we hope this will pay off down the road with
+increasing use of Boost, helping to streamling this (admittedly
+small) aspect of CRAN.
+
+Thanks,
+
+Jay, Mike, Dirk, JJ, and Romain
+
