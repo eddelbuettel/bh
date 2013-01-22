@@ -5,7 +5,7 @@
 ## set the variables boostall and version, here:
 boostall <- 'boost_1_51_0.tar.gz'
 version <- '1.51.0-0'
-date <- '2013-01-03'
+date <- '2013-01-22'
 pkgdir <- 'pkg/BoostHeaders'          # No trailing slash
 
 boostroot <- gsub('.tar.gz', '', boostall)
