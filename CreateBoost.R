@@ -5,8 +5,8 @@
 ## set the variables boostall and version, here:
 boostall <- 'boost_1_51_0.tar.gz'
 version <- '1.51.0-0'
-date <- '2013-01-22'
-pkgdir <- 'pkg/BoostHeaders'          # No trailing slash
+date <- '2013-01-29'
+pkgdir <- 'pkg/BH'          # No trailing slash
 
 boostroot <- gsub('.tar.gz', '', boostall)
 
@@ -17,10 +17,10 @@ if (!file.exists(boostall) && !file.exists(boostroot)) {
   stop('That Boost input does not exist')
 }
 if (file.exists(pkgdir)) {
-  cat("svn rm pkg/BoostHeaders\n")
+  cat("svn rm pkg/BH\n")
   cat("svn commit\n")
   cat("Then when this is done and tested, add it back into the svn\n")
-  stop('Move aside the old BoostHeaders')
+  stop('Move aside the old BH')
 }
 
 
@@ -67,11 +67,11 @@ system(paste('sed -i "s/XXX/', version, '/g" ', pkgdir, '/DESCRIPTION',
 system(paste('sed -i "s/YYY/', date, '/g" ', pkgdir, '/DESCRIPTION',
              sep=""))
 system(paste('sed -i "s/XXX/', version,
-             '/g" ', pkgdir, '/man/BoostHeaders-package.Rd', sep=""))
+             '/g" ', pkgdir, '/man/BH-package.Rd', sep=""))
 system(paste('sed -i "s/YYY/', date,
-             '/g" ', pkgdir, '/man/BoostHeaders-package.Rd', sep=""))
+             '/g" ', pkgdir, '/man/BH-package.Rd', sep=""))
 
-cat("\n\nNow svn add pkg/BoostHeaders\n")
+cat("\n\nNow svn add pkg/BH\n")
 cat("and svn commit\n")
 
 #########################################################################
