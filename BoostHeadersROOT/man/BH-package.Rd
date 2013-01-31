@@ -16,7 +16,7 @@ Package: \tab BH\cr
 Type: \tab Package\cr
 Version: \tab XXX\cr
 Date: \tab YYY\cr
-License: \tab LGPL-3 + file LICENSE\cr
+License: \tab BSL-1.0\cr
 }
 Boost provides free peer-reviewed portable C++ source
   libraries.  We place them in this package as a more efficient

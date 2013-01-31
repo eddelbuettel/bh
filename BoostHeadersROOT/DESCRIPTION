@@ -13,4 +13,4 @@ Description: Boost provides free peer-reviewed portable C++ source
   this package, we offer a more efficient distribution system for CRAN 
   as replication of this code in the sources of other packages is 
   avoided. 
-License: LGPL-3 + file LICENSE
+License: BSL-1.0
