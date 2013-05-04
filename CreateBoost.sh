@@ -10,7 +10,7 @@ boostall="boost_1_51_0.tar.gz"
 version="1.51.0-1"
 date="2013-05-02"
 pkgdir="pkg/BoostHeaders"          
-## September 2, 2012
+
 
 ## Additional resources we require and need to test for
 ## 'sources' lists the directories we scan for Boost components
@@ -102,8 +102,7 @@ sed -e "s/XXX/${version}/g" \
     -e "s/YYY/${date}/g"    \
     BoostHeadersROOT/DESCRIPTION  >  ${pkgdir}/DESCRIPTION
 sed -e "s/XXX/${version}/g" -e "s/YYY/${date}/g" \
-    BoostHeadersROOT/man/BoostHeaders-package.Rd >
-    ${pkgdir}/man/BoostHeaders-package.Rd 
+    BoostHeadersROOT/man/BoostHeaders-package.Rd > ${pkgdir}/man/BoostHeaders-package.Rd 
 
 
 ########################################################################
