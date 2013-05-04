@@ -87,8 +87,8 @@ bcp --boost=${boostroot} foreach ${pkgdir}/inst/include >> bcp.log
 bcp --boost=${boostroot} math/distributions ${pkgdir}/inst/include >> bcp.log
 bcp --boost=${boostroot} algorithm          ${pkgdir}/inst/include >> bcp.log
 
-# Plus iostream (cf issue ticket #2768) -- thia is a null-op, why?
-bcp --boost=${boostroot} iostream ${pkgdir}/inst/include >> bcp.log
+# Plus iostream (cf issue ticket #2768) 
+bcp --boost=${boostroot} iostreams          ${pkgdir}/inst/include >> bcp.log
 
 # TODO: check with other packages
 
@@ -97,7 +97,8 @@ bcp --boost=${boostroot} iostream ${pkgdir}/inst/include >> bcp.log
 rm -rf ${pkgdir}/inst/include/libs \
        ${pkgdir}/inst/include/Jamroot \
        ${pkgdir}/inst/include/boost.png \
-       ${pkgdir}/inst/include/doc
+       ${pkgdir}/inst/include/doc \
+       ${pkgdir}/inst/include/boost.css
 
 cp BoostHeadersROOT/LICENSE* \
    BoostHeadersROOT/NAMESPACE ${pkgdir}
