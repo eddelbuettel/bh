@@ -28,7 +28,7 @@ echo "Check: ${boostall} ${version} ${date} ${pkgdir} ${boostroot}"
 ## A sanity check here before continuing:
 if [ ! -f ${boostall} ] && [ ! -d ${boostroot} ]; then
     echo "The Boost input file or directory do not exist. Exiting."
-    exit -1
+    exit 1
 fi
 
 ## DE: Needed? Can we not just overwrite?
@@ -43,7 +43,7 @@ fi
 for prog in ${progs}; do
     if [ ! -x /usr/bin/${prog} ] && [ ! -x /usr/local/bin/${prog} ]; then
 	echo "** Program '${prog}' not found, exiting"
-	exit -1
+	exit 1
     fi
 done
     
@@ -51,7 +51,7 @@ done
 for dir in ${sources}; do
     if [ ! -d ${dir} ]; then
 	echo "** Source directory ${dir} not found, exiting"
-	exit -1
+	exit 1
     fi
 done
 
@@ -83,8 +83,9 @@ bcp --boost=${boostroot} filesystem ${pkgdir}/inst/include >> bcp.log
 # Plus foreach (cf issue ticket #2527)
 bcp --boost=${boostroot} foreach ${pkgdir}/inst/include >> bcp.log
 
-# Plus math/distributions (cf issue ticket #2533)
+# Plus math/distributions + algorithm (cf issue ticket #2533)
 bcp --boost=${boostroot} math/distributions ${pkgdir}/inst/include >> bcp.log
+bcp --boost=${boostroot} algorithm          ${pkgdir}/inst/include >> bcp.log
 
 # Plus iostream (cf issue ticket #2768) -- thia is a null-op, why?
 bcp --boost=${boostroot} iostream ${pkgdir}/inst/include >> bcp.log
