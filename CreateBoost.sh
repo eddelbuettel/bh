@@ -100,9 +100,10 @@ rm -rf ${pkgdir}/inst/include/libs \
        ${pkgdir}/inst/include/doc \
        ${pkgdir}/inst/include/boost.css
 
-cp BoostHeadersROOT/LICENSE* \
-   BoostHeadersROOT/NAMESPACE ${pkgdir}
-cp -p BoostHeadersROOT/man/*.Rd ${pkgdir}/man
+cp -p BoostHeadersROOT/LICENSE* \
+      BoostHeadersROOT/NAMESPACE    ${pkgdir}
+cp -p BoostHeadersROOT/inst/NEWS.Rd ${pkgdir}/inst/
+cp -p BoostHeadersROOT/man/*.Rd     ${pkgdir}/man
 
 sed -e "s/XXX/${version}/g" \
     -e "s/YYY/${date}/g"    \
