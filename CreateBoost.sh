@@ -9,7 +9,7 @@
 boostall="boost_1_51_0.tar.gz"
 version="1.51.0-1"
 date="2013-05-02"
-pkgdir="pkg/BoostHeaders"          
+pkgdir="pkg/BH"
 
 
 ## Additional resources we require and need to test for
@@ -33,9 +33,10 @@ fi
 
 ## DE: Needed? Can we not just overwrite?
 #if [ -d ${pkgdir} ]; then
-#    echo "svn rmdir pkg/BoostHeaders"
+#    echo "svn rm pkg/BH"
+#    echo "svn commit -m'removal'"
 #    echo "Then when this is done and tested, add it back into the svn"
-#    echo "stop 'Move aside the old BoostHeaders'"
+#    echo "stop 'Move aside the old BH'"
 #fi
 
 ## Another sanity check
@@ -72,6 +73,9 @@ mkdir -p ${pkgdir} \
 # The bigmemory Boost dependencies:
 bcp --scan --boost=${boostroot} ../bigmemory/pkg/bigmemory/src/*.cpp \
     ${pkgdir}/inst/include > bcp.log
+# The synchronicity Boost dependencies:
+bcp --scan --boost=${boostroot} ../bigmemory/pkg/synchronicity/src/*.cpp \
+    ${pkgdir}/inst/include > bcp.log
 
 # Plus filesystem
 bcp --boost=${boostroot} filesystem ${pkgdir}/inst/include >> bcp.log
@@ -89,10 +93,10 @@ bcp --boost=${boostroot} iostream ${pkgdir}/inst/include >> bcp.log
 
 
 ## Some post processing
-rm -r ${pkgdir}/inst/include/libs \
-      ${pkgdir}/inst/include/Jamroot \
-      ${pkgdir}/inst/include/boost.png \
-      ${pkgdir}/inst/include/doc
+rm -rf ${pkgdir}/inst/include/libs \
+       ${pkgdir}/inst/include/Jamroot \
+       ${pkgdir}/inst/include/boost.png \
+       ${pkgdir}/inst/include/doc
 
 cp BoostHeadersROOT/LICENSE* \
    BoostHeadersROOT/NAMESPACE ${pkgdir}
@@ -102,11 +106,12 @@ sed -e "s/XXX/${version}/g" \
     -e "s/YYY/${date}/g"    \
     BoostHeadersROOT/DESCRIPTION  >  ${pkgdir}/DESCRIPTION
 sed -e "s/XXX/${version}/g" -e "s/YYY/${date}/g" \
-    BoostHeadersROOT/man/BoostHeaders-package.Rd > ${pkgdir}/man/BoostHeaders-package.Rd 
+    BoostHeadersROOT/man/BH-package.Rd > ${pkgdir}/man/BH-package.Rd 
 
+# echo "Now 'svn add pkg/BH' and 'svn commit'
 
-########################################################################
-# Now fix up things that don't work.  Here, we need to stay
+#########################################################################
+# Now fix up things that don't work, if necessary.  Here, we need to stay
 # organized and decide who is the maintainer of what, but this script
 # is the master record of any changes made to the boost tree.
 
