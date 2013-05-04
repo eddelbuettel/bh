@@ -10,7 +10,8 @@
     \item Expanded \boost coverage by adding \boost packages \boostPkg{foreach},
     \boostPkgTwo{libs/math/doc/sf_and_dist/html/math_toolkit/dist.html}{statistical distributions},
     and \boostPkg{iostreams}. This addresses, respectively, R-Forge issue tickets 2527, 2533 and 2768).
-    \item The package can now also be used to compile \pkg{ExactNumCI}.
+    \item The package can now also be used to compile CRAN package
+    \pkg{ExactNumCI} and \pkg{rcppbugs}.
   }
 }
 
