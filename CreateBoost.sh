@@ -8,7 +8,7 @@
 ## set the variables boostall and version, here:
 boostall="boost_1_51_0.tar.gz"
 version="1.51.0-1"
-date="2013-05-02"
+date="2013-05-28"
 pkgdir="pkg/BH"
 
 
@@ -100,8 +100,7 @@ rm -rf ${pkgdir}/inst/include/libs \
        ${pkgdir}/inst/include/doc \
        ${pkgdir}/inst/include/boost.css
 
-cp -p BoostHeadersROOT/LICENSE* \
-      BoostHeadersROOT/NAMESPACE    ${pkgdir}
+cp -p BoostHeadersROOT/NAMESPACE    ${pkgdir}
 cp -p BoostHeadersROOT/inst/NEWS.Rd ${pkgdir}/inst/
 cp -p BoostHeadersROOT/man/*.Rd     ${pkgdir}/man
 
