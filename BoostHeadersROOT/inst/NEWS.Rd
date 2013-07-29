@@ -5,6 +5,12 @@
 \newcommand{\boostPkg}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#1}}}
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 
+\section{Changes in version 1.51.0-2 (2013-07-29)}{
+  \itemize{
+    \item Expanded \boost coverage by adding \boost packages \boostPkg{random} and \boostPkg{unordered}.
+  }
+}
+
 \section{Changes in [unreleased] version 1.51.0-1 (2013-05-04)}{
   \itemize{
     \item Expanded \boost coverage by adding \boost packages \boostPkg{foreach},
