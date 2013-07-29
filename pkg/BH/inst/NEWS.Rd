@@ -11,7 +11,7 @@
   }
 }
 
-\section{Changes in [unreleased] version 1.51.0-1 (2013-05-04)}{
+\section{Changes in version 1.51.0-1 (2013-05-29)}{
   \itemize{
     \item Expanded \boost coverage by adding \boost packages \boostPkg{foreach},
     \boostPkgTwo{libs/math/doc/sf_and_dist/html/math_toolkit/dist.html}{statistical distributions},
