@@ -7,8 +7,8 @@
 ## First, download the new version of the Boost Libraries and
 ## set the variables boostall and version, here:
 boostall="boost_1_51_0.tar.gz"
-version="1.51.0-1"
-date="2013-05-28"
+version="1.51.0-2"
+date="2013-07-29"
 pkgdir="pkg/BH"
 
 
@@ -77,8 +77,10 @@ bcp --scan --boost=${boostroot} ../bigmemory/pkg/bigmemory/src/*.cpp \
 bcp --scan --boost=${boostroot} ../bigmemory/pkg/synchronicity/src/*.cpp \
     ${pkgdir}/inst/include > bcp.log
 
-# Plus filesystem
+# Plus filesystem, random, unordered
 bcp --boost=${boostroot} filesystem ${pkgdir}/inst/include >> bcp.log
+bcp --boost=${boostroot} random ${pkgdir}/inst/include >> bcp.log
+bcp --boost=${boostroot} unordered ${pkgdir}/inst/include >> bcp.log
 
 # Plus foreach (cf issue ticket #2527)
 bcp --boost=${boostroot} foreach ${pkgdir}/inst/include >> bcp.log
