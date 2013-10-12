@@ -7,7 +7,7 @@
 ## First, download the new version of the Boost Libraries and
 ## set the variables boostall and version, here:
 boostall="boost_1_51_0.tar.gz"
-version="1.51.0-4"
+version="1.51.0-3"
 date="2013-10-10"
 pkgdir="pkg/BH"
 
@@ -92,7 +92,7 @@ bcp --boost=${boostroot} algorithm          ${pkgdir}/inst/include >> bcp.log
 # Plus iostream (cf issue ticket #2768) 
 bcp --boost=${boostroot} iostreams          ${pkgdir}/inst/include >> bcp.log
 
-# Plus dynamic_bitset (cf issue ticket #4991)
+# Plus dynamic_bitset (cf issue ticket #4991 -- may be non-issue and already implied)
 bcp --boost=${boostroot} dynamic_bitset     ${pkgdir}/inst/include >> bcp.log
 
 # TODO: check with other packages
