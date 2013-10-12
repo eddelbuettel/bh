@@ -4,6 +4,7 @@
 \newcommand{\boost}{\href{http://www.boost.org}{\pkg{Boost}}}
 \newcommand{\boostPkg}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#1}}}
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
+\newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
 
 \section{Changes in version 1.51.0-3 (2013-08-02)}{
   \itemize{
@@ -13,15 +14,18 @@
 
 \section{Changes in version 1.51.0-2 (2013-07-29)}{
   \itemize{
-    \item Expanded \boost coverage by adding \boost packages \boostPkg{random} and \boostPkg{unordered}.
+    \item Expanded \boost coverage by adding \boost packages
+    \boostPkg{random} and \boostPkg{unordered}. 
   }
 }
 
 \section{Changes in [unreleased] version 1.51.0-1 (2013-05-04)}{
   \itemize{
     \item Expanded \boost coverage by adding \boost packages \boostPkg{foreach},
-    \boostPkgTwo{libs/math/doc/sf_and_dist/html/math_toolkit/dist.html}{statistical distributions},
-    and \boostPkg{iostreams}. This addresses, respectively, R-Forge issue tickets 2527, 2533 and 2768).
+    \boostPkgTwo{libs/math/doc/sf_and_dist/html/math_toolkit/dist.html}{statistical
+      distributions}, and \boostPkg{iostreams}. This addresses,
+    respectively, R-Forge issue tickets \rfticket{2527}, \rfticket{2533}
+    and \rfticket{2768}). 
     \item The package can now also be used to compile CRAN package
     \pkg{ExactNumCI} and \pkg{rcppbugs}.
   }
