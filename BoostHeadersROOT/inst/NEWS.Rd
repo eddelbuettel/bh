@@ -6,9 +6,11 @@
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
 
-\section{Changes in version 1.51.0-3 (2013-08-02)}{
+\section{Changes in version 1.51.0-3 (2013-10-19)}{
   \itemize{
-    \item Expanded \boost coverage by adding \boost package \boostPkg{spirit}.
+    \item Expanded \boost coverage by adding \boost packages
+    \boostPkg{spirit}, \boostPkg{foreach}, \boostPkg{math/distributions}, 
+    \boostPkg{algorithm}, \boostPkg{iostreams}.
   }
 }
 
