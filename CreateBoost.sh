@@ -8,7 +8,7 @@
 ## set the variables boostall and version, here:
 boostall="boost_1_51_0.tar.gz"
 version="1.51.0-3"
-date="2013-10-10"
+date="2013-10-19"
 pkgdir="pkg/BH"
 
 
