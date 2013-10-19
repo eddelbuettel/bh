@@ -103,7 +103,8 @@ rm -rf ${pkgdir}/inst/include/libs \
        ${pkgdir}/inst/include/Jamroot \
        ${pkgdir}/inst/include/boost.png \
        ${pkgdir}/inst/include/doc \
-       ${pkgdir}/inst/include/boost.css
+       ${pkgdir}/inst/include/boost.css \
+       ${pkgdir}/inst/include/rst.css 
 
 cp -p BoostHeadersROOT/NAMESPACE    ${pkgdir}
 cp -p BoostHeadersROOT/inst/NEWS.Rd ${pkgdir}/inst/

@@ -4,7 +4,7 @@ Title: The Boost C++ Libraries
 Version: 1.51.0-3
 Date: 2013-10-10
 Author: John W. Emerson, Michael J. Kane, Dirk Eddelbuettel, JJ Allaire, and Romain Francois
-Maintainer: Jay Emerson <john.emerson@yale.edu>
+Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: Boost provides free peer-reviewed portable C++ source 
   libraries.  A large part of Boost is provided as C++ template code
   which is resolved entirely at compile-time without linking.  This 
