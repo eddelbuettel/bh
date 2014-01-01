@@ -16,7 +16,7 @@
     adjusted accordingly
     \item Besides the implicitly expanded coverage by including the
     complete libraries, we also expanded from
-    \boostPkg{math/distributions} to all of \boothPkg{math}.
+    \boostPkg{math/distributions} to all of \boostPkg{math}.
   }
 }
 
