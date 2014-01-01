@@ -6,6 +6,20 @@
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
 
+\section{Changes in version 1.51.0-4 (2014-01-01)}{
+  \itemize{
+    \item Rewritten main package creation script to no longer scan for
+    what \cpkg{bigmemory} and \cpkg{synchronicity} use, but rather
+    explicitly copy over an (equivalent) list of explicitly-enumerated
+    \boost libraries
+    \item Repository moved from R-Forge to GitHub, scripts and layout
+    adjusted accordingly
+    \item Besides the implicitly expanded coverage by including the
+    complete libraries, we also expanded from
+    \boostPkg{math/distributions} to all of \boothPkg{math}.
+  }
+}
+
 \section{Changes in version 1.51.0-3 (2013-10-19)}{
   \itemize{
     \item Expanded \boost coverage by adding \boost packages
@@ -29,7 +43,7 @@
     respectively, R-Forge issue tickets \rfticket{2527}, \rfticket{2533}
     and \rfticket{2768}). 
     \item The package can now also be used to compile CRAN package
-    \pkg{ExactNumCI} and \pkg{rcppbugs}.
+    \cpkg{ExactNumCI} and \cpkg{rcppbugs}.
   }
 }
 
