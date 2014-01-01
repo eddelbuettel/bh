@@ -98,7 +98,7 @@ boostlibs="bind concept config container date_time detail exception functional i
 
 ## this copies the Boost libraries listed in ${boostlibs} from the
 ## Boost sources in ${boostroot} into the target directory ${pkgincl}
-bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null.txt 2>&1
+bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 
 
 
@@ -110,7 +110,7 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null.txt 2>&1
 # Plus all of math (ie removing "/distributions" from "math/distributions"
 boostextras="filesystem random unordered spirit foreach math algorithm iostreams dynamic_bitset"
 
-bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null.txt 2>&1
+bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 
 # TODO: check with other CRAN packages about what may be needed
 
