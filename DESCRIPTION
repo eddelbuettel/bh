@@ -1,9 +1,9 @@
 Package: BH
 Type: Package
-Title: The Boost C++ Libraries
-Version: 1.51.0-3
-Date: 2013-10-19
-Author: John W. Emerson, Michael J. Kane, Dirk Eddelbuettel, JJ Allaire, and Romain Francois
+Title: Boost C++ header files
+Version: 1.51.0-4
+Date: 2014-01-01
+Author: Dirk Eddelbuettel, John W. Emerson and Michael J. Kane
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: Boost provides free peer-reviewed portable C++ source 
   libraries.  A large part of Boost is provided as C++ template code
