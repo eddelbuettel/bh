@@ -36,9 +36,6 @@ Maintainer: Dirk Eddelbuettel <edd@debian.org>
 http://www.boost.org/
 }
 \keyword{ package }
-\seealso{
-\code{\link[bigmemory:bigmemory-package]{bigmemory}}
-}
 \examples{
 # None
 }
