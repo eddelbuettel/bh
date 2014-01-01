@@ -15,8 +15,8 @@
 \tabular{ll}{
 Package: \tab BH\cr
 Type: \tab Package\cr
-Version: \tab 1.51.0-3\cr
-Date: \tab 2013-10-19\cr
+Version: \tab 1.51.0-4\cr
+Date: \tab 2014-01-01\cr
 License: \tab BSL-1.0\cr
 }
   Boost provides free peer-reviewed portable C++ source
