@@ -11,7 +11,7 @@
 pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
 boosttargz="boost_1_51_0.tar.gz"
-## -- version and other metadata
+## -- current package version and date (and other metadata as needed)
 version="1.51.0-4"
 date="2014-01-01"
 
@@ -37,6 +37,7 @@ boostsources="${localdir}/${boosttargz}"
 pkgincl="${pkgdir}/inst/include/"
 ## local files containing R package pieces
 localfiles="${pkgdir}/local/files"
+
 
 
 ## (4) Display current settings
@@ -78,20 +79,20 @@ fi
 echo "Unpacking ${boosttargz} into LocalDir (ie ${localdir})."
 (cd ${localdir} && tar xfz ${boostsources})
 
-exit 1
 
-## (7) Install dependencies
+
+## (7) Install Boost dependencies needed for BH
 ##
 ## We used to copy using bcp from what the bigmemory and synchronicity packages need:
 ##   # The bigmemory Boost dependencies:
-##   bcp --scan --boost=${boostroot} ../bigmemory/pkg/bigmemory/src/*.cpp \
-##       ${pkgdir}/inst/include > bcp.log
+##   bcp --scan --boost=${boostroot} ../bigmemory/pkg/bigmemory/src/*.cpp ${pkgdir}/inst/include > bcp.log
 ##   # The synchronicity Boost dependencies:
-##   bcp --scan --boost=${boostroot} ../bigmemory/pkg/synchronicity/src/*.cpp \
-##       ${pkgdir}/inst/include > bcp.log
+##   bcp --scan --boost=${boostroot} ../bigmemory/pkg/synchronicity/src/*.cpp ${pkgdir}/inst/include > bcp.log
 ##
 ## But we now enumerate the corresponding libraries (derived from what
 ## bigmemory and synchronicity brought in) explicitly
+
+echo "Copying Boost libraries into BH"
 
 boostlibs="bind concept config container date_time detail exception functional integer interprocess intrusive io iterator math move mpl numeric pending preprocessor random range smart_ptr tupe typeof type_trains unordered utility uuid"
 
@@ -101,13 +102,14 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null.txt 2>&1
 
 
 
-# (8) Plus filesystem, random, unordered, spirit
+# (8) Plus other Boost libraries:  filesystem, random, unordered, spirit
 # Plus foreach (cf issue ticket #2527)
 # Plus math/distributions + algorithm (cf issue ticket #2533)
 # Plus iostream (cf issue ticket #2768) 
 # Plus dynamic_bitset (cf issue ticket #4991 -- may be non-issue and already implied)
 # Plus all of math (ie removing "/distributions" from "math/distributions"
 boostextras="filesystem random unordered spirit foreach math algorithm iostreams dynamic_bitset"
+
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null.txt 2>&1
 
 # TODO: check with other CRAN packages about what may be needed
