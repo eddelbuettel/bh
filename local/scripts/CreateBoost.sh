@@ -138,8 +138,12 @@ sed -e "s/XXX/${version}/g" -e "s/YYY/${date}/g" \
     ${localfiles}/man/BH-package.Rd > ${pkgdir}/man/BH-package.Rd 
 
 
+## (11) Unconditional cleanup
+echo "Purging (temp. dir) BoostRoot"
+rm -rf ${boostroot}
 
-# echo "Now 'svn add pkg/BH' and 'svn commit'
+
+echo "Now check with 'git status' and add and commit as needed."
 
 
 
