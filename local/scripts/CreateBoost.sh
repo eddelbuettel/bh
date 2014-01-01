@@ -1,122 +1,145 @@
-#!/bin/sh
+#!/bin/bash
 ##
 ## CreateBoost.sh -- derived from CreateBoost.R
 ##
-## Jay Emerson and Dirk Eddelbuettel,  2012 - 2013
-
-## First, download the new version of the Boost Libraries and
-## set the variables boostall and version, here:
-boostall="boost_1_51_0.tar.gz"
-version="1.51.0-3"
-date="2013-10-19"
-pkgdir="pkg/BH"
+## Jay Emerson and Dirk Eddelbuettel,  2012 - 2014
 
 
-## Additional resources we require and need to test for
-## 'sources' lists the directories we scan for Boost components
-sources="../bigmemory"
+## (1) Adjust these variables as needed 
+## 
+## -- on a standard git checkout, this repo it may be ~/git/bh
+pkgdir="${HOME}/git/bh"
+## -- current boost sources, placed eg in ${pkgdir}/local/
+boosttargz="boost_1_51_0.tar.gz"
+## -- version and other metadata
+version="1.51.0-4"
+date="2014-01-01"
+
+
+
+## (2) Additional resources we require and need to test for
+##
 ## 'progs' lists the programs we need
 progs="bcp"
 
 
+
+## (3) Some internal constants and variables
+## local directory in git repo
+localdir="${pkgdir}/local"
 ## Derive the 'bootroot' name from the tarball, using basename(1)
-boostroot=$(basename ${boostall} ".tar.gz")
+boostver=$(basename ${boosttargz} ".tar.gz")
+## create boost root directory name
+boostroot="${localdir}/${boostver}"
+## create boost tarball file name with full path
+boostsources="${localdir}/${boosttargz}"
+## target directory for headers
+pkgincl="${pkgdir}/inst/include/"
+## local files containing R package pieces
+localfiles="${pkgdir}/local/files"
 
-## DEBUG display
-echo "Check: ${boostall} ${version} ${date} ${pkgdir} ${boostroot}"
 
-## A sanity check here before continuing:
-if [ ! -f ${boostall} ] && [ ! -d ${boostroot} ]; then
-    echo "The Boost input file or directory do not exist. Exiting."
+## (4) Display current settings
+echo "Using these settings:
+Date:          ${date}
+Version:       ${version}
+Boosttargz:    ${boosttargz}
+PkgDir:        ${pkgdir}
+PkgIncl:       ${pkgincl}
+LocalDir:      ${localdir}
+LocalFiles:    ${localfiles}
+BoostRoot:     ${boostroot}
+Boostsources:  ${boostsources}
+"
+
+
+
+## (5) Some sanity check here before continuing
+for prog in ${progs}; do
+    if [ ! -x /usr/bin/${prog} ] && [ ! -x /usr/local/bin/${prog} ]; then
+	echo "Program '${prog}' not found, exiting"
+	exit 1
+    fi
+done
+
+if [ ! -f "${boostsources}" ]; then
+    echo "Boost input file ${boostsources} missing, exiting." 
     exit 1
 fi
 
-## DE: Needed? Can we not just overwrite?
-#if [ -d ${pkgdir} ]; then
-#    echo "svn rm pkg/BH"
-#    echo "svn commit -m'removal'"
-#    echo "Then when this is done and tested, add it back into the svn"
-#    echo "stop 'Move aside the old BH'"
-#fi
-
-## Another sanity check
-for prog in ${progs}; do
-    if [ ! -x /usr/bin/${prog} ] && [ ! -x /usr/local/bin/${prog} ]; then
-	echo "** Program '${prog}' not found, exiting"
-	exit 1
-    fi
-done
-    
-## Check for sources
-for dir in ${sources}; do
-    if [ ! -d ${dir} ]; then
-	echo "** Source directory ${dir} not found, exiting"
-	exit 1
-    fi
-done
-
-########################################################################
-# Unpack, copy from boost to BoostHeaders/inst/include,
-# and build the supporting infrastructure of the package.
-
-if [ ! -d ${boostroot} ]; then
-    tar -zxf ${boostall}
+if [ -d ${boostroot} ]; then
+    echo "Old BoostRoot directory exists, removing it (ie ${boostroot})."
+    rm -rf ${boostroot}
 fi
 
-mkdir -p ${pkgdir} \
-         ${pkgdir}/inst \
-         ${pkgdir}/man \
-         ${pkgdir}/inst/include
 
 
-# The bigmemory Boost dependencies:
-bcp --scan --boost=${boostroot} ../bigmemory/pkg/bigmemory/src/*.cpp \
-    ${pkgdir}/inst/include > bcp.log
-# The synchronicity Boost dependencies:
-bcp --scan --boost=${boostroot} ../bigmemory/pkg/synchronicity/src/*.cpp \
-    ${pkgdir}/inst/include > bcp.log
+## (6) Unpack boost
+echo "Unpacking ${boosttargz} into LocalDir (ie ${localdir})."
+(cd ${localdir} && tar xfz ${boostsources})
 
-# Plus filesystem, random, unordered, spirit
-bcp --boost=${boostroot} filesystem ${pkgdir}/inst/include >> bcp.log
-bcp --boost=${boostroot} random ${pkgdir}/inst/include >> bcp.log
-bcp --boost=${boostroot} unordered ${pkgdir}/inst/include >> bcp.log
-bcp --boost=${boostroot} spirit ${pkgdir}/inst/include >> bcp.log
+exit 1
 
+## (7) Install dependencies
+##
+## We used to copy using bcp from what the bigmemory and synchronicity packages need:
+##   # The bigmemory Boost dependencies:
+##   bcp --scan --boost=${boostroot} ../bigmemory/pkg/bigmemory/src/*.cpp \
+##       ${pkgdir}/inst/include > bcp.log
+##   # The synchronicity Boost dependencies:
+##   bcp --scan --boost=${boostroot} ../bigmemory/pkg/synchronicity/src/*.cpp \
+##       ${pkgdir}/inst/include > bcp.log
+##
+## But we now enumerate the corresponding libraries (derived from what
+## bigmemory and synchronicity brought in) explicitly
+
+boostlibs="bind concept config container date_time detail exception functional integer interprocess intrusive io iterator math move mpl numeric pending preprocessor random range smart_ptr tupe typeof type_trains unordered utility uuid"
+
+## this copies the Boost libraries listed in ${boostlibs} from the
+## Boost sources in ${boostroot} into the target directory ${pkgincl}
+bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null.txt 2>&1
+
+
+
+# (8) Plus filesystem, random, unordered, spirit
 # Plus foreach (cf issue ticket #2527)
-bcp --boost=${boostroot} foreach ${pkgdir}/inst/include >> bcp.log
-
 # Plus math/distributions + algorithm (cf issue ticket #2533)
-bcp --boost=${boostroot} math/distributions ${pkgdir}/inst/include >> bcp.log
-bcp --boost=${boostroot} algorithm          ${pkgdir}/inst/include >> bcp.log
-
 # Plus iostream (cf issue ticket #2768) 
-bcp --boost=${boostroot} iostreams          ${pkgdir}/inst/include >> bcp.log
-
 # Plus dynamic_bitset (cf issue ticket #4991 -- may be non-issue and already implied)
-bcp --boost=${boostroot} dynamic_bitset     ${pkgdir}/inst/include >> bcp.log
+# Plus all of math (ie removing "/distributions" from "math/distributions"
+boostextras="filesystem random unordered spirit foreach math algorithm iostreams dynamic_bitset"
+bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null.txt 2>&1
 
-# TODO: check with other packages
+# TODO: check with other CRAN packages about what may be needed
 
 
-## Some post processing
-rm -rf ${pkgdir}/inst/include/libs \
-       ${pkgdir}/inst/include/Jamroot \
-       ${pkgdir}/inst/include/boost.png \
-       ${pkgdir}/inst/include/doc \
-       ${pkgdir}/inst/include/boost.css \
-       ${pkgdir}/inst/include/rst.css 
 
-cp -p BoostHeadersROOT/NAMESPACE    ${pkgdir}
-cp -p BoostHeadersROOT/inst/NEWS.Rd ${pkgdir}/inst/
-cp -p BoostHeadersROOT/man/*.Rd     ${pkgdir}/man
+## (9) Some post processing and cleanup
+rm -rf ${pkgincl}/libs \
+       ${pkgincl}/Jamroot \
+       ${pkgincl}/boost.png \
+       ${pkgincl}/doc \
+       ${pkgincl}/boost.css \
+       ${pkgincl}/rst.css 
+
+
+
+## (10) Some file manips -- or rather, we might as well do this by hand ...
+cp -p ${localfiles}/NAMESPACE    ${pkgdir}
+cp -p ${localfiles}/inst/NEWS.Rd ${pkgdir}/inst/
+cp -p ${localfiles}/man/*.Rd     ${pkgdir}/man
 
 sed -e "s/XXX/${version}/g" \
     -e "s/YYY/${date}/g"    \
-    BoostHeadersROOT/DESCRIPTION  >  ${pkgdir}/DESCRIPTION
+    ${localfiles}/DESCRIPTION  >  ${pkgdir}/DESCRIPTION
 sed -e "s/XXX/${version}/g" -e "s/YYY/${date}/g" \
-    BoostHeadersROOT/man/BH-package.Rd > ${pkgdir}/man/BH-package.Rd 
+    ${localfiles}/man/BH-package.Rd > ${pkgdir}/man/BH-package.Rd 
+
+
 
 # echo "Now 'svn add pkg/BH' and 'svn commit'
+
+
 
 #########################################################################
 # Now fix up things that don't work, if necessary.  Here, we need to stay
