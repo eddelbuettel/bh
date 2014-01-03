@@ -12,7 +12,7 @@ resolved entirely at compile-time without linking.
 
 This package aims to provide the most useful subset of
 [Boost](http://www.boost.org/) libraries for template use among CRAN
-package. By placing these libraries in this package, we offer a more
+packages. By placing these libraries in this package, we offer a more
 efficient distribution system for CRAN as replication of this code in the
 sources of other packages is avoided.
 
@@ -23,6 +23,19 @@ include flags correctly on all architectures supported by R.
 Not that this can be used solely by headers-only Boost libraries. This
 covers most of Boost, but excludes some libraries which require linking for
 parts or all of their functionality. 
+
+## See Also
+
+See the [BH](http://dirk.eddelbuettel.com/code/bh.html) page for some more details.
+
+## Updating
+
+If needed, the script `local/script/CreateBoost.sh` can be used to update a forked
+version to a newer version of [Boost](http://www.boost.org/).  
+
+We plan to keep the package up-to-date with [Boost](http://www.boost.org/)
+upstream, but will not necessarily follow each and every new release as we
+also value the merits of relative release stability. 
 
 ## Authors 
 
