@@ -42,7 +42,7 @@ namespace boost
                 mutex.destroy();
             }
 
-            bool try_lock()
+            bool try_lock() BOOST_NOEXCEPT
             {
                 long const current_thread_id=win32::GetCurrentThreadId();
                 return try_recursive_lock(current_thread_id) || try_basic_lock(current_thread_id);
@@ -58,6 +58,7 @@ namespace boost
                     recursion_count=1;
                 }
             }
+#if defined BOOST_THREAD_USES_DATETIME
             bool timed_lock(::boost::system_time const& target)
             {
                 long const current_thread_id=win32::GetCurrentThreadId();
@@ -68,6 +69,7 @@ namespace boost
             {
                 return timed_lock(get_system_time()+timeout);
             }
+#endif
 
 #ifdef BOOST_THREAD_USES_CHRONO
         template <class Rep, class Period>
@@ -93,7 +95,7 @@ namespace boost
             }
 
         private:
-            bool try_recursive_lock(long current_thread_id)
+            bool try_recursive_lock(long current_thread_id) BOOST_NOEXCEPT
             {
                 if(::boost::detail::interlocked_read_acquire(&locking_thread_id)==current_thread_id)
                 {
@@ -103,7 +105,7 @@ namespace boost
                 return false;
             }
 
-            bool try_basic_lock(long current_thread_id)
+            bool try_basic_lock(long current_thread_id) BOOST_NOEXCEPT
             {
                 if(mutex.try_lock())
                 {
@@ -114,6 +116,7 @@ namespace boost
                 return false;
             }
 
+#if defined BOOST_THREAD_USES_DATETIME
             bool try_timed_lock(long current_thread_id,::boost::system_time const& target)
             {
                 if(mutex.timed_lock(target))
@@ -124,6 +127,7 @@ namespace boost
                 }
                 return false;
             }
+#endif
             template <typename TP>
             bool try_timed_lock_until(long current_thread_id,TP const& target)
             {

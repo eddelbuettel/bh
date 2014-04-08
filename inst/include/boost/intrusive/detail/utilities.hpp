@@ -28,6 +28,7 @@
 #include <iterator>
 #include <boost/cstdint.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/detail/no_exceptions_support.hpp>
 
 namespace boost {
 namespace intrusive {
@@ -41,64 +42,29 @@ struct internal_member_value_traits
    static const bool value = sizeof(test<T>(0)) == sizeof(detail::two);
 };
 
-template <class T>
-struct internal_base_hook_bool
-{
-   template<bool Add>
-   struct two_or_three {one _[2 + Add];};
-   template <class U> static one test(...);
-   template <class U> static two_or_three<U::boost_intrusive_tags::is_base_hook> test (int);
-   static const std::size_t value = sizeof(test<T>(0));
-};
+#define BOOST_INTRUSIVE_INTERNAL_STATIC_BOOL_IS_TRUE(TRAITS_PREFIX, TYPEDEF_TO_FIND) \
+template <class T>\
+struct TRAITS_PREFIX##_bool\
+{\
+   template<bool Add>\
+   struct two_or_three {one _[2 + Add];};\
+   template <class U> static one test(...);\
+   template <class U> static two_or_three<U::TYPEDEF_TO_FIND> test (int);\
+   static const std::size_t value = sizeof(test<T>(0));\
+};\
+\
+template <class T>\
+struct TRAITS_PREFIX##_bool_is_true\
+{\
+   static const bool value = TRAITS_PREFIX##_bool<T>::value > sizeof(one)*2;\
+};\
+//
 
-template <class T>
-struct internal_base_hook_bool_is_true
-{
-   static const bool value = internal_base_hook_bool<T>::value > sizeof(one)*2;
-};
-
-template <class T>
-struct internal_any_hook_bool
-{
-   template<bool Add>
-   struct two_or_three {one _[2 + Add];};
-   template <class U> static one test(...);
-   template <class U> static two_or_three<U::is_any_hook> test (int);
-   static const std::size_t value = sizeof(test<T>(0));
-};
-
-template <class T>
-struct internal_any_hook_bool_is_true
-{
-   static const bool value = internal_any_hook_bool<T>::value > sizeof(one)*2;
-};
-
-
-template <class T>
-struct external_value_traits_bool
-{
-   template<bool Add>
-   struct two_or_three {one _[2 + Add];};
-   template <class U> static one test(...);
-   template <class U> static two_or_three<U::external_value_traits> test (int);
-   static const std::size_t value = sizeof(test<T>(0));
-};
-
-template <class T>
-struct external_bucket_traits_bool
-{
-   template<bool Add>
-   struct two_or_three {one _[2 + Add];};
-   template <class U> static one test(...);
-   template <class U> static two_or_three<U::external_bucket_traits> test (int);
-   static const std::size_t value = sizeof(test<T>(0));
-};
-
-template <class T>
-struct external_value_traits_is_true
-{
-   static const bool value = external_value_traits_bool<T>::value > sizeof(one)*2;
-};
+BOOST_INTRUSIVE_INTERNAL_STATIC_BOOL_IS_TRUE(internal_base_hook, boost_intrusive_tags::is_base_hook)
+BOOST_INTRUSIVE_INTERNAL_STATIC_BOOL_IS_TRUE(internal_any_hook, is_any_hook)
+BOOST_INTRUSIVE_INTERNAL_STATIC_BOOL_IS_TRUE(external_value_traits, external_value_traits)
+BOOST_INTRUSIVE_INTERNAL_STATIC_BOOL_IS_TRUE(external_bucket_traits, external_bucket_traits)
+BOOST_INTRUSIVE_INTERNAL_STATIC_BOOL_IS_TRUE(resizable, resizable)
 
 template<class Node, class Tag, link_mode_type LinkMode, int>
 struct node_holder
@@ -166,6 +132,12 @@ struct size_holder
    void increment()
    {  ++size_; }
 
+   void increase(SizeType n)
+   {  size_ += n; }
+
+   void decrease(SizeType n)
+   {  size_ -= n; }
+
    SizeType size_;
 };
 
@@ -185,6 +157,12 @@ struct size_holder<false, SizeType>
    {}
 
    void increment()
+   {}
+
+   void increase(SizeType)
+   {}
+
+   void decrease(SizeType)
    {}
 };
 
@@ -644,7 +622,7 @@ struct store_cont_ptr_on_it
 {
    typedef typename Container::value_traits value_traits;
    static const bool value = store_cont_ptr_on_it_impl
-      <value_traits, external_value_traits_is_true<value_traits>::value>::value;
+      <value_traits, external_value_traits_bool_is_true<value_traits>::value>::value;
 };
 
 template<class Container, bool IsConst>
@@ -727,19 +705,20 @@ class array_initializer
    {
       char *init_buf = (char*)rawbuf;
       std::size_t i = 0;
-      try{
+      BOOST_TRY{
          for(; i != N; ++i){
             new(init_buf)T(init);
             init_buf += sizeof(T);
          }
       }
-      catch(...){
+      BOOST_CATCH(...){
          while(i--){
             init_buf -= sizeof(T);
             ((T*)init_buf)->~T();
          }
-         throw;
+         BOOST_RETHROW;
       }
+      BOOST_CATCH_END
    }
 
    operator T* ()

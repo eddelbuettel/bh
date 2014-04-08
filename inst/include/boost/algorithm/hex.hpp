@@ -10,12 +10,6 @@
 /*
     General problem - turn a sequence of integral types into a sequence of hexadecimal characters.
     - and back.
-
-TO DO:
-    1. these should really only work on integral types. (see the >> and << operations)
-        -- this is done, I think.
-    2. The 'value_type_or_char' struct is really a hack.
-        -- but it's a better hack now that it works with back_insert_iterators
 */
 
 /// \file  hex.hpp
@@ -42,11 +36,11 @@ namespace boost { namespace algorithm {
 /*! 
     \struct hex_decode_error 
     \brief  Base exception class for all hex decoding errors 
-    
+*/ /*!
     \struct non_hex_input    
     \brief  Thrown when a non-hex value (0-9, A-F) encountered when decoding.
                 Contains the offending character
-    
+*/ /*!    
     \struct not_enough_input 
     \brief  Thrown when the input sequence unexpectedly ends
     
@@ -69,14 +63,16 @@ namespace detail {
         return std::copy ( res, res + num_hex_digits, out );
         }
 
-    unsigned hex_char_to_int ( char c ) {
-        if ( c >= '0' && c <= '9' ) return c - '0';
-        if ( c >= 'A' && c <= 'F' ) return c - 'A' + 10;
-        if ( c >= 'a' && c <= 'f' ) return c - 'a' + 10;
-        BOOST_THROW_EXCEPTION (non_hex_input() << bad_char (c));
-        return 0;   // keep dumb compilers happy
+    template <typename T>
+    unsigned char hex_char_to_int ( T val ) {
+        char c = static_cast<char> ( val );
+        unsigned retval = 0;
+        if      ( c >= '0' && c <= '9' ) retval = c - '0';
+        else if ( c >= 'A' && c <= 'F' ) retval = c - 'A' + 10;
+        else if ( c >= 'a' && c <= 'f' ) retval = c - 'a' + 10;
+        else BOOST_THROW_EXCEPTION (non_hex_input() << bad_char (c));
+        return retval;
         }
-    
 
 //  My own iterator_traits class.
 //  It is here so that I can "reach inside" some kinds of output iterators
@@ -105,17 +101,17 @@ namespace detail {
 //  The first one is the output type, the second one is the character type of
 //  the underlying stream, the third is the character traits.
 //      We only care about the first one.
-  template<typename T, typename charType, typename traits>
-  struct hex_iterator_traits< std::ostream_iterator<T, charType, traits> > {
-      typedef T value_type;
-  };
+    template<typename T, typename charType, typename traits>
+    struct hex_iterator_traits< std::ostream_iterator<T, charType, traits> > {
+        typedef T value_type;
+    };
 
-	template <typename Iterator> 
-	bool iter_end ( Iterator current, Iterator last ) { return current == last; }
-	
-	template <typename T>
-	bool ptr_end ( const T* ptr, const T* /*end*/ ) { return *ptr == '\0'; }
-	
+    template <typename Iterator> 
+    bool iter_end ( Iterator current, Iterator last ) { return current == last; }
+  
+    template <typename T>
+    bool ptr_end ( const T* ptr, const T* /*end*/ ) { return *ptr == '\0'; }
+  
 //  What can we assume here about the inputs?
 //      is std::iterator_traits<InputIterator>::value_type always 'char' ?
 //  Could it be wchar_t, say? Does it matter?
@@ -130,7 +126,7 @@ namespace detail {
         for ( std::size_t i = 0; i < 2 * sizeof ( T ); ++i, ++first ) {
             if ( pred ( first, last )) 
                 BOOST_THROW_EXCEPTION (not_enough_input ());
-            res = ( 16 * res ) + hex_char_to_int (static_cast<char> (*first));
+            res = ( 16 * res ) + hex_char_to_int (*first);
             }
         
         *out = res;

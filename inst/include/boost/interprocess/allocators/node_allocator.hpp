@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -102,7 +102,7 @@ class node_allocator_base
    //!node_allocator_base
    template<class T2>
    struct rebind
-   { 
+   {
       typedef node_allocator_base<Version, T2, SegmentManager, NodesPerBlock>       other;
    };
 
@@ -128,8 +128,8 @@ class node_allocator_base
    //!count of the associated node pool. Never throws
    node_allocator_base(const node_allocator_base &other)
       : mp_node_pool(other.get_node_pool())
-   { 
-      node_pool<0>::get(ipcdetail::to_raw_pointer(mp_node_pool))->inc_ref_count();  
+   {
+      node_pool<0>::get(ipcdetail::to_raw_pointer(mp_node_pool))->inc_ref_count();
    }
 
    //!Copy constructor from related node_allocator_base. If not present, constructs
@@ -206,7 +206,7 @@ class node_allocator_v1
 
    template<class T2>
    struct rebind
-   { 
+   {
       typedef node_allocator_v1<T2, SegmentManager, NodesPerBlock>  other;
    };
 
@@ -256,7 +256,7 @@ class node_allocator
 
    template<class T2>
    struct rebind
-   { 
+   {
       typedef node_allocator<T2, SegmentManager, NodesPerBlock>  other;
    };
 
@@ -288,7 +288,7 @@ class node_allocator
    //!node_allocator
    template<class T2>
    struct rebind
-   { 
+   {
       typedef node_allocator<T2, SegmentManager, NodesPerBlock> other;
    };
 
@@ -385,12 +385,12 @@ class node_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. The elements must be deallocated
    //!with deallocate(...)
-   multiallocation_chain allocate_many(size_type elem_size, size_type num_elements);
+   void allocate_many(size_type elem_size, size_type num_elements, multiallocation_chain &chain);
 
    //!Allocates n_elements elements, each one of size elem_sizes[i]in a
    //!contiguous block
    //!of memory. The elements must be deallocated
-   multiallocation_chain allocate_many(const size_type *elem_sizes, size_type n_elements);
+   void allocate_many(const size_type *elem_sizes, size_type n_elements, multiallocation_chain &chain);
 
    //!Allocates many elements of size elem_size in a contiguous block
    //!of memory. The minimum number to be allocated is min_elements,
@@ -398,7 +398,7 @@ class node_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. The elements must be deallocated
    //!with deallocate(...)
-   void deallocate_many(multiallocation_chain chain);
+   void deallocate_many(multiallocation_chain &chain);
 
    //!Allocates just one object. Memory allocated with this function
    //!must be deallocated only with deallocate_one().
@@ -411,7 +411,7 @@ class node_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. Memory allocated with this function
    //!must be deallocated only with deallocate_one().
-   multiallocation_chain allocate_individual(size_type num_elements);
+   void allocate_individual(size_type num_elements, multiallocation_chain &chain);
 
    //!Deallocates memory previously allocated with allocate_one().
    //!You should never use deallocate_one to deallocate memory allocated
@@ -424,7 +424,7 @@ class node_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. Memory allocated with this function
    //!must be deallocated only with deallocate_one().
-   void deallocate_individual(multiallocation_chain chain);
+   void deallocate_individual(multiallocation_chain &chain);
    #endif
 };
 
