@@ -168,16 +168,17 @@ namespace chrono {
         duration d_;
 
     public:
-        BOOST_CONSTEXPR
+        BOOST_FORCEINLINE BOOST_CONSTEXPR
         time_point() : d_(duration::zero())
         {}
-        BOOST_CONSTEXPR explicit time_point(const duration& d)
+        BOOST_FORCEINLINE BOOST_CONSTEXPR
+        explicit time_point(const duration& d)
             : d_(d)
         {}
 
         // conversions
         template <class Duration2>
-        BOOST_CONSTEXPR
+        BOOST_FORCEINLINE BOOST_CONSTEXPR
         time_point(const time_point<clock, Duration2>& t
                 , typename boost::enable_if
                 <
@@ -217,12 +218,12 @@ namespace chrono {
 
         // special values
 
-        static BOOST_CONSTEXPR time_point
+        static BOOST_CHRONO_LIB_CONSTEXPR time_point
         min BOOST_PREVENT_MACRO_SUBSTITUTION ()
         {
             return time_point((duration::min)());
         }
-        static BOOST_CONSTEXPR time_point
+        static BOOST_CHRONO_LIB_CONSTEXPR time_point
         max BOOST_PREVENT_MACRO_SUBSTITUTION ()
         {
             return time_point((duration::max)());

@@ -6,6 +6,16 @@
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
 
+\section{Changes in version 1.54.0-1 (2014-04-07)}{
+  \itemize{
+    \item Upgraded to Boost 1.54.0
+    \item Adjust build script \code{local/script/CreateBoost.sh} accordingly
+    \item Renamed \code{generation_runge_kutta_cash_karp54_classic.hpp}
+    to \code{generation_runge_kutta_cash_karp54_cl.hpp} to remain within
+    100-character limit for \code{tar}
+  }
+}
+
 \section{Changes in version 1.51.0-4 (2014-01-01)}{
   \itemize{
     \item Rewritten main package creation script to no longer scan for

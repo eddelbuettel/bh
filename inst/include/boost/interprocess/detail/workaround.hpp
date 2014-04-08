@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -17,17 +17,19 @@
    #define BOOST_INTERPROCESS_WINDOWS
    #define BOOST_INTERPROCESS_FORCE_GENERIC_EMULATION
    #define BOOST_INTERPROCESS_HAS_KERNEL_BOOTTIME
+   //Define this to connect with shared memory created with versions < 1.54
+   //#define BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME
 #else
    #include <unistd.h>
 
    #if defined(_POSIX_THREAD_PROCESS_SHARED) && ((_POSIX_THREAD_PROCESS_SHARED - 0) > 0)
       //Cygwin defines _POSIX_THREAD_PROCESS_SHARED but does not implement it.
-      //Mac Os X >= Leopard defines _POSIX_THREAD_PROCESS_SHARED but does not seems to work.
+      //Mac Os X >= Leopard defines _POSIX_THREAD_PROCESS_SHARED but does not seem to work.
       #if !defined(__CYGWIN__) && !defined(__APPLE__)
          #define BOOST_INTERPROCESS_POSIX_PROCESS_SHARED
       #endif
    #endif
-  
+
    #if defined(_POSIX_BARRIERS) && ((_POSIX_BARRIERS - 0) > 0)
       #define BOOST_INTERPROCESS_POSIX_BARRIERS
    #endif
@@ -39,7 +41,7 @@
       #endif
    //Some platforms have a limited (name length) named semaphore support
    #elif (defined(__FreeBSD__) && (__FreeBSD__ >= 4)) || defined(__APPLE__)
-      #define BOOST_INTERPROCESS_POSIX_NAMED_SEMAPHORES  
+      #define BOOST_INTERPROCESS_POSIX_NAMED_SEMAPHORES
    #endif
 
    #if ((defined _V6_ILP32_OFFBIG)  &&(_V6_ILP32_OFFBIG   - 0 > 0)) ||\
@@ -90,6 +92,8 @@
       //          hp-ux               tru64               vms               freebsd
       #if defined(__hpux) || defined(__osf__) || defined(__vms) || (defined(__FreeBSD__) && (__FreeBSD__ < 7))
          #define BOOST_INTERPROCESS_FILESYSTEM_BASED_POSIX_SHARED_MEMORY
+      //Some systems have "jailed" environments where shm usage is restricted at runtime
+      //and temporary file file based shm is possible in those executions.
       #elif defined(__FreeBSD__)
          #define BOOST_INTERPROCESS_RUNTIME_FILESYSTEM_BASED_POSIX_SHARED_MEMORY
       #endif
@@ -108,6 +112,10 @@
 
    #if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
       #define BOOST_INTERPROCESS_BSD_DERIVATIVE
+      //Some *BSD systems (OpenBSD & NetBSD) need sys/param.h before sys/sysctl.h, whereas
+      //others (FreeBSD & Darwin) need sys/types.h
+      #include <sys/types.h>
+      #include <sys/param.h>
       #include <sys/sysctl.h>
       #if defined(CTL_KERN) && defined (KERN_BOOTTIME)
          //#define BOOST_INTERPROCESS_HAS_KERNEL_BOOTTIME
@@ -115,7 +123,7 @@
    #endif
 #endif   //!defined(BOOST_INTERPROCESS_WINDOWS)
 
-#if    !defined(BOOST_NO_RVALUE_REFERENCES) && !defined(BOOST_NO_VARIADIC_TEMPLATES)
+#if    !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
    #define BOOST_INTERPROCESS_PERFECT_FORWARDING
 #endif
 
@@ -128,6 +136,40 @@
 // Timeout duration use if BOOST_INTERPROCESS_ENABLE_TIMEOUT_WHEN_LOCKING is set
 #ifndef BOOST_INTERPROCESS_TIMEOUT_WHEN_LOCKING_DURATION_MS
    #define BOOST_INTERPROCESS_TIMEOUT_WHEN_LOCKING_DURATION_MS 10000
+#endif
+
+//Other switches
+//BOOST_INTERPROCESS_MSG_QUEUE_USES_CIRC_INDEX
+//message queue uses a circular queue as index instead of an array (better performance)
+//Boost version < 1.52 uses an array, so undef this if you want to communicate
+//with processes compiled with those versions.
+#define BOOST_INTERPROCESS_MSG_QUEUE_CIRCULAR_INDEX
+
+//Inline attributes
+#if defined(_MSC_VER)
+   #define BOOST_INTERPROCESS_ALWAYS_INLINE __forceinline
+#elif defined (__GNUC__)
+   #define BOOST_INTERPROCESS_ALWAYS_INLINE __attribute__((__always_inline__))
+#else
+   #define BOOST_INTERPROCESS_ALWAYS_INLINE inline
+#endif
+
+#if defined(_MSC_VER)
+   #define BOOST_INTERPROCESS_NEVER_INLINE __declspec(noinline)
+#elif defined (__GNUC__)
+   #define BOOST_INTERPROCESS_NEVER_INLINE __attribute__((__noinline__))
+#endif
+
+#if defined(BOOST_NO_CXX11_NOEXCEPT)
+   #if defined(BOOST_MSVC)
+      #define BOOST_INTERPROCESS_NOEXCEPT throw()
+   #else
+      #define BOOST_INTERPROCESS_NOEXCEPT
+   #endif
+   #define BOOST_INTERPROCESS_NOEXCEPT_IF(x)
+#else
+   #define BOOST_INTERPROCESS_NOEXCEPT    noexcept
+   #define BOOST_INTERPROCESS_NOEXCEPT_IF(x) noexcept(x)
 #endif
 
 #include <boost/interprocess/detail/config_end.hpp>

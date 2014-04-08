@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2009-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2009-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -54,7 +54,7 @@ static void create_tmp_subdir_and_get_pid_based_filepath
    s += "/";
    s += file_prefix;
    if(creation_time){
-      std::string sstamp;  
+      std::string sstamp;
       get_pid_creation_time_str(sstamp);
       s += sstamp;
    }
@@ -137,7 +137,7 @@ struct thread_safe_global_map_dependant<managed_global_memory>
          delete_file(singleton_lock_file_path_);
          shared_memory_object::remove(shm_name_);
       }
-     
+
       const char * const shm_name_;
       const char * const singleton_lock_file_path_;
       managed_global_memory & shm_;
@@ -222,11 +222,11 @@ struct thread_safe_global_map_dependant<managed_global_memory>
             //Create a unique current pid based lock file path
             create_and_get_singleton_lock_file_path(lck_str);
             //Open or create and lock file
-            int fd = open_or_create_and_lock_file(lck_str.c_str());
+            int fd_lockfile = open_or_create_and_lock_file(lck_str.c_str());
             //If failed, write a bad file descriptor to notify other modules that
             //something was wrong and unlink shared memory. Mark the function object
             //to tell caller to retry with another shared memory
-            if(fd < 0){
+            if(fd_lockfile < 0){
                this->register_lock_file(GMemMarkToBeRemoved);
                std::string s;
                get_map_name(s);
@@ -235,7 +235,7 @@ struct thread_safe_global_map_dependant<managed_global_memory>
             }
             //If successful, register the file descriptor
             else{
-               this->register_lock_file(fd);
+               this->register_lock_file(fd_lockfile);
             }
          }
          //If the fd was invalid (maybe a previous try failed) notify caller that

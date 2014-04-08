@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -8,7 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 //
-// This file comes from SGI's sstream file. Modified by Ion Gaztanaga 2005.
+// This file comes from SGI's sstream file. Modified by Ion Gaztanaga 2005-2012.
 // Changed internal SGI string to a buffer. Added efficient
 // internal buffer get/set/swap functions, so that we can obtain/establish the
 // internal buffer without any reallocation or copy. Kill those temporaries!
@@ -42,7 +42,7 @@
 #include <ios>
 #include <istream>
 #include <ostream>
-#include <string>    // char traits           
+#include <string>    // char traits
 #include <cstddef>   // ptrdiff_t
 #include <boost/assert.hpp>
 #include <boost/interprocess/interprocess_fwd.hpp>
@@ -74,10 +74,10 @@ class basic_bufferbuf
 
    //!Constructor. Assigns formatting buffer.
    //!Does not throw.
-   explicit basic_bufferbuf(CharT *buffer, std::size_t length,
+   explicit basic_bufferbuf(CharT *buf, std::size_t length,
                             std::ios_base::openmode mode
                               = std::ios_base::in | std::ios_base::out)
-      :  base_t(), m_mode(mode), m_buffer(buffer), m_length(length)
+      :  base_t(), m_mode(mode), m_buffer(buf), m_length(length)
       {  this->set_pointers();   }
 
    virtual ~basic_bufferbuf(){}
@@ -90,8 +90,8 @@ class basic_bufferbuf
 
    //!Sets the underlying buffer to a new value
    //!Does not throw.
-   void buffer(CharT *buffer, std::size_t length)
-      {  m_buffer = buffer;   m_length = length;   this->set_pointers();   }
+   void buffer(CharT *buf, std::size_t length)
+      {  m_buffer = buf;   m_length = length;   this->set_pointers();   }
 
    /// @cond
    private:
@@ -177,7 +177,7 @@ class basic_bufferbuf
    {
       bool in  = false;
       bool out = false;
-       
+
       const std::ios_base::openmode inout =
          std::ios_base::in | std::ios_base::out;
 
@@ -275,10 +275,10 @@ class basic_ibufferstream
 
    //!Constructor. Assigns formatting buffer.
    //!Does not throw.
-   basic_ibufferstream(const CharT *buffer, std::size_t length,
-                          std::ios_base::openmode mode = std::ios_base::in)
+   basic_ibufferstream(const CharT *buf, std::size_t length,
+                       std::ios_base::openmode mode = std::ios_base::in)
       :  basic_ios_t(), base_t(0),
-         m_buf(const_cast<CharT*>(buffer), length, mode | std::ios_base::in)
+         m_buf(const_cast<CharT*>(buf), length, mode | std::ios_base::in)
       {  basic_ios_t::init(&m_buf); }
 
    ~basic_ibufferstream(){};
@@ -296,8 +296,8 @@ class basic_ibufferstream
 
    //!Sets the underlying buffer to a new value. Resets
    //!stream position. Does not throw.
-   void buffer(const CharT *buffer, std::size_t length)
-      {  m_buf.buffer(const_cast<CharT*>(buffer), length);  }
+   void buffer(const CharT *buf, std::size_t length)
+      {  m_buf.buffer(const_cast<CharT*>(buf), length);  }
 
    /// @cond
    private:
@@ -333,10 +333,10 @@ class basic_obufferstream
 
    //!Constructor. Assigns formatting buffer.
    //!Does not throw.
-   basic_obufferstream(CharT *buffer, std::size_t length,
+   basic_obufferstream(CharT *buf, std::size_t length,
                        std::ios_base::openmode mode = std::ios_base::out)
       :  basic_ios_t(), base_t(0),
-         m_buf(buffer, length, mode | std::ios_base::out)
+         m_buf(buf, length, mode | std::ios_base::out)
       {  basic_ios_t::init(&m_buf); }
 
    ~basic_obufferstream(){}
@@ -354,8 +354,8 @@ class basic_obufferstream
 
    //!Sets the underlying buffer to a new value. Resets
    //!stream position. Does not throw.
-   void buffer(CharT *buffer, std::size_t length)
-      {  m_buf.buffer(buffer, length);  }
+   void buffer(CharT *buf, std::size_t length)
+      {  m_buf.buffer(buf, length);  }
 
    /// @cond
    private:
@@ -395,10 +395,10 @@ class basic_bufferstream
 
    //!Constructor. Assigns formatting buffer.
    //!Does not throw.
-   basic_bufferstream(CharT *buffer, std::size_t length,
+   basic_bufferstream(CharT *buf, std::size_t length,
                       std::ios_base::openmode mode
                         = std::ios_base::in | std::ios_base::out)
-      :  basic_ios_t(), base_t(0), m_buf(buffer, length, mode)
+      :  basic_ios_t(), base_t(0), m_buf(buf, length, mode)
       {  basic_ios_t::init(&m_buf); }
 
    ~basic_bufferstream(){}
@@ -416,8 +416,8 @@ class basic_bufferstream
 
    //!Sets the underlying buffer to a new value. Resets
    //!stream position. Does not throw.
-   void buffer(CharT *buffer, std::size_t length)
-      {  m_buf.buffer(buffer, length);  }
+   void buffer(CharT *buf, std::size_t length)
+      {  m_buf.buffer(buf, length);  }
 
    /// @cond
    private:

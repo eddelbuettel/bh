@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -88,8 +88,7 @@ class rbtree_best_fit
    typedef MutexFamily        mutex_family;
    //!Pointer type to be used with the rest of the Interprocess framework
    typedef VoidPointer        void_pointer;
-   typedef boost::container::container_detail::
-      basic_multiallocation_chain<VoidPointer>  multiallocation_chain;
+   typedef ipcdetail::basic_multiallocation_chain<VoidPointer>  multiallocation_chain;
 
    typedef typename boost::intrusive::pointer_traits<char_ptr>::difference_type difference_type;
    typedef typename boost::make_unsigned<difference_type>::type     size_type;
@@ -132,7 +131,7 @@ class rbtree_best_fit
       {  return size < block.m_size;  }
 
       bool operator()(const block_ctrl &block, size_type size) const
-      {  return block.m_size < size;  }     
+      {  return block.m_size < size;  }
    };
 
    //!Shared mutex to protect memory allocate/deallocate
@@ -157,7 +156,7 @@ class rbtree_best_fit
    }  m_header;
 
    friend class ipcdetail::memory_algorithm_common<rbtree_best_fit>;
-  
+
    typedef ipcdetail::memory_algorithm_common<rbtree_best_fit> algo_impl_t;
 
    public:
@@ -184,27 +183,25 @@ class rbtree_best_fit
    //Experimental. Dont' use
 
    //!Multiple element allocation, same size
-   multiallocation_chain allocate_many(size_type elem_bytes, size_type num_elements)
+   void allocate_many(size_type elem_bytes, size_type num_elements, multiallocation_chain &chain)
    {
-
       //-----------------------
       boost::interprocess::scoped_lock<mutex_type> guard(m_header);
       //-----------------------
-      return algo_impl_t::allocate_many(this, elem_bytes, num_elements);
+      algo_impl_t::allocate_many(this, elem_bytes, num_elements, chain);
    }
 
    //!Multiple element allocation, different size
-   multiallocation_chain allocate_many(const size_type *elem_sizes, size_type n_elements, size_type sizeof_element)
+   void allocate_many(const size_type *elem_sizes, size_type n_elements, size_type sizeof_element, multiallocation_chain &chain)
    {
-
       //-----------------------
       boost::interprocess::scoped_lock<mutex_type> guard(m_header);
       //-----------------------
-      return algo_impl_t::allocate_many(this, elem_sizes, n_elements, sizeof_element);
+      algo_impl_t::allocate_many(this, elem_sizes, n_elements, sizeof_element, chain);
    }
 
    //!Multiple element allocation, different size
-   void deallocate_many(multiallocation_chain chain);
+   void deallocate_many(multiallocation_chain &chain);
 
    /// @endcond
 
@@ -339,7 +336,7 @@ class rbtree_best_fit
    void priv_add_segment(void *addr, size_type size);
 
    public:
-  
+
    static const size_type Alignment = !MemAlignment
       ? size_type(::boost::alignment_of< ::boost::detail::max_align>::value)
       : size_type(MemAlignment)
@@ -385,16 +382,16 @@ inline typename rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::size_ty
 
 template<class MutexFamily, class VoidPointer, std::size_t MemAlignment>
 void rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::
-   priv_add_segment(void *addr, size_type size)
-{ 
+   priv_add_segment(void *addr, size_type segment_size)
+{
    //Check alignment
    algo_impl_t::check_alignment(addr);
    //Check size
-   BOOST_ASSERT(size >= (BlockCtrlBytes + EndCtrlBlockBytes));
+   BOOST_ASSERT(segment_size >= (BlockCtrlBytes + EndCtrlBlockBytes));
 
    //Initialize the first big block and the "end" node
    block_ctrl *first_big_block = new(addr)block_ctrl;
-   first_big_block->m_size = size/Alignment - EndCtrlBlockUnits;
+   first_big_block->m_size = segment_size/Alignment - EndCtrlBlockUnits;
    BOOST_ASSERT(first_big_block->m_size >= BlockCtrlUnits);
 
    //The "end" node is just a node of size 0 with the "end" bit set
@@ -451,18 +448,18 @@ inline typename rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::block_c
 
 template<class MutexFamily, class VoidPointer, std::size_t MemAlignment>
 inline rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::
-   rbtree_best_fit(size_type size, size_type extra_hdr_bytes)
+   rbtree_best_fit(size_type segment_size, size_type extra_hdr_bytes)
 {
    //Initialize the header
    m_header.m_allocated       = 0;
-   m_header.m_size            = size;
+   m_header.m_size            = segment_size;
    m_header.m_extra_hdr_bytes = extra_hdr_bytes;
 
    //Now write calculate the offset of the first big block that will
    //cover the whole segment
-   BOOST_ASSERT(get_min_size(extra_hdr_bytes) <= size);
+   BOOST_ASSERT(get_min_size(extra_hdr_bytes) <= segment_size);
    size_type block1_off  = priv_first_block_offset_from_this(this, extra_hdr_bytes);
-   priv_add_segment(reinterpret_cast<char*>(this) + block1_off, size - block1_off);
+   priv_add_segment(reinterpret_cast<char*>(this) + block1_off, segment_size - block1_off);
 }
 
 template<class MutexFamily, class VoidPointer, std::size_t MemAlignment>
@@ -570,7 +567,7 @@ void rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::shrink_to_fit()
 
    size_type shrunk_border_offset = (size_type)(reinterpret_cast<char*>(last_block) -
                                        reinterpret_cast<char*>(this)) + EndCtrlBlockBytes;
-  
+
    block_ctrl *new_end_block = last_block;
    algo_impl_t::assert_alignment(new_end_block);
 
@@ -672,7 +669,7 @@ bool rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::
 template<class MutexFamily, class VoidPointer, std::size_t MemAlignment>
 inline void* rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::
    allocate(size_type nbytes)
-{ 
+{
    //-----------------------
    boost::interprocess::scoped_lock<mutex_type> guard(m_header);
    //-----------------------
@@ -851,7 +848,7 @@ void* rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::
             if(!priv_expand(reuse_ptr, received_size, received_size, received_size2)){
                BOOST_ASSERT(0);
             }
-            BOOST_ASSERT(received_size = received_size2);
+            BOOST_ASSERT(received_size == received_size2);
          }
          //We need a minimum size to split the previous one
          if(prev_block->m_size >= (needs_backwards_aligned/Alignment + BlockCtrlUnits)){
@@ -884,7 +881,7 @@ void* rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::
 
             received_size = needs_backwards_aligned + received_size;
             m_header.m_allocated += needs_backwards_aligned;
-        
+
             //Check alignment
             algo_impl_t::assert_alignment(new_block);
 
@@ -930,12 +927,12 @@ void* rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::
 
 template<class MutexFamily, class VoidPointer, std::size_t MemAlignment>
 inline void rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::
-   deallocate_many(typename rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::multiallocation_chain chain)
+   deallocate_many(typename rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::multiallocation_chain &chain)
 {
    //-----------------------
    boost::interprocess::scoped_lock<mutex_type> guard(m_header);
    //-----------------------
-   algo_impl_t::deallocate_many(this, boost::move(chain));
+   algo_impl_t::deallocate_many(this, chain);
 }
 
 template<class MutexFamily, class VoidPointer, std::size_t MemAlignment>
@@ -1044,7 +1041,7 @@ bool rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::
    //The block must be marked as allocated and the sizes must be equal
    BOOST_ASSERT(priv_is_allocated_block(block));
    //BOOST_ASSERT(old_block_units == priv_tail_size(block));
-  
+
    //Put this to a safe value
    received_size = (old_block_units - AllocatedCtrlUnits)*Alignment + UsableByPreviousChunk;
    if(received_size >= preferred_size || received_size >= min_size)
@@ -1298,7 +1295,7 @@ void* rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::priv_check_and_al
          m_header.m_imultiset.erase(it_old);
          m_header.m_imultiset.insert(m_header.m_imultiset.begin(), *rem_block);
       }
-        
+
    }
    else if (block->m_size >= nunits){
       m_header.m_imultiset.erase(it_old);
@@ -1318,7 +1315,7 @@ void* rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::priv_check_and_al
    //Clear the memory occupied by the tree hook, since this won't be
    //cleared with zero_free_memory
    TreeHook *t = static_cast<TreeHook*>(block);
-   //Just clear the memory part reserved for the user     
+   //Just clear the memory part reserved for the user
    std::size_t tree_hook_offset_in_block = (char*)t - (char*)block;
    //volatile char *ptr =
    char *ptr = reinterpret_cast<char*>(block)+tree_hook_offset_in_block;
@@ -1344,7 +1341,7 @@ void rbtree_best_fit<MutexFamily, VoidPointer, MemAlignment>::priv_deallocate(vo
    if(!addr)   return;
 
    block_ctrl *block = priv_get_block(addr);
- 
+
    //The blocks must be marked as allocated and the sizes must be equal
    BOOST_ASSERT(priv_is_allocated_block(block));
 //   BOOST_ASSERT(block->m_size == priv_tail_size(block));

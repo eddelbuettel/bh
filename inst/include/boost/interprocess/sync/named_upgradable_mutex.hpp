@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -56,7 +56,7 @@ class named_upgradable_mutex
    //!If the upgradable mutex can't be created throws interprocess_exception
    named_upgradable_mutex(create_only_t create_only, const char *name, const permissions &perm = permissions());
 
-   //!Opens or creates a global upgradable mutex with a name, and an initial count.
+   //!Opens or creates a global upgradable mutex with a name.
    //!If the upgradable mutex is created, this call is equivalent to
    //!named_upgradable_mutex(create_only_t, ...)
    //!If the upgradable mutex is already created, this call is equivalent to
@@ -215,6 +215,12 @@ class named_upgradable_mutex
    //!Throws: An exception derived from interprocess_exception on error.
    bool try_unlock_sharable_and_lock();
 
+   //!Precondition: The thread must have sharable ownership of the mutex.
+   //!Effects: The thread atomically releases sharable ownership and tries to acquire
+   //!   upgradable ownership. This operation will fail if there are threads with sharable
+   //!   or upgradable ownership, but it will maintain sharable ownership.
+   //!Returns: If acquires upgradable ownership, returns true. Otherwise returns false.
+   //!Throws: An exception derived from interprocess_exception on error.
    bool try_unlock_sharable_and_lock_upgradable();
 
    //!Erases a named upgradable mutex from the system.
@@ -229,7 +235,8 @@ class named_upgradable_mutex
    interprocess_upgradable_mutex *mutex() const
    {  return static_cast<interprocess_upgradable_mutex*>(m_shmem.get_user_address()); }
 
-   ipcdetail::managed_open_or_create_impl<shared_memory_object> m_shmem;
+   typedef ipcdetail::managed_open_or_create_impl<shared_memory_object, 0, true, false> open_create_impl_t;
+   open_create_impl_t m_shmem;
    typedef ipcdetail::named_creation_functor<interprocess_upgradable_mutex> construct_func_t;
    /// @endcond
 };
@@ -244,8 +251,7 @@ inline named_upgradable_mutex::named_upgradable_mutex
    :  m_shmem  (create_only
                ,name
                ,sizeof(interprocess_upgradable_mutex) +
-                  ipcdetail::managed_open_or_create_impl<shared_memory_object>::
-                     ManagedOpenOrCreateUserOffset
+                  open_create_impl_t::ManagedOpenOrCreateUserOffset
                ,read_write
                ,0
                ,construct_func_t(ipcdetail::DoCreate)
@@ -257,8 +263,7 @@ inline named_upgradable_mutex::named_upgradable_mutex
    :  m_shmem  (open_or_create
                ,name
                ,sizeof(interprocess_upgradable_mutex) +
-                  ipcdetail::managed_open_or_create_impl<shared_memory_object>::
-                     ManagedOpenOrCreateUserOffset
+                  open_create_impl_t::ManagedOpenOrCreateUserOffset
                ,read_write
                ,0
                ,construct_func_t(ipcdetail::DoOpenOrCreate)
@@ -288,13 +293,7 @@ inline bool named_upgradable_mutex::try_lock()
 
 inline bool named_upgradable_mutex::timed_lock
    (const boost::posix_time::ptime &abs_time)
-{
-   if(abs_time == boost::posix_time::pos_infin){
-      this->lock();
-      return true;
-   }
-   return this->mutex()->timed_lock(abs_time);
-}
+{  return this->mutex()->timed_lock(abs_time);  }
 
 inline void named_upgradable_mutex::lock_upgradable()
 {  this->mutex()->lock_upgradable();  }
@@ -307,13 +306,7 @@ inline bool named_upgradable_mutex::try_lock_upgradable()
 
 inline bool named_upgradable_mutex::timed_lock_upgradable
    (const boost::posix_time::ptime &abs_time)
-{
-   if(abs_time == boost::posix_time::pos_infin){
-      this->lock_upgradable();
-      return true;
-   }
-   return this->mutex()->timed_lock_upgradable(abs_time);
-}
+{  return this->mutex()->timed_lock_upgradable(abs_time);   }
 
 inline void named_upgradable_mutex::lock_sharable()
 {  this->mutex()->lock_sharable();  }
@@ -326,13 +319,7 @@ inline bool named_upgradable_mutex::try_lock_sharable()
 
 inline bool named_upgradable_mutex::timed_lock_sharable
    (const boost::posix_time::ptime &abs_time)
-{
-   if(abs_time == boost::posix_time::pos_infin){
-      this->lock_sharable();
-      return true;
-   }
-   return this->mutex()->timed_lock_sharable(abs_time);
-}
+{  return this->mutex()->timed_lock_sharable(abs_time);  }
 
 inline void named_upgradable_mutex::unlock_and_lock_upgradable()
 {  this->mutex()->unlock_and_lock_upgradable();  }

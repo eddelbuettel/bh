@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -21,6 +21,19 @@
 #include <boost/interprocess/detail/os_file_functions.hpp>
 #include <string>
 #include <boost/cstdint.hpp>
+#include <boost/assert.hpp>
+//Some Unixes use caddr_t instead of void * in madvise
+//              SunOS                                 Tru64                               HP-UX                    AIX
+#if defined(sun) || defined(__sun) || defined(__osf__) || defined(__osf) || defined(_hpux) || defined(hpux) || defined(_AIX)
+#define BOOST_INTERPROCESS_MADVISE_USES_CADDR_T
+#include <sys/types.h>
+#endif
+
+//A lot of UNIXes have destructive semantics for MADV_DONTNEED, so
+//we need to be careful to allow it.
+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__APPLE__)
+#define BOOST_INTERPROCESS_MADV_DONTNEED_HAS_NONDESTRUCTIVE_SEMANTICS
+#endif
 
 #if defined (BOOST_INTERPROCESS_WINDOWS)
 #  include <boost/interprocess/detail/win32_api.hpp>
@@ -49,6 +62,13 @@ namespace boost {
 namespace interprocess {
 
 /// @cond
+
+//Solaris declares madvise only in some configurations but defines MADV_XXX, a bit confusing.
+//Predeclare it here to avoid any compilation error
+#if (defined(sun) || defined(__sun)) && defined(MADV_NORMAL)
+extern "C" int madvise(caddr_t, size_t, int);
+#endif
+
 namespace ipcdetail{ class interprocess_tester; }
 namespace ipcdetail{ class raw_mapped_region_creator; }
 
@@ -76,6 +96,22 @@ class mapped_region
    //!If an address is specified, both the offset and the address must be
    //!multiples of the page size.
    //!
+   //!The map is created using "default_map_options". This flag is OS
+   //!dependant and it should not be changed unless the user needs to
+   //!specify special options.
+   //!
+   //!In Windows systems "map_options" is a DWORD value passed as
+   //!"dwDesiredAccess" to "MapViewOfFileEx". If "default_map_options" is passed
+   //!it's initialized to zero. "map_options" is XORed with FILE_MAP_[COPY|READ|WRITE].
+   //!
+   //!In UNIX systems and POSIX mappings "map_options" is an int value passed as "flags"
+   //!to "mmap". If "default_map_options" is specified it's initialized to MAP_NOSYNC
+   //!if that option exists and to zero otherwise. "map_options" XORed with MAP_PRIVATE or MAP_SHARED.
+   //!
+   //!In UNIX systems and XSI mappings "map_options" is an int value passed as "shmflg"
+   //!to "shmat". If "default_map_options" is specified it's initialized to zero.
+   //!"map_options" is XORed with SHM_RDONLY if needed.
+   //!
    //!The OS could allocate more pages than size/page_size(), but get_address()
    //!will always return the address passed in this function (if not null) and
    //!get_size() will return the specified size.
@@ -84,7 +120,8 @@ class mapped_region
                 ,mode_t mode
                 ,offset_t offset = 0
                 ,std::size_t size = 0
-                ,const void *address = 0);
+                ,const void *address = 0
+                ,map_options_t map_options = default_map_options);
 
    //!Default constructor. Address will be 0 (nullptr).
    //!Size will be 0.
@@ -117,6 +154,10 @@ class mapped_region
       return *this;
    }
 
+   //!Swaps the mapped_region with another
+   //!mapped region
+   void swap(mapped_region &other);
+
    //!Returns the size of the mapping. Never throws.
    std::size_t get_size() const;
 
@@ -135,9 +176,41 @@ class mapped_region
    //!Never throws. Returns false if operation could not be performed.
    bool flush(std::size_t mapping_offset = 0, std::size_t numbytes = 0, bool async = true);
 
-   //!Swaps the mapped_region with another
-   //!mapped region
-   void swap(mapped_region &other);
+   //!Shrinks current mapped region. If after shrinking there is no longer need for a previously
+   //!mapped memory page, accessing that page can trigger a segmentation fault.
+   //!Depending on the OS, this operation might fail (XSI shared memory), it can decommit storage
+   //!and free a portion of the virtual address space (e.g.POSIX) or this
+   //!function can release some physical memory wihout freeing any virtual address space(Windows).
+   //!Returns true on success. Never throws.
+   bool shrink_by(std::size_t bytes, bool from_back = true);
+
+   //!This enum specifies region usage behaviors that an application can specify
+   //!to the mapped region implementation.
+   enum advice_types{ 
+      //!Specifies that the application has no advice to give on its behavior with respect to
+      //!the region. It is the default characteristic if no advice is given for a range of memory.
+      advice_normal,
+      //!Specifies that the application expects to access the region sequentially from
+      //!lower addresses to higher addresses. The implementation can lower the priority of
+      //!preceding pages within the region once a page have been accessed.
+      advice_sequential,
+      //!Specifies that the application expects to access the region in a random order,
+      //!and prefetching is likely not advantageous.
+      advice_random,
+      //!Specifies that the application expects to access the region in the near future.
+      //!The implementation can prefetch pages of the region.
+      advice_willneed,
+      //!Specifies that the application expects that it will not access the region in the near future.
+      //!The implementation can unload pages within the range to save system resources.
+      advice_dontneed
+   };
+
+   //!Advises the implementation on the expected behavior of the application with respect to the data
+   //!in the region. The implementation may use this information to optimize handling of the region data.
+   //!This function has no effect on the semantics of access to memory in the region, although it may affect
+   //!the performance of access.
+   //!If the advise type is not known to the implementation, the function returns false. True otherwise.
+   bool advise(advice_types advise);
 
    //!Returns the size of the page. This size is the minimum memory that
    //!will be used by the system when mapping a memory mappable source and
@@ -152,6 +225,7 @@ class mapped_region
    void* priv_map_address()  const;
    std::size_t priv_map_size()  const;
    bool priv_flush_param_check(std::size_t mapping_offset, void *&addr, std::size_t &numbytes) const;
+   bool priv_shrink_param_check(std::size_t bytes, bool from_back, void *&shrink_page_start, std::size_t &shrink_page_bytes);
    static void priv_size_from_mapping_size
       (offset_t mapping_size, offset_t offset, offset_t page_offset, std::size_t &size);
    static offset_t priv_page_offset_addr_fixup(offset_t page_offset, const void *&addr);
@@ -226,6 +300,38 @@ inline bool mapped_region::priv_flush_param_check
    return true;
 }
 
+inline bool mapped_region::priv_shrink_param_check
+   (std::size_t bytes, bool from_back, void *&shrink_page_start, std::size_t &shrink_page_bytes)
+{
+   //Check some errors
+   if(m_base == 0 || bytes > m_size){
+      return false;
+   }
+   else if(bytes == m_size){
+      this->priv_close();
+      return true;
+   }
+   else{
+      const std::size_t page_size = mapped_region::get_page_size();
+      if(from_back){
+         const std::size_t new_pages = (m_size + m_page_offset - bytes - 1)/page_size + 1;
+         shrink_page_start = static_cast<char*>(this->priv_map_address()) + new_pages*page_size;
+         shrink_page_bytes = m_page_offset + m_size - new_pages*page_size;
+         m_size -= bytes;
+      }
+      else{
+         shrink_page_start = this->priv_map_address();
+         m_page_offset += bytes;
+         shrink_page_bytes = (m_page_offset/page_size)*page_size;
+         m_page_offset = m_page_offset % page_size;
+         m_size -= bytes;
+         m_base  = static_cast<char *>(m_base) + bytes;
+         BOOST_ASSERT(shrink_page_bytes%page_size == 0);
+      }
+      return true;
+   }
+}
+
 inline void mapped_region::priv_size_from_mapping_size
    (offset_t mapping_size, offset_t offset, offset_t page_offset, std::size_t &size)
 {
@@ -278,7 +384,8 @@ inline mapped_region::mapped_region
    ,mode_t mode
    ,offset_t offset
    ,std::size_t size
-   ,const void *address)
+   ,const void *address
+   ,map_options_t map_options)
    :  m_base(0), m_size(0), m_page_offset(0), m_mode(mode)
    ,  m_file_or_mapping_hnd(ipcdetail::invalid_file())
 {
@@ -290,7 +397,7 @@ inline mapped_region::mapped_region
       //For "create_file_mapping"
       unsigned long protection = 0;
       //For "mapviewoffile"
-      unsigned long map_access = 0;
+      unsigned long map_access = map_options == default_map_options ? 0 : map_options;
 
       switch(mode)
       {
@@ -356,7 +463,6 @@ inline mapped_region::mapped_region
          priv_size_from_mapping_size(mapping_size, offset, page_offset, size);
       }
 
-
       //Map with new offsets and size
       void *base = winapi::map_view_of_file_ex
                                  (native_mapping_handle,
@@ -398,11 +504,42 @@ inline bool mapped_region::flush(std::size_t mapping_offset, std::size_t numbyte
    }
    //m_file_or_mapping_hnd can be a file handle or a mapping handle.
    //so flushing file buffers has only sense for files...
-   else if(async && m_file_or_mapping_hnd != winapi::invalid_handle_value &&
+   else if(!async && m_file_or_mapping_hnd != winapi::invalid_handle_value &&
            winapi::get_file_type(m_file_or_mapping_hnd) == winapi::file_type_disk){
       return winapi::flush_file_buffers(m_file_or_mapping_hnd);
    }
    return true;
+}
+
+inline bool mapped_region::shrink_by(std::size_t bytes, bool from_back)
+{
+   void *shrink_page_start;
+   std::size_t shrink_page_bytes;
+   if(!this->priv_shrink_param_check(bytes, from_back, shrink_page_start, shrink_page_bytes)){
+      return false;
+   }
+   else if(shrink_page_bytes){
+      //In Windows, we can't decommit the storage or release the virtual address space,
+      //the best we can do is try to remove some memory from the process working set. 
+      //With a bit of luck we can free some physical memory.
+      unsigned long old_protect_ignored;
+      bool b_ret = winapi::virtual_unlock(shrink_page_start, shrink_page_bytes)
+                           || (winapi::get_last_error() == winapi::error_not_locked);
+      (void)old_protect_ignored;
+      //Change page protection to forbid any further access
+      b_ret = b_ret && winapi::virtual_protect
+         (shrink_page_start, shrink_page_bytes, winapi::page_noaccess, old_protect_ignored);
+      return b_ret;
+   }
+   else{
+      return true;
+   }
+}
+
+inline bool mapped_region::advise(advice_types)
+{
+   //Windows has no madvise/posix_madvise equivalent
+   return false;
 }
 
 inline void mapped_region::priv_close()
@@ -440,7 +577,8 @@ inline mapped_region::mapped_region
    , mode_t mode
    , offset_t offset
    , std::size_t size
-   , const void *address)
+   , const void *address
+   , map_options_t map_options)
    : m_base(0), m_size(0), m_page_offset(0), m_mode(mode), m_is_xsi(false)
 {
    mapping_handle_t map_hnd = mapping.get_mapping_handle();
@@ -464,7 +602,7 @@ inline mapped_region::mapped_region
          throw interprocess_exception(err);
       }
       //Calculate flag
-      int flag = 0;
+      int flag = map_options == default_map_options ? 0 : map_options;
       if(m_mode == read_only){
          flag |= SHM_RDONLY;
       }
@@ -501,9 +639,17 @@ inline mapped_region::mapped_region
       priv_size_from_mapping_size(buf.st_size, offset, page_offset, size);
    }
 
+   #ifdef MAP_NOSYNC
+      #define BOOST_INTERPROCESS_MAP_NOSYNC MAP_NOSYNC
+   #else
+      #define BOOST_INTERPROCESS_MAP_NOSYNC 0
+   #endif   //MAP_NOSYNC
+
    //Create new mapping
    int prot    = 0;
-   int flags   = 0;
+   int flags   = map_options == default_map_options ? BOOST_INTERPROCESS_MAP_NOSYNC : map_options;
+
+   #undef BOOST_INTERPROCESS_MAP_NOSYNC
 
    switch(mode)
    {
@@ -562,14 +708,107 @@ inline mapped_region::mapped_region
    }
 }
 
+inline bool mapped_region::shrink_by(std::size_t bytes, bool from_back)
+{
+   void *shrink_page_start = 0;
+   std::size_t shrink_page_bytes = 0;
+   if(m_is_xsi || !this->priv_shrink_param_check(bytes, from_back, shrink_page_start, shrink_page_bytes)){
+      return false;
+   }
+   else if(shrink_page_bytes){
+      //In UNIX we can decommit and free virtual address space.
+      return 0 == munmap(shrink_page_start, shrink_page_bytes);
+   }
+   else{
+      return true;
+   }
+}
+
 inline bool mapped_region::flush(std::size_t mapping_offset, std::size_t numbytes, bool async)
 {
    void *addr;
-   if(!this->priv_flush_param_check(mapping_offset, addr, numbytes)){
+   if(m_is_xsi || !this->priv_flush_param_check(mapping_offset, addr, numbytes)){
       return false;
    }
    //Flush it all
-   return msync( addr, numbytes, async ? MS_ASYNC : MS_SYNC) == 0;
+   return msync(addr, numbytes, async ? MS_ASYNC : MS_SYNC) == 0;
+}
+
+inline bool mapped_region::advise(advice_types advice)
+{
+   int unix_advice = 0;
+   //Modes; 0: none, 2: posix, 1: madvise
+   const unsigned int mode_none = 0;
+   const unsigned int mode_padv = 1;
+   const unsigned int mode_madv = 2;
+   unsigned int mode = mode_none;
+   //Choose advice either from POSIX (preferred) or native Unix
+   switch(advice){
+      case advice_normal:
+         #if defined(POSIX_MADV_NORMAL)
+         unix_advice = POSIX_MADV_NORMAL;
+         mode = mode_padv;
+         #elif defined(MADV_NORMAL)
+         unix_advice = MADV_NORMAL;
+         mode = mode_madv;
+         #endif
+      break;
+      case advice_sequential:
+         #if defined(POSIX_MADV_SEQUENTIAL)
+         unix_advice = POSIX_MADV_SEQUENTIAL;
+         mode = mode_padv;
+         #elif defined(MADV_SEQUENTIAL)
+         unix_advice = MADV_SEQUENTIAL;
+         mode = mode_madv;
+         #endif
+      break;
+      case advice_random:
+         #if defined(POSIX_MADV_RANDOM)
+         unix_advice = POSIX_MADV_RANDOM;
+         mode = mode_padv;
+         #elif defined(MADV_RANDOM)
+         unix_advice = MADV_RANDOM;
+         mode = mode_madv;
+         #endif
+      break;
+      case advice_willneed:
+         #if defined(POSIX_MADV_WILLNEED)
+         unix_advice = POSIX_MADV_WILLNEED;
+         mode = mode_padv;
+         #elif defined(MADV_WILLNEED)
+         unix_advice = MADV_WILLNEED;
+         mode = mode_madv;
+         #endif
+      break;
+      case advice_dontneed:
+         #if defined(POSIX_MADV_DONTNEED)
+         unix_advice = POSIX_MADV_DONTNEED;
+         mode = mode_padv;
+         #elif defined(MADV_DONTNEED) && defined(BOOST_INTERPROCESS_MADV_DONTNEED_HAS_NONDESTRUCTIVE_SEMANTICS)
+         unix_advice = MADV_DONTNEED;
+         mode = mode_madv;
+         #endif
+      break;
+      default:
+      return false;
+   }
+   switch(mode){
+      #if defined(POSIX_MADV_NORMAL)
+         case mode_padv:
+         return 0 == posix_madvise(this->priv_map_address(), this->priv_map_size(), unix_advice);
+      #endif
+      #if defined(MADV_NORMAL)
+         case mode_madv:
+         return 0 == madvise(
+            #if defined(BOOST_INTERPROCESS_MADVISE_USES_CADDR_T)
+            (caddr_t)
+            #endif
+            this->priv_map_address(), this->priv_map_size(), unix_advice);
+      #endif
+      default:
+      return false;
+
+   }
 }
 
 inline void mapped_region::priv_close()
@@ -623,6 +862,9 @@ struct null_mapped_region_function
 {
    bool operator()(void *, std::size_t , bool) const
       {   return true;   }
+
+   std::size_t get_min_size() const
+   {  return 0;  }
 };
 
 /// @endcond
