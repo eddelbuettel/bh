@@ -1,0 +1,6 @@
+2014-04-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* lexical_cast.hpp (BOOST_LCAST_HAS_INT128): ensure that
+	BOOST_LCAST_HAS_INT128 is set only if BOOST_HAS_INT128 is set
+
+	* ChangeLog: Started. Better late than never.
