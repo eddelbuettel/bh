@@ -6,6 +6,13 @@
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
 
+\section{Changes in version 1.54.0-2 (2014-04-14)}{
+  \itemize{
+    \item Bug fix to \code{lexical_cast.hpp} which now uses the test for
+    INT128 which the rest of Boost uses, consistent with Boost 1.55 too.
+  }
+}
+
 \section{Changes in version 1.54.0-1 (2014-04-07)}{
   \itemize{
     \item Upgraded to Boost 1.54.0
