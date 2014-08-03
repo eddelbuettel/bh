@@ -12,8 +12,8 @@ pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
 boosttargz="boost_1_54_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.54.0-1"
-date="2014-04-07"
+version="1.54.0-3"
+date="2014-08-02"
 
 
 
@@ -108,7 +108,8 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus iostream (cf issue ticket #2768) 
 # Plus dynamic_bitset (cf issue ticket #4991 -- may be non-issue and already implied)
 # Plus all of math (ie removing "/distributions" from "math/distributions"
-boostextras="filesystem random unordered spirit foreach math algorithm iostreams dynamic_bitset"
+# Plus heap (request of package RcppMLPACK)
+boostextras="filesystem heap random unordered spirit foreach math algorithm iostreams dynamic_bitset"
 
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 

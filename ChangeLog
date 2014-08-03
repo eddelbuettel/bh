@@ -1,3 +1,18 @@
+2014-08-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 1.54.0-3
+
+	* local/scripts/CreateBoost.sh: Also include Boost Heap
+
+	* lexical_cast.hpp: Apply same fix as in 1.54.0-2
+	* numeric/odeint/stepper/generation/: As before, rename 'generation
+	runge kutta cash karp54 classic' to shorter '... karp54 cl' (and
+	adjust include in generation.hpp) to fit character limit for R's tar
+
+2014-04-14  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 1.54.0-2
+
 2014-04-13  Dirk Eddelbuettel  <edd@debian.org>
 
 	* lexical_cast.hpp (BOOST_LCAST_HAS_INT128): ensure that
