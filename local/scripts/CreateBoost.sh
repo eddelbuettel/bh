@@ -109,7 +109,7 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus dynamic_bitset (cf issue ticket #4991 -- may be non-issue and already implied)
 # Plus all of math (ie removing "/distributions" from "math/distributions"
 # Plus heap (request of package RcppMLPACK)
-boostextras="filesystem heap random unordered spirit foreach math algorithm iostreams dynamic_bitset"
+boostextras="filesystem random unordered spirit foreach math algorithm iostreams dynamic_bitset heap"
 
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 
@@ -128,13 +128,13 @@ rm -rf ${pkgincl}/libs \
 
 
 ## (10) Some file manips -- or rather, we might as well do this by hand ...
-cp -p ${localfiles}/NAMESPACE    ${pkgdir}
-cp -p ${localfiles}/inst/NEWS.Rd ${pkgdir}/inst/
+#cp -p ${localfiles}/NAMESPACE    ${pkgdir}
+#cp -p ${localfiles}/inst/NEWS.Rd ${pkgdir}/inst/
 cp -p ${localfiles}/man/*.Rd     ${pkgdir}/man
 
-sed -e "s/XXX/${version}/g" \
-    -e "s/YYY/${date}/g"    \
-    ${localfiles}/DESCRIPTION  >  ${pkgdir}/DESCRIPTION
+#sed -e "s/XXX/${version}/g" \
+#    -e "s/YYY/${date}/g"    \
+#    ${localfiles}/DESCRIPTION  >  ${pkgdir}/DESCRIPTION
 sed -e "s/XXX/${version}/g" -e "s/YYY/${date}/g" \
     ${localfiles}/man/BH-package.Rd > ${pkgdir}/man/BH-package.Rd 
 
