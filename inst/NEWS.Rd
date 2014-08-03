@@ -19,7 +19,8 @@
     \item Adjust build script \code{local/script/CreateBoost.sh} accordingly
     \item Renamed \code{generation_runge_kutta_cash_karp54_classic.hpp}
     to \code{generation_runge_kutta_cash_karp54_cl.hpp} to remain within
-    100-character limit for \code{tar}
+    100-character limit for \code{tar}; also adjust corresponding
+  \code{#include} in \code{numeric/odeint/stepper/generation.hpp}
   }
 }
 
