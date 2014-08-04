@@ -6,6 +6,13 @@
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
 
+\section{Changes in version 1.54.0-3 (2014-08-03)}{
+  \itemize{
+    \item Added Boost Heap library which will be needed by the next
+  version of \cpkg{RcppMLPACK}
+  }
+}
+
 \section{Changes in version 1.54.0-2 (2014-04-14)}{
   \itemize{
     \item Bug fix to \code{lexical_cast.hpp} which now uses the test for
@@ -20,7 +27,7 @@
     \item Renamed \code{generation_runge_kutta_cash_karp54_classic.hpp}
     to \code{generation_runge_kutta_cash_karp54_cl.hpp} to remain within
     100-character limit for \code{tar}; also adjust corresponding
-  \code{#include} in \code{numeric/odeint/stepper/generation.hpp}
+    \code{#include} in \code{numeric/odeint/stepper/generation.hpp}
   }
 }
 

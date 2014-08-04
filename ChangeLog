@@ -1,8 +1,9 @@
-2014-08-02  Dirk Eddelbuettel  <edd@debian.org>
+2014-08-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 1.54.0-3
 
-	* local/scripts/CreateBoost.sh: Also include Boost Heap
+	* local/scripts/CreateBoost.sh: Also include Boost Heap to satisfy a
+	build requirement for the next RcppMLPACK version
 
 	* lexical_cast.hpp: Apply same fix as in 1.54.0-2
 	* numeric/odeint/stepper/generation/: As before, rename 'generation
