@@ -6,6 +6,13 @@
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
 
+\section{Changes in version 1.54.0-4 (2014-08-29)}{
+  \itemize{
+    \item Added Boost Any requested by Greg Jeffries for his nabo
+  package 
+  }
+}
+
 \section{Changes in version 1.54.0-3 (2014-08-03)}{
   \itemize{
     \item Added Boost Heap library which will be needed by the next
