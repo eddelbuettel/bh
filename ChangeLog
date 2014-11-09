@@ -1,9 +1,16 @@
+2014-11-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 1.54.0-5
+
+	* local/scripts/CreateBoost.sh: Also include Boost.Circular_Buffer as
+	requested by Ben Goodrich for use by RStan
+
 2014-08-29  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 1.54.0-4
-	
+
 	* local/scripts/CreateBoost.sh: Also include Boost.Any as requested
-	by Greg Jeffries for his upcoming nabo package (currently on GitHub) 
+	by Greg Jeffries for his upcoming nabo package (currently on GitHub)
 
 2014-08-03  Dirk Eddelbuettel  <edd@debian.org>
 
