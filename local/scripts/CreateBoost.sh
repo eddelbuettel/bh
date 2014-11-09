@@ -12,8 +12,8 @@ pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
 boosttargz="boost_1_54_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.54.0-4"
-date="2014-08-29"
+version="1.54.0-5"
+date="2014-11-09"
 
 
 
@@ -110,7 +110,8 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus all of math (ie removing "/distributions" from "math/distributions"
 # Plus heap (request of package RcppMLPACK)
 # Plus any (request of [GitHub] package nabo by Greg Jeffries)
-boostextras="filesystem random unordered spirit foreach math algorithm iostreams dynamic_bitset heap any"
+# Plus circular_buffer (email requesy by Ben Goodrich for use in RStan)
+boostextras="filesystem random unordered spirit foreach math algorithm iostreams dynamic_bitset heap any circular_buffer"
 
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 
