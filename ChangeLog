@@ -1,3 +1,8 @@
+2014-12-20  Dirk Eddelbuettel  <edd@debian.org>
+
+	* local/boost_1_55_0.tar.gz: Added, taken from Debian file
+	boost1.55_1.55.0+dfsg.orig.tar.gz
+
 2014-11-09  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 1.54.0-5
