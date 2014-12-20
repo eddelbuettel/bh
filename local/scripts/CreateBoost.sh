@@ -10,10 +10,10 @@
 ## -- on a standard git checkout, this repo it may be ~/git/bh
 pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
-boosttargz="boost_1_54_0.tar.gz"
+boosttargz="boost_1_55_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.54.0-5"
-date="2014-11-09"
+version="1.55.0-1"
+date="2014-12-20"
 
 
 
@@ -75,9 +75,9 @@ fi
 
 
 
-## (6) Unpack boost
+## (6) Unpack boost -- note that for tarballs straight from Debian we need a rename step
 echo "Unpacking ${boosttargz} into LocalDir (ie ${localdir})."
-(cd ${localdir} && tar xfz ${boostsources})
+(cd ${localdir} && tar xfz ${boostsources} && mv boost*-*.orig/ ${boostver})
 
 
 
@@ -111,7 +111,8 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus heap (request of package RcppMLPACK)
 # Plus any (request of [GitHub] package nabo by Greg Jeffries)
 # Plus circular_buffer (email requesy by Ben Goodrich for use in RStan)
-boostextras="filesystem random unordered spirit foreach math algorithm iostreams dynamic_bitset heap any circular_buffer"
+# Plus geometry (cf [github] issue ticket #5)
+boostextras="filesystem random unordered spirit foreach math algorithm iostreams dynamic_bitset heap any circular_buffer geometry"
 
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 

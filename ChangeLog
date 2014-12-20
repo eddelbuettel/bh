@@ -1,7 +1,15 @@
 2014-12-20  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION: Release 1.55.0-1
+
 	* local/boost_1_55_0.tar.gz: Added, taken from Debian file
 	boost1.55_1.55.0+dfsg.orig.tar.gz
+
+	* local/scripts/CreateBoost.sh: Also include Boost.Geometry as
+	requested in GitHub issue ticket #5 by user 'teramonagi'
+
+	* numeric/odeint/stepper/generation/: As before rename
+	karp54_classic.hpp to karp54_cl.hpp and adjust generation.hpp
 
 2014-11-09  Dirk Eddelbuettel  <edd@debian.org>
 
