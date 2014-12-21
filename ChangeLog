@@ -1,6 +1,8 @@
-2014-12-20  Dirk Eddelbuettel  <edd@debian.org>
+2014-12-21  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 1.55.0-1
+	* DESCRIPTION: Release 1.55.0-1 wrapping (parts of) Boost 1.55
+
+2014-12-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* local/boost_1_55_0.tar.gz: Added, taken from Debian file
 	boost1.55_1.55.0+dfsg.orig.tar.gz
