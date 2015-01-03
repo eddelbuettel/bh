@@ -28,6 +28,11 @@ parts or all of their functionality.
 
 See the [BH](http://dirk.eddelbuettel.com/code/bh.html) page for some more details.
 
+The [mailing list](http://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/boostheaders-devel)
+at [R-Forge](http://www.r-forge.r-project.org) is a good place for questions,
+comments and general discussion. The [issue tracker](https://github.com/eddelbuettel/bh/issues)
+can be used for bugs.
+
 ## Updating
 
 If needed, the script `local/script/CreateBoost.sh` can be used to update a forked
