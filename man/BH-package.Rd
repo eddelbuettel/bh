@@ -15,8 +15,8 @@
 \tabular{ll}{
 Package: \tab BH\cr
 Type: \tab Package\cr
-Version: \tab 1.55.0-1\cr
-Date: \tab 2014-12-20\cr
+Version: \tab 1.55.0-2\cr
+Date: \tab 2015-01-03\cr
 License: \tab BSL-1.0\cr
 }
   Boost provides free peer-reviewed portable C++ source
@@ -26,6 +26,14 @@ License: \tab BSL-1.0\cr
   a package that depends on some subset of the Boost Libraries,
   yet you do not need to distribute a copy of this code with your
   package.
+
+  General discussions as well as questions and comments regarding the
+  packages can be conducted at the mailing list for which subscriptions
+  etc can be set up via the interface at R-Forge at
+  \url{http://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/boostheaders-devel}.
+
+  Bug reports can also be registered at the GitHub issue tracker at
+  \url{https://github.com/eddelbuettel/bh/issues}.
 }
 \author{
 John W. Emerson and Michael J. Kane and Dirk Eddelbuettel
