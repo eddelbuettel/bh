@@ -6,6 +6,12 @@
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
 
+\section{Changes in version 1.55.0-2 (2015-01-03)}{
+  \itemize{
+    \item Added Boost Fusion requested in GH ticket #7 by Dirk for RcppStreams
+  }
+}
+
 \section{Changes in version 1.55.0-1 (2014-12-21)}{
   \itemize{
     \item Upgraded to Boost 1.55 once again from the Debian tarball at
