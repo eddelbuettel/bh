@@ -14,3 +14,6 @@ Description: Boost provides free peer-reviewed portable C++ source
  as replication of this code in the sources of other packages is 
  avoided. 
 License: BSL-1.0
+MailingList: Please send questions and comments regarding BH to
+  http://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/boostheaders-devel
+BugReports: https://github.com/eddelbuettel/bh/issues
