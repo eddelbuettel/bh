@@ -1,8 +1,4 @@
-# bh: Boost Headers for R 
-
-[![Build Status](https://travis-ci.org/eddelbuettel/bh.png)](https://travis-ci.org/eddelbuettel/bh)
-
-## About
+## bh: Boost Headers for R  [![Build Status](https://travis-ci.org/eddelbuettel/bh.png)](https://travis-ci.org/eddelbuettel/bh)
 
 This package provides [R](http://www.r-project.org) with access to
 [Boost](http://www.boost.org/) header files.  [Boost](http://www.boost.org/)
@@ -24,7 +20,7 @@ Not that this can be used solely by headers-only Boost libraries. This
 covers most of Boost, but excludes some libraries which require linking for
 parts or all of their functionality. 
 
-## See Also
+### See Also
 
 See the [BH](http://dirk.eddelbuettel.com/code/bh.html) page for some more details.
 
@@ -33,16 +29,22 @@ at [R-Forge](http://www.r-forge.r-project.org) is a good place for questions,
 comments and general discussion. The [issue tracker](https://github.com/eddelbuettel/bh/issues)
 can be used for bugs.
 
-## Updating
+### Updating
 
-If needed, the script `local/script/CreateBoost.sh` can be used to update a forked
-version to a newer version of [Boost](http://www.boost.org/).  
+We maintain this package is a somewhat conservative fashion and do not
+immediately jump the newest Boost releases.  Rather, we start from the
+[Debian sources for Boost](https://packages.debian.org/sid/libboost-all-dev)
+to ensure that we work with a version that is at the same time current yet
+mature.
 
-We plan to keep the package up-to-date with [Boost](http://www.boost.org/)
+In general, we plan to keep the package up-to-date with [Boost](http://www.boost.org/)
 upstream, but will not necessarily follow each and every new release as we
 also value the merits of relative release stability. 
 
-## Authors 
+If needed, the script `local/script/CreateBoost.sh` can be used to update a forked
+version to a newer version of [Boost](http://www.boost.org/).
+
+### Authors 
 
 Dirk Eddelbuettel, Jay Emerson and Michael Kane
 

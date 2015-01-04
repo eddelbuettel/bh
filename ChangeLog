@@ -1,3 +1,10 @@
+2015-01-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 1.55.0-3
+
+	* local/scripts/CreateBoost.sh: Added Boost.Graph also needed for
+	Streamulus / RcppStreams
+
 2015-01-03  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 1.55.0-2
