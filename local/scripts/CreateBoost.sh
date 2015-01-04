@@ -12,8 +12,8 @@ pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
 boosttargz="boost_1_55_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.55.0-2"
-date="2015-01-03"
+version="1.55.0-3"
+date="2015-01-04"
 
 
 
@@ -112,8 +112,10 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus any (request of [GitHub] package nabo by Greg Jeffries)
 # Plus circular_buffer (email requesy by Ben Goodrich for use in RStan)
 # Plus geometry (cf [github] issue ticket #5)
-# Plus funsion (cf [github] issue ticket #7)
-boostextras="filesystem random unordered spirit foreach math algorithm iostreams dynamic_bitset heap any circular_buffer geometry fusion"
+# Plus fusion (cf [github] issue ticket #7)
+# Plus graph (cf [github] issue ticket #9)
+boostextras="filesystem random unordered spirit foreach math algorithm iostreams \
+            dynamic_bitset heap any circular_buffer geometry fusion graph"
 
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 
