@@ -94,7 +94,9 @@ echo "Unpacking ${boosttargz} into LocalDir (ie ${localdir})."
 
 echo "Copying Boost libraries into BH"
 
-boostlibs="bind concept config container date_time detail exception functional integer interprocess intrusive io iterator math move mpl numeric pending preprocessor random range smart_ptr tupe typeof type_trains unordered utility uuid"
+boostlibs="bind concept config container date_time detail exception functional integer \
+           interprocess intrusive io iterator math move mpl numeric pending preprocessor \
+           random range smart_ptr tupe typeof type_trains unordered utility uuid"
 
 ## this copies the Boost libraries listed in ${boostlibs} from the
 ## Boost sources in ${boostroot} into the target directory ${pkgincl}
