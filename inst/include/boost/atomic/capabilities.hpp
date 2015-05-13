@@ -18,9 +18,9 @@
 #include <boost/atomic/detail/platform.hpp>
 #include <boost/atomic/detail/int_sizes.hpp>
 
-#if !defined(BOOST_ATOMIC_EMULATED)
-#include BOOST_ATOMIC_DETAIL_HEADER(boost/atomic/detail/caps_)
-#endif
+// #if !defined(BOOST_ATOMIC_EMULATED)
+// #include BOOST_ATOMIC_DETAIL_HEADER(boost/atomic/detail/caps_)
+// #endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 #pragma once
