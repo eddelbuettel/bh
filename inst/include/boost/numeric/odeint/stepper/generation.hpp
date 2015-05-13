@@ -24,7 +24,7 @@
 #include <boost/numeric/odeint/stepper/generation/generation_controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/generation/generation_dense_output_runge_kutta.hpp>
 
-#include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp>
+#include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_cl.hpp>
 #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54.hpp>
 #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_fehlberg78.hpp>
