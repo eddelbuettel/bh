@@ -77,7 +77,8 @@ fi
 
 ## (6) Unpack boost -- note that for tarballs straight from Debian we need a rename step
 echo "Unpacking ${boosttargz} into LocalDir (ie ${localdir})."
-(cd ${localdir} && tar xfz ${boostsources} && mv boost*-*.orig/ ${boostver})
+#(cd ${localdir} && tar xfz ${boostsources} && mv boost*-*.orig/ ${boostver})
+(cd ${localdir} && tar xfz ${boostsources})
 
 
 
