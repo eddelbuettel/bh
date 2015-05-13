@@ -1,4 +1,4 @@
-## bh: Boost Headers for R  [![Build Status](https://travis-ci.org/eddelbuettel/bh.png)](https://travis-ci.org/eddelbuettel/bh)
+## bh: Boost Headers for R  [![Build Status](https://travis-ci.org/eddelbuettel/bh.svg)](https://travis-ci.org/eddelbuettel/bh) [![License](https://img.shields.io/badge/License-BSL--1.0-brightgreen.svg?style=flat)](http://www.boost.org/users/license.html) [![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](http://cran.rstudio.com/package=BH)
 
 This package provides [R](http://www.r-project.org) with access to
 [Boost](http://www.boost.org/) header files.  [Boost](http://www.boost.org/)
@@ -31,11 +31,11 @@ can be used for bugs.
 
 ### Updating
 
-We maintain this package is a somewhat conservative fashion and do not
+We aim to maintain this package in a somewhat conservative fashion and do not
 immediately jump the newest Boost releases.  Rather, we start from the
 [Debian sources for Boost](https://packages.debian.org/sid/libboost-all-dev)
 to ensure that we work with a version that is at the same time current yet
-mature.
+mature.  But on occassion, and as needed, we will go directly to Boost releases.
 
 In general, we plan to keep the package up-to-date with [Boost](http://www.boost.org/)
 upstream, but will not necessarily follow each and every new release as we
