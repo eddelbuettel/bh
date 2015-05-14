@@ -52,7 +52,7 @@ LocalFiles:    ${localfiles}
 BoostRoot:     ${boostroot}
 Boostsources:  ${boostsources}
 "
-
+exit -1
 
 
 ## (5) Some sanity check here before continuing
@@ -125,6 +125,8 @@ bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 
 # TODO: check with other CRAN packages about what may be needed
 
+## At least atomic needs to be complete with actual copy
+cp -vax ${boostroot}/boost/atomic ${pkgincl}/boost
 
 
 ## (9) Some post processing and cleanup
