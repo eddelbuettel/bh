@@ -11,11 +11,6 @@
 	* numeric/odeint/stepper/generation/: As before rename
 	karp54_classic.hpp to karp54_cl.hpp and adjust generation.hpp
 
-	* inst/include/boost/atomic/capabilities.hpp: Comment-out the first
-	'#if defined' and do not include caps_ which breaks compilation
-	* inst/include/boost/atomic/detail/operations_lockfree.hpp:  Idem
-	* This issue is now https://svn.boost.org/trac/boost/ticket/11301
-
 2015-01-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 1.55.0-3
