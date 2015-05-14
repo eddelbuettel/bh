@@ -95,7 +95,7 @@
 \section{Changes in [unreleased] version 1.51.0-1 (2013-05-04)}{
   \itemize{
     \item Expanded \boost coverage by adding \boost packages \boostPkg{foreach},
-    \boostPkgTwo{libs/math/doc/sf_and_dist/html/math_toolkit/dist.html}{statistical
+    \boostPkgTwo{math/doc/sf_and_dist/html/math_toolkit/dist.html}{statistical
       distributions}, and \boostPkg{iostreams}. This addresses,
     respectively, R-Forge issue tickets \rfticket{2527}, \rfticket{2533}
     and \rfticket{2768}). 
