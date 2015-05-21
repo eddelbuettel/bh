@@ -1,6 +1,10 @@
+2015-05-21  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 1.58.0-1
+
 2015-05-14  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION: Release 1.58.0-0
+	* DESCRIPTION: Non-CRAN test release 1.58.0-0
 
 	* local/scripts/CreateBoost.sh: Ensure all files in atomic are copied
 
