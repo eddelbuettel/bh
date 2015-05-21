@@ -80,8 +80,8 @@
 \section{Changes in version 1.51.0-3 (2013-10-19)}{
   \itemize{
     \item Expanded \boost coverage by adding \boost packages
-    \boostPkg{spirit}, \boostPkg{foreach}, \boostPkg{math/distributions}, 
-    \boostPkg{algorithm}, \boostPkg{iostreams}.
+    \boostPkg{spirit}, \boostPkg{foreach}, \boostPkg{algorithm},
+    \boostPkg{iostreams}. 
   }
 }
 
