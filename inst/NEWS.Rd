@@ -6,6 +6,14 @@
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
 
+\section{Changes in version 1.58.0-1 (2015-05-21)}{
+  \itemize{
+    \item Upgraded to Boost 1.58 installed directly from upstream source
+    \item Added Boost MultiPrecision as requested in GH ticket #12 based
+      on rcpp-devel request by Jordi Molins Coronado
+  }
+}
+
 \section{Changes in version 1.55.0-3 (2015-01-04)}{
   \itemize{
     \item Added Boost Graph requested in GH ticket #9 by Dirk for RcppStreams
