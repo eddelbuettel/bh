@@ -106,7 +106,7 @@
     \boostPkgTwo{math/doc/html/dist.html}{statistical
       distributions}, and \boostPkg{iostreams}. This addresses,
     respectively, R-Forge issue tickets \rfticket{2527}, \rfticket{2533}
-    and \rfticket{2768}). 
+    and \rfticket{2768}. 
     \item The package can now also be used to compile CRAN package
     \cpkg{ExactNumCI} and \cpkg{rcppbugs}.
   }
