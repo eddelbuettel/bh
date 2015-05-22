@@ -5,51 +5,54 @@
 \newcommand{\boostPkg}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#1}}}
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
+\newcommand{\ghissue}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 
 \section{Changes in version 1.58.0-1 (2015-05-21)}{
   \itemize{
-    \item Upgraded to Boost 1.58 installed directly from upstream source
-    \item Added Boost MultiPrecision as requested in GH ticket #12 based
+    \item Upgraded to \boost 1.58 installed directly from upstream source
+    \item Added Boost \boostPkg{multiprecision} as requested in GH ticket \ghissue{12} based
       on rcpp-devel request by Jordi Molins Coronado
   }
 }
 
 \section{Changes in version 1.55.0-3 (2015-01-04)}{
   \itemize{
-    \item Added Boost Graph requested in GH ticket #9 by Dirk for RcppStreams
+    \item Added Boost \boostPkg{graph} requested in GH ticket
+    \ghissue{9} by Dirk for \cpkg{RcppStreams}
   }
 }
 
 \section{Changes in version 1.55.0-2 (2015-01-03)}{
   \itemize{
-    \item Added Boost Fusion requested in GH ticket #7 by Dirk for RcppStreams
+    \item Added Boost \boostPkg{fusion} requested in GH ticket
+  \ghissue{7} by Dirk for \cpkg{RcppStreams}
   }
 }
 
 \section{Changes in version 1.55.0-1 (2014-12-21)}{
   \itemize{
-    \item Upgraded to Boost 1.55 once again from the Debian tarball at
-    \url{https://packages.debian.org/source/sid/boost1.55} 
-    \item Added Boost Geometry requested in GH ticket #5 by 'teramonagi'
+    \item Upgraded to \boost 1.55 once again from the  
+    \href{https://packages.debian.org/source/sid/boost1.55}{Debian tarball}
+    \item Added Boost \boostPkg{geometry} requested in GH ticket \ghissue{5} by 'teramonagi'
   }
 }
 
 \section{Changes in version 1.54.0-5 (2014-11-09)}{
   \itemize{
-    \item Added Boost Circular Buffer requested by Ben Goodrich for RStan
+    \item Added Boost \boostPkg{circular_buffer} requested by Ben Goodrich for \cpkg{RStan}
   }
 }
 
 \section{Changes in version 1.54.0-4 (2014-08-29)}{
   \itemize{
-    \item Added Boost Any requested by Greg Jeffries for his nabo package 
+    \item Added Boost \boostPkg{any} requested by Greg Jeffries for his \cpkg{nabo} package 
   }
 }
 
 \section{Changes in version 1.54.0-3 (2014-08-03)}{
   \itemize{
-    \item Added Boost Heap library which will be needed by the next
-  version of \cpkg{RcppMLPACK}
+    \item Added Boost \boostPkg{heap} library which will be needed by the next
+    version of \cpkg{RcppMLPACK}
   }
 }
 
