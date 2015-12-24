@@ -97,7 +97,7 @@ echo "Copying Boost libraries into BH"
 
 boostlibs="bind concept config container date_time detail exception functional integer \
            interprocess intrusive io iterator math move mpl numeric pending preprocessor \
-           random range smart_ptr tupe typeof type_trains unordered utility uuid"
+           random range smart_ptr tuple typeof type_trains unordered utility uuid"
 
 ## this copies the Boost libraries listed in ${boostlibs} from the
 ## Boost sources in ${boostroot} into the target directory ${pkgincl}
@@ -119,7 +119,7 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus graph (cf [github] issue ticket #9)
 # Plus multiprecsion (cf [github] issue ticket #12)
 # Plus phoenix (cf [github] issue ticket #19)
-boostextras="filesystem random unordered spirit foreach math algorithm iostreams \
+boostextras="filesystem spirit foreach algorithm iostreams \
             dynamic_bitset heap any circular_buffer geometry fusion graph \
             multiprcecision phoenix"
 

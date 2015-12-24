@@ -20,6 +20,15 @@ Not that this can be used solely by headers-only Boost libraries. This
 covers most of Boost, but excludes some libraries which require linking for
 parts or all of their functionality. 
 
+### Coverage
+
+As of release 1.60, the following Boost libraries are included:
+> algorithm any bind circular_buffer concept config container date_time
+> detail dynamic_bitset exception filesystem foreach functional fusion
+> geometry graph heap integer interprocess intrusive io iostreams iterator
+> math move mpl multiprcecision numeric pending phoenix preprocessor random
+> range smart_ptr spirit tuple type_trains typeof unordered utility uuid
+
 ### See Also
 
 See the [BH](http://dirk.eddelbuettel.com/code/bh.html) page for some more details.
@@ -32,10 +41,11 @@ can be used for bugs.
 ### Updating
 
 We aim to maintain this package in a somewhat conservative fashion and do not
-immediately jump the newest Boost releases.  Rather, we start from the
+immediately jump the newest Boost releases.  Rather, we (used to) start from the
 [Debian sources for Boost](https://packages.debian.org/sid/libboost-all-dev)
 to ensure that we work with a version that is at the same time current yet
-mature.  But on occassion, and as needed, we will go directly to Boost releases.
+mature.  But on occassion, and as needed, and more recently, we will also go
+directly to Boost releases. 
 
 In general, we plan to keep the package up-to-date with [Boost](http://www.boost.org/)
 upstream, but will not necessarily follow each and every new release as we
