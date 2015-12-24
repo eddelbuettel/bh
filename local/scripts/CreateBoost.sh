@@ -10,10 +10,10 @@
 ## -- on a standard git checkout, this repo it may be ~/git/bh
 pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
-boosttargz="boost_1_58_0.tar.gz"
+boosttargz="boost_1_60_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.58.0-0"
-date="2015-05-13"
+version="1.60.0-0"
+date="2015-12-24"
 
 
 
@@ -52,7 +52,7 @@ LocalFiles:    ${localfiles}
 BoostRoot:     ${boostroot}
 Boostsources:  ${boostsources}
 "
-exit -1
+#exit -1
 
 
 ## (5) Some sanity check here before continuing
@@ -118,8 +118,10 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus fusion (cf [github] issue ticket #7)
 # Plus graph (cf [github] issue ticket #9)
 # Plus multiprecsion (cf [github] issue ticket #12)
+# Plus phoenix (cf [github] issue ticket #19)
 boostextras="filesystem random unordered spirit foreach math algorithm iostreams \
-            dynamic_bitset heap any circular_buffer geometry fusion graph multiprcecision"
+            dynamic_bitset heap any circular_buffer geometry fusion graph \
+            multiprcecision phoenix"
 
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 
