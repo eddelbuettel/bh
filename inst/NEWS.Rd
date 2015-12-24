@@ -1,11 +1,18 @@
 \name{NEWS}
 \title{News for Package \pkg{BH}}
-\newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
+\newcommand{\cpkg}{\href{https://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 \newcommand{\boost}{\href{http://www.boost.org}{\pkg{Boost}}}
 \newcommand{\boostPkg}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#1}}}
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
 \newcommand{\ghissue}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
+
+\section{Changes in version 1.60.0-1 (2015-12-24)}{
+  \itemize{
+    \item Upgraded to \boost 1.60 installed directly from upstream source
+    \item Added Boost \boostPkg{phoenix} as discussed in GH ticket \ghissue{19}
+  }
+}
 
 \section{Changes in version 1.58.0-1 (2015-05-21)}{
   \itemize{
@@ -39,13 +46,13 @@
 
 \section{Changes in version 1.54.0-5 (2014-11-09)}{
   \itemize{
-    \item Added Boost \boostPkg{circular_buffer} requested by Ben Goodrich for \cpkg{RStan}
+    \item Added Boost \boostPkg{circular_buffer} requested by Ben Goodrich for \cpkg{rstan}
   }
 }
 
 \section{Changes in version 1.54.0-4 (2014-08-29)}{
   \itemize{
-    \item Added Boost \boostPkg{any} requested by Greg Jeffries for his \cpkg{nabo} package 
+    \item Added Boost \boostPkg{any} requested by Greg Jeffries for his \cpkg{nabor} package 
   }
 }
 
