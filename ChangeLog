@@ -1,3 +1,12 @@
+2015-12-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 1.60.0-1
+
+	* local/scripts/CreateBoost.sh: Added Boost.Phoenix (cf #19)
+
+	* numeric/odeint/stepper/generation/: As before rename
+	karp54_classic.hpp to karp54_cl.hpp and adjust generation.hpp
+
 2015-05-22  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/NEWS.Rd: Updated and expanded use of links throughout
