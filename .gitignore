@@ -1,2 +1,1 @@
-local/boost_1_51_0.tar.gz
-local/boost_1_54_0.tar.gz
+local/boost_*.tar.gz

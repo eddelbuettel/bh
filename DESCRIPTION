@@ -1,8 +1,8 @@
 Package: BH
 Type: Package
 Title: Boost C++ Header Files
-Version: 1.58.0-1
-Date: 2015-05-21
+Version: 1.60.0-1
+Date: 2015-12-24
 Author: Dirk Eddelbuettel, John W. Emerson and Michael J. Kane
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: Boost provides free peer-reviewed portable C++ source 
@@ -12,7 +12,15 @@ Description: Boost provides free peer-reviewed portable C++ source
  for template use among CRAN package. By placing these libraries in 
  this package, we offer a more efficient distribution system for CRAN 
  as replication of this code in the sources of other packages is 
- avoided. 
+ avoided.
+ .
+ As of release 1.60, the following Boost libraries are included:
+ algorithm any bind circular_buffer concept config container
+ date_time detail dynamic_bitset exception filesystem foreach
+ functional fusion geometry graph heap integer interprocess
+ intrusive io iostreams iterator math move mpl multiprcecision
+ numeric pending phoenix preprocessor random range smart_ptr
+ spirit tuple type_trains typeof unordered utility uuid.
 License: BSL-1.0
 MailingList: Please send questions and comments regarding BH to
   http://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/boostheaders-devel

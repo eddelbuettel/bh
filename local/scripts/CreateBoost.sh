@@ -10,10 +10,10 @@
 ## -- on a standard git checkout, this repo it may be ~/git/bh
 pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
-boosttargz="boost_1_58_0.tar.gz"
+boosttargz="boost_1_60_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.58.0-0"
-date="2015-05-13"
+version="1.60.0-0"
+date="2015-12-24"
 
 
 
@@ -52,7 +52,7 @@ LocalFiles:    ${localfiles}
 BoostRoot:     ${boostroot}
 Boostsources:  ${boostsources}
 "
-exit -1
+#exit -1
 
 
 ## (5) Some sanity check here before continuing
@@ -97,7 +97,7 @@ echo "Copying Boost libraries into BH"
 
 boostlibs="bind concept config container date_time detail exception functional integer \
            interprocess intrusive io iterator math move mpl numeric pending preprocessor \
-           random range smart_ptr tupe typeof type_trains unordered utility uuid"
+           random range smart_ptr tuple typeof type_trains unordered utility uuid"
 
 ## this copies the Boost libraries listed in ${boostlibs} from the
 ## Boost sources in ${boostroot} into the target directory ${pkgincl}
@@ -118,8 +118,10 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus fusion (cf [github] issue ticket #7)
 # Plus graph (cf [github] issue ticket #9)
 # Plus multiprecsion (cf [github] issue ticket #12)
-boostextras="filesystem random unordered spirit foreach math algorithm iostreams \
-            dynamic_bitset heap any circular_buffer geometry fusion graph multiprcecision"
+# Plus phoenix (cf [github] issue ticket #19)
+boostextras="filesystem spirit foreach algorithm iostreams \
+            dynamic_bitset heap any circular_buffer geometry fusion graph \
+            multiprcecision phoenix"
 
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 
