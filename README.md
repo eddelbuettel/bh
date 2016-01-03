@@ -27,6 +27,7 @@ parts or all of their functionality.
 ### Coverage
 
 As of release 1.60, the following Boost libraries are included:
+
 > algorithm any bind circular_buffer concept config container date_time
 > detail dynamic_bitset exception filesystem foreach functional fusion
 > geometry graph heap integer interprocess intrusive io iostreams iterator
