@@ -1,3 +1,7 @@
+2016-02-20  Jim Hester <james.f.hester@gmail.com>
+
+	* local/scripts/CreateBoost.sh: Added Boost.Bimap (cf #24)
+
 2015-12-24  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 1.60.0-1
