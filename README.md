@@ -34,6 +34,10 @@ As of release 1.60, the following Boost libraries are included:
 > math move mpl multiprcecision numeric pending phoenix preprocessor random
 > range smart_ptr spirit tuple type_trains typeof unordered utility uuid
 
+A recent PR added
+
+> bimap
+
 ### See Also
 
 See the [BH](http://dirk.eddelbuettel.com/code/bh.html) page for some more details.
@@ -58,6 +62,17 @@ also value the merits of relative release stability.
 
 If needed, the script `local/script/CreateBoost.sh` can be used to update a forked
 version to a newer version of [Boost](http://www.boost.org/).
+
+### But what about the size?
+
+We know. We erroneously thought that committing the Boost tarballs would be a
+good idea. It wasn't. First attempts at pruning the history
+[using bfg](https://rtyley.github.io/bfg-repo-cleaner/) were not that
+successful.  If someone has a script doing this well we would take another
+look.
+
+Otherwise we recommend to just start from
+[CreateBoost.sh](https://github.com/eddelbuettel/bh/blob/master/local/scripts/CreateBoost.sh). 
 
 ### Authors 
 

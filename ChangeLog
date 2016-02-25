@@ -1,3 +1,7 @@
+2016-02-25  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Mention bimap; add note about massive repo size
+
 2016-02-20  Jim Hester <james.f.hester@gmail.com>
 
 	* local/scripts/CreateBoost.sh: Added Boost.Bimap (cf #24)
