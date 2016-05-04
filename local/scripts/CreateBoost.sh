@@ -13,7 +13,7 @@ pkgdir="${HOME}/git/bh"
 boosttargz="boost_1_60_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
 version="1.60.0-0"
-date="2016-2-20"
+date="2016-5-4"
 
 
 
@@ -121,7 +121,7 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus phoenix (cf [github] issue ticket #19)
 boostextras="filesystem spirit foreach algorithm iostreams \
             dynamic_bitset heap any circular_buffer geometry fusion graph \
-            multiprcecision phoenix bimap"
+            multiprcecision phoenix bimap icl"
 
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 
