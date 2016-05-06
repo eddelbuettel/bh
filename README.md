@@ -26,17 +26,14 @@ parts or all of their functionality.
 
 ### Coverage
 
-As of release 1.60, the following Boost libraries are included:
+As of release 1.60.0-2, the following Boost libraries are included:
 
-> algorithm any bind circular_buffer concept config container date_time
-> detail dynamic_bitset exception filesystem foreach functional fusion
-> geometry graph heap integer interprocess intrusive io iostreams iterator
-> math move mpl multiprcecision numeric pending phoenix preprocessor random
-> range smart_ptr spirit tuple type_trains typeof unordered utility uuid
-
-A recent PR added
-
-> bimap
+> algorithm any bimap bind circular_buffer concept config container date_time
+> detail dynamic_bitset exception filesystem flyweight foreach functional
+> fusion geometry graph heap icl integer interprocess intrusive io iostreams
+> iterator math move mpl multiprcecision numeric pending phoenix preprocessor
+> random range smart_ptr spirit tuple type_trains typeof unordered utility
+> uuid
 
 ### See Also
 
