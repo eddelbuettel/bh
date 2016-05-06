@@ -2,7 +2,7 @@
 ##
 ## CreateBoost.sh -- derived from CreateBoost.R
 ##
-## Jay Emerson and Dirk Eddelbuettel,  2012 - 2015
+## Jay Emerson and Dirk Eddelbuettel,  2012 - 2016
 
 
 ## (1) Adjust these variables as needed 
@@ -12,8 +12,8 @@ pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
 boosttargz="boost_1_60_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.60.0-0"
-date="2016-5-4"
+version="1.60.0-1"
+date="2016-05-05"
 
 
 
@@ -119,9 +119,12 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus graph (cf [github] issue ticket #9)
 # Plus multiprecsion (cf [github] issue ticket #12)
 # Plus phoenix (cf [github] issue ticket #19)
+# Plus bimap (cf [github] pr #24)
+# Plus icl (cf [github] pr #27)
+# Plus flyweight (cf [github] issue ticket #26)
 boostextras="filesystem spirit foreach algorithm iostreams \
             dynamic_bitset heap any circular_buffer geometry fusion graph \
-            multiprcecision phoenix bimap icl"
+            multiprcecision phoenix bimap icl flyweight"
 
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 
@@ -158,18 +161,6 @@ echo "Purging (temp. dir) BoostRoot"
 rm -rf ${boostroot}
 
 
+## (12) And done
 echo "Now check with 'git status' and add and commit as needed."
-
-
-
-#########################################################################
-# Now fix up things that don't work, if necessary.  Here, we need to stay
-# organized and decide who is the maintainer of what, but this script
-# is the master record of any changes made to the boost tree.
-
-## bigmemory et.al. will require changes to support Windows; we
-## believe the Mac and Linux versions will be fine without changes.
-
-## We'll invite co-maintainers who identify changes needed to support
-## their specific libraries.
 
