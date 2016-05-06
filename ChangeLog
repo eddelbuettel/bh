@@ -1,3 +1,16 @@
+2016-05-06  Dirk Eddelbuettel  <edd@debian.org>
+
+	* local/scripts/CreateBoost.sh: Added Boost.Flyweight (cf #26)
+	* inst/include/boost/flyweight/: Ditto
+
+	* numeric/odeint/stepper/generation/: As before rename
+	karp54_classic.hpp to karp54_cl.hpp and adjust generation.hpp
+
+2016-05-04  Jay Hesselberth  <jay.hesselberth@gmail.com>
+
+	* local/scripts/CreateBoost.sh: Added Boost.ICL (cf #27)
+	* inst/include/boost/icl/: Ditto
+
 2016-04-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Use canonical CRAN URL
@@ -9,6 +22,7 @@
 2016-02-20  Jim Hester <james.f.hester@gmail.com>
 
 	* local/scripts/CreateBoost.sh: Added Boost.Bimap (cf #24)
+	* inst/include/boost/bimap: Ditto
 
 2015-12-24  Dirk Eddelbuettel  <edd@debian.org>
 
