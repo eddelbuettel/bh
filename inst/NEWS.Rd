@@ -8,10 +8,13 @@
 \newcommand{\ghissue}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
-\section{Changes in version 1.6x.y-1 (2016-zz-zz)}{
+\section{Changes in version 1.60.0-2 (2016-05-06)}{
   \itemize{
-    \item Added Boost \boostPkg{bimap} via GH pull request \gh[r{24} by
+    \item Added Boost \boostPkg{bimap} via GH pull request \ghpr{24} by
     Jim Hester
+    \item Added Boost \boostPkg{icl} via GH pull request \ghpr{27} by
+    Jay Hesselbert
+    \item Added Boost \boostPkg{flyweight} as requested in GH ticket \ghissue{26}
   }
 }
 
