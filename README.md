@@ -32,7 +32,7 @@ As of release 1.60.0-2, the following Boost libraries are included:
 > detail dynamic_bitset exception filesystem flyweight foreach functional
 > fusion geometry graph heap icl integer interprocess intrusive io iostreams
 > iterator math move mpl multiprcecision numeric pending phoenix preprocessor
-> random range smart_ptr spirit tuple type_trains typeof unordered utility
+> random range smart_ptr spirit tuple type_traits typeof unordered utility
 > uuid
 
 ### See Also
