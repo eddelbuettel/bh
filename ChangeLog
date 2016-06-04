@@ -1,3 +1,12 @@
+2016-06-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Description): s/type_trains/type_traits/
+	* local/scripts/CreateBoost.sh (boostlibs): Ditto
+
+2016-06-04  Evelyn Mitchell <efm-github@linsomniac.com>
+
+	* README.md: Correct typo via s/type_trains/type_traits/
+
 2016-05-06  Dirk Eddelbuettel  <edd@debian.org>
 
 	* local/scripts/CreateBoost.sh: Added Boost.Flyweight (cf #26)
