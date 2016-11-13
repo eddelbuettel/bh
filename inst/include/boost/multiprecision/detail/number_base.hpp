@@ -9,6 +9,7 @@
 #include <limits>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_convertible.hpp>
+#include <boost/type_traits/is_constructible.hpp>
 #include <boost/type_traits/decay.hpp>
 #ifdef BOOST_MSVC
 #  pragma warning(push)
@@ -25,10 +26,23 @@
 #  define BOOST_MP_FORCEINLINE inline
 #endif
 
-#if defined(BOOST_GCC) && (BOOST_GCC <= 40700)
+#if (defined(BOOST_GCC) && (BOOST_GCC <= 40700)) || BOOST_WORKAROUND(__SUNPRO_CC, < 0x5140)
 #  define BOOST_MP_NOEXCEPT_IF(x)
 #else
 #  define BOOST_MP_NOEXCEPT_IF(x) BOOST_NOEXCEPT_IF(x)
+#endif
+
+#if defined(BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS) || BOOST_WORKAROUND(__SUNPRO_CC, < 0x5140)
+#define BOOST_MP_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
+#endif
+
+//
+// Thread local storage:
+//
+#if !defined(BOOST_NO_CXX11_THREAD_LOCAL) && !defined(BOOST_INTEL)
+#  define BOOST_MP_THREAD_LOCAL thread_local
+#else
+#  define BOOST_MP_THREAD_LOCAL
 #endif
 
 #ifdef BOOST_MSVC
@@ -378,8 +392,8 @@ struct expression<tag, Arg1, void, void, void>
    const Arg1& left_ref()const BOOST_NOEXCEPT { return arg; }
 
    static const unsigned depth = left_type::depth + 1;
-#ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
-#  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
+#ifndef BOOST_MP_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
+#  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7) && !defined(__clang__)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
    //
    // Horrible workaround for gcc-4.6.x which always prefers the template
    // operator bool() rather than the non-template operator when converting to
@@ -397,7 +411,11 @@ struct expression<tag, Arg1, void, void, void>
       return static_cast<T>(static_cast<result_type>(*this));
    }
 #  else
-   template <class T, typename boost::disable_if_c<is_number<T>::value, int>::type = 0>
+   template <class T
+#ifndef __SUNPRO_CC
+, typename boost::disable_if_c<is_number<T>::value || is_constructible<T const&, result_type>::value, int>::type = 0
+#endif
+>
    explicit operator T()const
    {
       return static_cast<T>(static_cast<result_type>(*this));
@@ -407,7 +425,9 @@ struct expression<tag, Arg1, void, void, void>
       result_type r(*this);
       return static_cast<bool>(r);
    }
-   explicit operator void()const {}
+#if BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40800)
+   BOOST_MP_FORCEINLINE explicit operator void()const {}
+#endif
 #  endif
 #else
    operator unmentionable_type()const
@@ -442,8 +462,8 @@ struct expression<terminal, Arg1, void, void, void>
 
    static const unsigned depth = 0;
 
-#ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
-#  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
+#ifndef BOOST_MP_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
+#  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7) && !defined(__clang__)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
    //
    // Horrible workaround for gcc-4.6.x which always prefers the template
    // operator bool() rather than the non-template operator when converting to
@@ -461,7 +481,11 @@ struct expression<terminal, Arg1, void, void, void>
       return static_cast<T>(static_cast<result_type>(*this));
    }
 #  else
-   template <class T, typename boost::disable_if_c<is_number<T>::value, int>::type = 0>
+   template <class T
+#ifndef __SUNPRO_CC
+, typename boost::disable_if_c<is_number<T>::value || is_constructible<T const&, result_type>::value, int>::type = 0
+#endif
+>
    explicit operator T()const
    {
       return static_cast<T>(static_cast<result_type>(*this));
@@ -471,7 +495,9 @@ struct expression<terminal, Arg1, void, void, void>
       result_type r(*this);
       return static_cast<bool>(r);
    }
-   explicit operator void()const {}
+#if BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40800)
+   BOOST_MP_FORCEINLINE explicit operator void()const {}
+#endif
 #  endif
 #else
    operator unmentionable_type()const
@@ -510,8 +536,8 @@ struct expression<tag, Arg1, Arg2, void, void>
    const Arg1& left_ref()const BOOST_NOEXCEPT { return arg1; }
    const Arg2& right_ref()const BOOST_NOEXCEPT { return arg2; }
 
-#ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
-#  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
+#ifndef BOOST_MP_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
+#  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7) && !defined(__clang__)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
       //
       // Horrible workaround for gcc-4.6.x which always prefers the template
       // operator bool() rather than the non-template operator when converting to
@@ -529,7 +555,11 @@ struct expression<tag, Arg1, Arg2, void, void>
       return static_cast<T>(static_cast<result_type>(*this));
    }
 #  else
-      template <class T, typename boost::disable_if_c<is_number<T>::value, int>::type = 0>
+   template <class T
+#ifndef __SUNPRO_CC
+, typename boost::disable_if_c<is_number<T>::value || is_constructible<T const&, result_type>::value, int>::type = 0
+#endif
+>
    explicit operator T()const
    {
       return static_cast<T>(static_cast<result_type>(*this));
@@ -539,7 +569,9 @@ struct expression<tag, Arg1, Arg2, void, void>
       result_type r(*this);
       return static_cast<bool>(r);
    }
-   explicit operator void()const {}
+#if BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40800)
+   BOOST_MP_FORCEINLINE explicit operator void()const {}
+#endif
 #  endif
 #else
    operator unmentionable_type()const
@@ -589,8 +621,8 @@ struct expression<tag, Arg1, Arg2, Arg3, void>
    const Arg2& middle_ref()const BOOST_NOEXCEPT { return arg2; }
    const Arg3& right_ref()const BOOST_NOEXCEPT { return arg3; }
 
-#ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
-#  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
+#ifndef BOOST_MP_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
+#  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7) && !defined(__clang__)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
       //
       // Horrible workaround for gcc-4.6.x which always prefers the template
       // operator bool() rather than the non-template operator when converting to
@@ -608,7 +640,11 @@ struct expression<tag, Arg1, Arg2, Arg3, void>
       return static_cast<T>(static_cast<result_type>(*this));
    }
 #  else
-      template <class T, typename boost::disable_if_c<is_number<T>::value, int>::type = 0>
+   template <class T
+#ifndef __SUNPRO_CC
+, typename boost::disable_if_c<is_number<T>::value || is_constructible<T const&, result_type>::value, int>::type = 0
+#endif
+>
    explicit operator T()const
    {
       return static_cast<T>(static_cast<result_type>(*this));
@@ -618,7 +654,9 @@ struct expression<tag, Arg1, Arg2, Arg3, void>
       result_type r(*this);
       return static_cast<bool>(r);
    }
-   explicit operator void()const {}
+#if BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40800)
+   BOOST_MP_FORCEINLINE explicit operator void()const {}
+#endif
 #  endif
 #else
    operator unmentionable_type()const
@@ -677,8 +715,8 @@ struct expression
    const Arg3& right_middle_ref()const BOOST_NOEXCEPT { return arg3; }
    const Arg4& right_ref()const BOOST_NOEXCEPT { return arg4; }
 
-#ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
-#  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
+#ifndef BOOST_MP_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
+#  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7) && !defined(__clang__)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
       //
       // Horrible workaround for gcc-4.6.x which always prefers the template
       // operator bool() rather than the non-template operator when converting to
@@ -696,7 +734,11 @@ struct expression
       return static_cast<T>(static_cast<result_type>(*this));
    }
 #  else
-   template <class T, typename boost::disable_if_c<is_number<T>::value, int>::type = 0>
+   template <class T
+#ifndef __SUNPRO_CC
+, typename boost::disable_if_c<is_number<T>::value || is_constructible<T const&, result_type>::value, int>::type = 0
+#endif
+>
    explicit operator T()const
    {
       return static_cast<T>(static_cast<result_type>(*this));
@@ -706,7 +748,9 @@ struct expression
       result_type r(*this);
       return static_cast<bool>(r);
    }
-   explicit operator void()const {}
+#if BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40800)
+   BOOST_MP_FORCEINLINE explicit operator void()const {}
+#endif
 #  endif
 #else
    operator unmentionable_type()const
@@ -746,7 +790,8 @@ struct digits2
    BOOST_STATIC_ASSERT((std::numeric_limits<T>::radix == 2) || (std::numeric_limits<T>::radix == 10));
    // If we really have so many digits that this fails, then we're probably going to hit other problems anyway:
    BOOST_STATIC_ASSERT(LONG_MAX / 1000 > (std::numeric_limits<T>::digits + 1));
-   static const long value = std::numeric_limits<T>::radix == 10 ?  (((std::numeric_limits<T>::digits + 1) * 1000L) / 301L) : std::numeric_limits<T>::digits;
+   static const long m_value = std::numeric_limits<T>::radix == 10 ?  (((std::numeric_limits<T>::digits + 1) * 1000L) / 301L) : std::numeric_limits<T>::digits;
+   static inline BOOST_CONSTEXPR long value()BOOST_NOEXCEPT { return m_value; }
 };
 
 #ifndef BOOST_MP_MIN_EXPONENT_DIGITS

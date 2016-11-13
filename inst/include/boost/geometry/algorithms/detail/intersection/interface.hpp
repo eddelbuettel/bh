@@ -54,7 +54,7 @@ struct intersection
         <
             Geometry1, Geometry2, OneOut,
             overlay_intersection
-        >::apply(geometry1, geometry2, robust_policy, std::back_inserter(geometry_out), strategy);
+        >::apply(geometry1, geometry2, robust_policy, range::back_inserter(geometry_out), strategy);
 
         return true;
     }
@@ -110,8 +110,8 @@ struct intersection
           const Geometry2& geometry2,
           GeometryOut& geometry_out)
     {
-        concept::check<Geometry1 const>();
-        concept::check<Geometry2 const>();
+        concepts::check<Geometry1 const>();
+        concepts::check<Geometry2 const>();
         
         typedef typename geometry::rescale_overlay_policy_type
         <
@@ -123,7 +123,7 @@ struct intersection
             = geometry::get_rescale_policy<rescale_policy_type>(geometry1,
                                                                 geometry2);
         
-        typedef strategy_intersection
+        typedef intersection_strategies
         <
             typename cs_tag<Geometry1>::type,
             Geometry1,
