@@ -604,7 +604,7 @@ public:
    //
    // Use in boolean context, and explicit conversion operators:
    //
-#ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
+#ifndef BOOST_MP_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
 #  if (defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 7)) || (defined(BOOST_INTEL) && (BOOST_INTEL <= 1500))
    //
    // Horrible workaround for gcc-4.6.x which always prefers the template
@@ -632,7 +632,9 @@ public:
    {
       return !is_zero();
    }
-   explicit operator void()const {}
+#if BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40800)
+   BOOST_MP_FORCEINLINE explicit operator void()const {}
+#endif
 #  endif
 #else
    typedef bool (self_type::*unmentionable_type)()const;
@@ -759,7 +761,12 @@ private:
       bool bl = contains_self(e.left());
       bool br = contains_self(e.right());
 
-      if(bl && is_self(e.left()))
+      if(bl && br)
+      {
+         self_type temp(e);
+         temp.m_backend.swap(this->m_backend);
+      }
+      else if(bl && is_self(e.left()))
       {
          // Ignore the left node, it's *this, just add the right:
          do_add(e.right(), typename right_type::tag_type());
@@ -768,11 +775,6 @@ private:
       {
          // Ignore the right node, it's *this, just add the left:
          do_add(e.left(), typename left_type::tag_type());
-      }
-      else if(bl && br)
-      {
-         self_type temp(e);
-         temp.m_backend.swap(this->m_backend);
       }
       else if(!br && (bl || (left_depth >= right_depth)))
       { // br is always false, but if bl is true we must take the this branch:
@@ -797,7 +799,12 @@ private:
       bool bl = contains_self(e.left());
       bool br = contains_self(e.right());
 
-      if(bl && is_self(e.left()))
+      if(bl && br)
+      {
+         self_type temp(e);
+         temp.m_backend.swap(this->m_backend);
+      }
+      else if(bl && is_self(e.left()))
       {
          // Ignore the left node, it's *this, just subtract the right:
          do_subtract(e.right(), typename right_type::tag_type());
@@ -807,11 +814,6 @@ private:
          // Ignore the right node, it's *this, just subtract the left and negate the result:
          do_subtract(e.left(), typename left_type::tag_type());
          m_backend.negate();
-      }
-      else if(bl && br)
-      {
-         self_type temp(e);
-         temp.m_backend.swap(this->m_backend);
       }
       else if(!br && (bl || (left_depth >= right_depth)))
       { // br is always false, but if bl is true we must take the this branch:
@@ -837,7 +839,12 @@ private:
       bool bl = contains_self(e.left());
       bool br = contains_self(e.right());
 
-      if(bl && is_self(e.left()))
+      if(bl && br)
+      {
+         self_type temp(e);
+         temp.m_backend.swap(this->m_backend);
+      }
+      else if(bl && is_self(e.left()))
       {
          // Ignore the left node, it's *this, just add the right:
          do_multiplies(e.right(), typename right_type::tag_type());
@@ -846,11 +853,6 @@ private:
       {
          // Ignore the right node, it's *this, just add the left:
          do_multiplies(e.left(), typename left_type::tag_type());
-      }
-      else if(bl && br)
-      {
-         self_type temp(e);
-         temp.m_backend.swap(this->m_backend);
       }
       else if(!br && (bl || (left_depth >= right_depth)))
       { // br is always false, but if bl is true we must take the this branch:
@@ -1761,7 +1763,12 @@ inline std::istream& operator >> (std::istream& is, number<Backend, ExpressionTe
    switch(boost::multiprecision::number_category<number<Backend, ExpressionTemplates> >::value)
    {
    case boost::multiprecision::number_kind_integer:
-      s = detail::read_string_while(is, "+-0xX123456789");
+      if(oct_format)
+         s = detail::read_string_while(is, "+-01234567");
+      else if(hex_format)
+         s = detail::read_string_while(is, "+-xXabcdefABCDEF0123456789");
+      else
+         s = detail::read_string_while(is, "+-0123456789");
       break;
    case boost::multiprecision::number_kind_floating_point:
       s = detail::read_string_while(is, "+-eE.0123456789infINFnanNANinfinityINFINITY");
@@ -1787,6 +1794,14 @@ BOOST_MP_FORCEINLINE void swap(number<Backend, ExpressionTemplates>& a, number<B
    BOOST_MP_NOEXCEPT_IF(noexcept(std::declval<number<Backend, ExpressionTemplates>&>() = std::declval<number<Backend, ExpressionTemplates>&>()))
 {
    a.swap(b);
+}
+//
+// Boost.Hash support, just call hash_value for the backend, which may or may not be supported:
+//
+template <class Backend, expression_template_option ExpressionTemplates>
+inline std::size_t hash_value(const number<Backend, ExpressionTemplates>& val)
+{
+   return hash_value(val.backend());
 }
 
 }  // namespace multiprecision
@@ -1863,6 +1878,54 @@ typename boost::enable_if<boost::is_arithmetic<Arithmetic>, bool>::type operator
    return a != multiprecision::number<T, ExpressionTemplates>(b);
 }
 
+template <class T, multiprecision::expression_template_option ExpressionTemplates, class Arithmetic>
+typename boost::enable_if<boost::is_arithmetic<Arithmetic>, bool>::type operator < (const rational<multiprecision::number<T, ExpressionTemplates> >& a, const Arithmetic& b)
+{
+   return a < multiprecision::number<T, ExpressionTemplates>(b);
+}
+
+template <class T, multiprecision::expression_template_option ExpressionTemplates, class Arithmetic>
+typename boost::enable_if<boost::is_arithmetic<Arithmetic>, bool>::type operator < (const Arithmetic& b, const rational<multiprecision::number<T, ExpressionTemplates> >& a)
+{
+   return a > multiprecision::number<T, ExpressionTemplates>(b);
+}
+
+template <class T, multiprecision::expression_template_option ExpressionTemplates, class Arithmetic>
+typename boost::enable_if<boost::is_arithmetic<Arithmetic>, bool>::type operator <= (const rational<multiprecision::number<T, ExpressionTemplates> >& a, const Arithmetic& b)
+{
+   return a <= multiprecision::number<T, ExpressionTemplates>(b);
+}
+
+template <class T, multiprecision::expression_template_option ExpressionTemplates, class Arithmetic>
+typename boost::enable_if<boost::is_arithmetic<Arithmetic>, bool>::type operator <= (const Arithmetic& b, const rational<multiprecision::number<T, ExpressionTemplates> >& a)
+{
+   return a >= multiprecision::number<T, ExpressionTemplates>(b);
+}
+
+template <class T, multiprecision::expression_template_option ExpressionTemplates, class Arithmetic>
+typename boost::enable_if<boost::is_arithmetic<Arithmetic>, bool>::type operator > (const rational<multiprecision::number<T, ExpressionTemplates> >& a, const Arithmetic& b)
+{
+   return a > multiprecision::number<T, ExpressionTemplates>(b);
+}
+
+template <class T, multiprecision::expression_template_option ExpressionTemplates, class Arithmetic>
+typename boost::enable_if<boost::is_arithmetic<Arithmetic>, bool>::type operator > (const Arithmetic& b, const rational<multiprecision::number<T, ExpressionTemplates> >& a)
+{
+   return a < multiprecision::number<T, ExpressionTemplates>(b);
+}
+
+template <class T, multiprecision::expression_template_option ExpressionTemplates, class Arithmetic>
+typename boost::enable_if<boost::is_arithmetic<Arithmetic>, bool>::type operator >= (const rational<multiprecision::number<T, ExpressionTemplates> >& a, const Arithmetic& b)
+{
+   return a >= multiprecision::number<T, ExpressionTemplates>(b);
+}
+
+template <class T, multiprecision::expression_template_option ExpressionTemplates, class Arithmetic>
+typename boost::enable_if<boost::is_arithmetic<Arithmetic>, bool>::type operator >= (const Arithmetic& b, const rational<multiprecision::number<T, ExpressionTemplates> >& a)
+{
+   return a <= multiprecision::number<T, ExpressionTemplates>(b);
+}
+
 template <class T, multiprecision::expression_template_option ExpressionTemplates>
 inline multiprecision::number<T, ExpressionTemplates> numerator(const rational<multiprecision::number<T, ExpressionTemplates> >& a)
 {
@@ -1891,6 +1954,22 @@ struct component_type<boost::rational<I> >
 #endif
 
 } // namespaces
+
+#ifndef BOOST_NO_CXX11_HDR_FUNCTIONAL
+
+#include <functional>
+
+namespace std {
+
+   template <class Backend, boost::multiprecision::expression_template_option ExpressionTemplates>
+   struct hash<boost::multiprecision::number<Backend, ExpressionTemplates> >
+   {
+      std::size_t operator()(const boost::multiprecision::number<Backend, ExpressionTemplates>& val)const { return hash_value(val); }
+   };
+
+}
+
+#endif
 
 #include <boost/multiprecision/detail/ublas_interop.hpp>
 

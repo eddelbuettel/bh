@@ -90,7 +90,7 @@
 
 #else
 
-#include "boost/config/compiler/common_edg.hpp"
+#include <boost/config/compiler/common_edg.hpp>
 
 #if defined(__INTEL_COMPILER)
 #if __INTEL_COMPILER == 9999
@@ -514,7 +514,15 @@ template<> struct assert_intrinsic_wchar_t<unsigned short> {};
 #  define BOOST_HAS_STDINT_H
 #endif
 
-#if defined(__LP64__) && defined(__GNUC__) && (BOOST_INTEL_CXX_VERSION >= 1310) && !defined(__CUDACC__)
+#if defined(__CUDACC__)
+#  if defined(BOOST_GCC_CXX11)
+#    define BOOST_NVCC_CXX11
+#  else
+#    define BOOST_NVCC_CXX03
+#  endif
+#endif
+
+#if defined(__LP64__) && defined(__GNUC__) && (BOOST_INTEL_CXX_VERSION >= 1310) && !defined(BOOST_NVCC_CXX03)
 #  define BOOST_HAS_INT128
 #endif
 

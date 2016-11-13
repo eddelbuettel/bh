@@ -25,6 +25,7 @@
 #include <boost/array.hpp>
 #endif
 #include <boost/cstdint.hpp>
+#include <boost/functional/hash_fwd.hpp>
 #include <boost/multiprecision/number.hpp>
 #include <boost/multiprecision/detail/big_lanczos.hpp>
 #include <boost/multiprecision/detail/dynamic_array.hpp>
@@ -256,6 +257,17 @@ public:
    }
 
    cpp_dec_float(const double mantissa, const ExponentType exponent);
+
+   std::size_t hash()const
+   {
+      std::size_t result = 0;
+      for(int i = 0; i < prec_elem; ++i)
+         boost::hash_combine(result, data[i]);
+      boost::hash_combine(result, exp);
+      boost::hash_combine(result, neg);
+      boost::hash_combine(result, fpclass);
+      return result;
+   }
 
    // Specific special values.
    static const cpp_dec_float& nan()
@@ -662,6 +674,12 @@ cpp_dec_float<Digits10, ExponentType, Allocator>& cpp_dec_float<Digits10, Expone
       return operator=(v);
    }
 
+   if((v.isnan)() || (v.isinf)())
+   {
+      *this = v;
+      return *this;
+   }
+
    // Get the offset for the add/sub operation.
    static const ExponentType max_delta_exp = static_cast<ExponentType>((cpp_dec_float_elem_number - 1) * cpp_dec_float_elem_digits10);
 
@@ -942,6 +960,18 @@ cpp_dec_float<Digits10, ExponentType, Allocator>& cpp_dec_float<Digits10, Expone
 template <unsigned Digits10, class ExponentType, class Allocator>
 cpp_dec_float<Digits10, ExponentType, Allocator>& cpp_dec_float<Digits10, ExponentType, Allocator>::operator/=(const cpp_dec_float<Digits10, ExponentType, Allocator>& v)
 {
+   if(iszero())
+   {
+      if((v.isnan)())
+      {
+         return *this = v;
+      }
+      else if(v.iszero())
+      {
+         return *this = nan();
+      }
+   }
+
    const bool u_and_v_are_finite_and_identical = ( (isfinite)()
       && (fpclass == v.fpclass)
       && (exp == v.exp)
@@ -960,14 +990,6 @@ cpp_dec_float<Digits10, ExponentType, Allocator>& cpp_dec_float<Digits10, Expone
    }
    else
    {
-      if(iszero())
-      {
-         if((v.isnan)() || v.iszero())
-         {
-            return *this = v;
-         }
-         return *this;
-      }
       cpp_dec_float t(v);
       t.calculate_inv();
       return operator*=(t);
@@ -1888,7 +1910,9 @@ std::string cpp_dec_float<Digits10, ExponentType, Allocator>::str(boost::intmax_
 template <unsigned Digits10, class ExponentType, class Allocator>
 bool cpp_dec_float<Digits10, ExponentType, Allocator>::rd_string(const char* const s)
 {
+#ifndef BOOST_NO_EXCEPTIONS
    try{
+#endif
 
    std::string str(s);
 
@@ -2146,6 +2170,7 @@ bool cpp_dec_float<Digits10, ExponentType, Allocator>::rd_string(const char* con
       }
    }
 
+#ifndef BOOST_NO_EXCEPTIONS
    }
    catch(const bad_lexical_cast&)
    {
@@ -2155,7 +2180,7 @@ bool cpp_dec_float<Digits10, ExponentType, Allocator>::rd_string(const char* con
       msg += "\" as a floating point value.";
       throw std::runtime_error(msg);
    }
-
+#endif
    return true;
 }
 
@@ -2227,7 +2252,12 @@ cpp_dec_float<Digits10, ExponentType, Allocator>& cpp_dec_float<Digits10, Expone
       return *this = one();
 
    if((boost::math::isinf)(a))
-      return *this = inf();
+   {
+      *this = inf();
+      if(a < 0)
+         this->negate();
+      return *this;
+   }
 
    if((boost::math::isnan)(a))
       return *this = nan();
@@ -2941,6 +2971,12 @@ template <unsigned Digits10, class ExponentType, class Allocator>
 inline int eval_get_sign(const cpp_dec_float<Digits10, ExponentType, Allocator>& val)
 {
    return val.iszero() ? 0 : val.isneg() ? -1 : 1;
+}
+
+template <unsigned Digits10, class ExponentType, class Allocator>
+inline std::size_t hash_value(const cpp_dec_float<Digits10, ExponentType, Allocator>& val)
+{
+   return val.hash();
 }
 
 } // namespace backends
