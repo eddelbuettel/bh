@@ -1,10 +1,10 @@
-## bh [![Build Status](https://travis-ci.org/eddelbuettel/bh.svg)](https://travis-ci.org/eddelbuettel/bh) [![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](http://www.boost.org/users/license.html) [![CRAN](http://www.r-pkg.org/badges/version/BH)](http://cran.r-project.org/package=BH) [![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](http://www.r-pkg.org/pkg/BH)
+## bh [![Build Status](https://travis-ci.org/eddelbuettel/bh.svg)](https://travis-ci.org/eddelbuettel/bh) [![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](http://www.boost.org/users/license.html) [![CRAN](http://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH) [![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](http://www.r-pkg.org/pkg/BH)
 
 Boost Headers for R
 
 ### About
 
-This package provides [R](http://www.r-project.org) with access to
+This package provides [R](https://www.r-project.org) with access to
 [Boost](http://www.boost.org/) header files.  [Boost](http://www.boost.org/)
 provides free peer-reviewed portable C++ source libraries.  A large part of
 [Boost](http://www.boost.org/) is provided as C++ template code which is
@@ -26,14 +26,16 @@ parts or all of their functionality.
 
 ### Coverage
 
-As of release 1.60.0-2, the following Boost libraries are included:
+As of release 1.62.0-1, the following Boost libraries are included:
 
-> algorithm any bimap bind circular_buffer concept config container date_time
-> detail dynamic_bitset exception filesystem flyweight foreach functional
-> fusion geometry graph heap icl integer interprocess intrusive io iostreams
-> iterator math move mpl multiprcecision numeric pending phoenix preprocessor
-> random range smart_ptr spirit tuple type_traits typeof unordered utility
-> uuid
+> algorithm any atomic bimap bind circular_buffer
+> concept config container date_time detail dynamic_bitset
+> exception filesystem flyweight foreach functional fusion
+> geometry graph heap icl integer interprocess intrusive io
+> iostreams iterator math move mpl multiprcecision numeric
+> pending phoenix preprocessor propery_tree random range
+> scope_exit smart_ptr spirit tuple type_traits typeof unordered
+> utility uuid
 
 ### See Also
 
@@ -62,9 +64,9 @@ version to a newer version of [Boost](http://www.boost.org/).
 
 ### But what about the size?
 
-We know. We erroneously thought that committing the Boost tarballs would be a
-good idea. It wasn't. First attempts at pruning the history
-[using bfg](https://rtyley.github.io/bfg-repo-cleaner/) were not that
+The repo has a large footprint. We know. We erroneously thought that committing 
+the Boost tarballs would be a good idea. It wasn't. First attempts at pruning 
+the history [using bfg](https://rtyley.github.io/bfg-repo-cleaner/) were not that
 successful.  If someone has a script doing this well we would take another
 look.
 

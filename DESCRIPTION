@@ -1,8 +1,8 @@
 Package: BH
 Type: Package
 Title: Boost C++ Header Files
-Version: 1.60.0-2
-Date: 2016-05-06
+Version: 1.62.0-1
+Date: 2016-11-13
 Author: Dirk Eddelbuettel, John W. Emerson and Michael J. Kane
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: Boost provides free peer-reviewed portable C++ source 
@@ -12,16 +12,14 @@ Description: Boost provides free peer-reviewed portable C++ source
  for template use among CRAN package. By placing these libraries in 
  this package, we offer a more efficient distribution system for CRAN 
  as replication of this code in the sources of other packages is 
- avoided.
- .
- As of release 1.60.0-2, the following Boost libraries are included:
- 'algorithm' 'any' 'bimap' 'bind' 'circular_buffer' 'concept' 'config'
- 'container' 'date'_'time' 'detail' 'dynamic_bitset' 'exception'
- 'filesystem' 'flyweight' 'foreach' 'functional' 'fusion' 'geometry'
- 'graph' 'heap' 'icl' 'integer' 'interprocess' 'intrusive' 'io'
- 'iostreams' 'iterator' 'math' 'move' 'mpl' 'multiprcecision'
- 'numeric' 'pending' 'phoenix' 'preprocessor' 'random' 'range'
- 'smart_ptr' 'spirit' 'tuple' 'type_traits' 'typeof' 'unordered'
+ avoided. As of release 1.62.0-1, the following Boost libraries are
+ included: 'algorithm' 'any' 'atomic' 'bimap' 'bind' 'circular_buffer'
+ 'concept' 'config' 'container' 'date'_'time' 'detail' 'dynamic_bitset'
+ 'exception' 'filesystem' 'flyweight' 'foreach' 'functional' 'fusion'
+ 'geometry' 'graph' 'heap' 'icl' 'integer' 'interprocess' 'intrusive' 'io'
+ 'iostreams' 'iterator' 'math' 'move' 'mpl' 'multiprcecision' 'numeric'
+ 'pending' 'phoenix' 'preprocessor' 'propery_tree' 'random' 'range'
+ 'scope_exit' 'smart_ptr' 'spirit' 'tuple' 'type_traits' 'typeof' 'unordered'
  'utility' 'uuid'.
 License: BSL-1.0
 BugReports: https://github.com/eddelbuettel/bh/issues
