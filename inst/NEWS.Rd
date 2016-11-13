@@ -1,12 +1,22 @@
 \name{NEWS}
 \title{News for Package \pkg{BH}}
-\newcommand{\cpkg}{\href{https://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 \newcommand{\boost}{\href{http://www.boost.org}{\pkg{Boost}}}
 \newcommand{\boostPkg}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#1}}}
 \newcommand{\boostPkgTwo}{\href{http://www.boost.org/doc/libs/release/libs/#1}{\pkg{#2}}}
 \newcommand{\rfticket}{\href{https://r-forge.r-project.org/tracker/index.php?func=detail&aid=#1}{#1}}
-\newcommand{\ghissue}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
+\newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
+
+\section{Changes in version 1.62.0-1 (2016-11-13)}{
+  \itemize{
+    \item Added Boost \boostPkg{property_tree} as requested in \ghit{29}
+    by Aydin Demircioglu
+    \item Added Boost \boostPkg{scopted_exit} as requested in \ghit{30} by
+    Kirill Mueller
+    \item Added Boost \boostPkg{atomic} which we had informally added
+    since 1.58.0
+  }
+}
 
 \section{Changes in version 1.60.0-2 (2016-05-06)}{
   \itemize{
@@ -14,21 +24,21 @@
     Jim Hester
     \item Added Boost \boostPkg{icl} via GH pull request \ghpr{27} by
     Jay Hesselbert
-    \item Added Boost \boostPkg{flyweight} as requested in GH ticket \ghissue{26}
+    \item Added Boost \boostPkg{flyweight} as requested in GH ticket \ghit{26}
   }
 }
 
 \section{Changes in version 1.60.0-1 (2015-12-24)}{
   \itemize{
     \item Upgraded to \boost 1.60 installed directly from upstream source
-    \item Added Boost \boostPkg{phoenix} as discussed in GH ticket \ghissue{19}
+    \item Added Boost \boostPkg{phoenix} as discussed in GH ticket \ghit{19}
   }
 }
 
 \section{Changes in version 1.58.0-1 (2015-05-21)}{
   \itemize{
     \item Upgraded to \boost 1.58 installed directly from upstream source
-    \item Added Boost \boostPkg{multiprecision} as requested in GH ticket \ghissue{12} based
+    \item Added Boost \boostPkg{multiprecision} as requested in GH ticket \ghit{12} based
       on rcpp-devel request by Jordi Molins Coronado
   }
 }
@@ -36,14 +46,14 @@
 \section{Changes in version 1.55.0-3 (2015-01-04)}{
   \itemize{
     \item Added Boost \boostPkg{graph} requested in GH ticket
-    \ghissue{9} by Dirk for \cpkg{RcppStreams}
+    \ghit{9} by Dirk for \CRANpkg{RcppStreams}
   }
 }
 
 \section{Changes in version 1.55.0-2 (2015-01-03)}{
   \itemize{
     \item Added Boost \boostPkg{fusion} requested in GH ticket
-  \ghissue{7} by Dirk for \cpkg{RcppStreams}
+    \ghit{7} by Dirk for \CRANpkg{RcppStreams}
   }
 }
 
@@ -51,26 +61,26 @@
   \itemize{
     \item Upgraded to \boost 1.55 once again from the  
     \href{https://packages.debian.org/source/sid/boost1.55}{Debian tarball}
-    \item Added Boost \boostPkg{geometry} requested in GH ticket \ghissue{5} by 'teramonagi'
+    \item Added Boost \boostPkg{geometry} requested in GH ticket \ghit{5} by 'teramonagi'
   }
 }
 
 \section{Changes in version 1.54.0-5 (2014-11-09)}{
   \itemize{
-    \item Added Boost \boostPkg{circular_buffer} requested by Ben Goodrich for \cpkg{rstan}
+    \item Added Boost \boostPkg{circular_buffer} requested by Ben Goodrich for \CRANpkg{rstan}
   }
 }
 
 \section{Changes in version 1.54.0-4 (2014-08-29)}{
   \itemize{
-    \item Added Boost \boostPkg{any} requested by Greg Jeffries for his \cpkg{nabor} package 
+    \item Added Boost \boostPkg{any} requested by Greg Jeffries for his \CRANpkg{nabor} package 
   }
 }
 
 \section{Changes in version 1.54.0-3 (2014-08-03)}{
   \itemize{
     \item Added Boost \boostPkg{heap} library which will be needed by the next
-    version of \cpkg{RcppMLPACK}
+    version of \CRANpkg{RcppMLPACK}
   }
 }
 
@@ -95,7 +105,7 @@
 \section{Changes in version 1.51.0-4 (2014-01-01)}{
   \itemize{
     \item Rewritten main package creation script to no longer scan for
-    what \cpkg{bigmemory} and \cpkg{synchronicity} use, but rather
+    what \CRANpkg{bigmemory} and \CRANpkg{synchronicity} use, but rather
     explicitly copy over an (equivalent) list of explicitly-enumerated
     \boost libraries
     \item Repository moved from R-Forge to GitHub, scripts and layout
@@ -129,15 +139,15 @@
     respectively, R-Forge issue tickets \rfticket{2527}, \rfticket{2533}
     and \rfticket{2768}. 
     \item The package can now also be used to compile CRAN package
-    \cpkg{ExactNumCI} and \cpkg{rcppbugs}.
+    \CRANpkg{ExactNumCI} and \CRANpkg{rcppbugs}.
   }
 }
 
 \section{Changes in version 1.51.0-0 (2013-01-31)}{
   \itemize{
     \item First CRAN upload
-    \item The package can be used to build \cpkg{bigmemory} and
-    \cpkg{RcppBDT} as it already contains significant portions of Boost libraries
+    \item The package can be used to build \CRANpkg{bigmemory} and
+    \CRANpkg{RcppBDT} as it already contains significant portions of Boost libraries
     algorithm, bind, concept, config, container, date_time, detail,
     exceptions, filesystem, functional, interprocess, intrusive, iterator,
     math, mpl, numeric, preprocessor, random, range, smart_ptr,

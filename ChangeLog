@@ -1,3 +1,13 @@
+2016-11-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION: Release 1.62.0-1
+
+	* local/scripts/CreateBoost.sh: Added Boost.PropertyTree (cf #29),
+	Boost.ScopeExit (cf #30) and (belatedly) formally added Boost.Atomic
+
+	* numeric/odeint/stepper/generation/: As before rename
+	karp54_classic.hpp to karp54_cl.hpp and adjust generation.hpp
+
 2016-06-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Description): s/type_trains/type_traits/
