@@ -10,10 +10,10 @@
 ## -- on a standard git checkout, this repo it may be ~/git/bh
 pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
-boosttargz="boost_1_60_0.tar.gz"
+boosttargz="boost_1_62_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.60.0-2"
-date="2016-05-05"
+version="1.62.0-1"
+date="2016-11-13"
 
 
 
@@ -93,7 +93,7 @@ echo "Unpacking ${boosttargz} into LocalDir (ie ${localdir})."
 ## But we now enumerate the corresponding libraries (derived from what
 ## bigmemory and synchronicity brought in) explicitly
 
-echo "Copying Boost libraries into BH"
+echo "Copying (core) Boost libraries into BH"
 
 boostlibs="bind concept config container date_time detail exception functional integer \
            interprocess intrusive io iterator math move mpl numeric pending preprocessor \
@@ -122,17 +122,19 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus bimap (cf [github] pr #24)
 # Plus icl (cf [github] pr #27)
 # Plus flyweight (cf [github] issue ticket #26)
+# Plus property_tree (cf [github] issue ticket #29)
+# Plus scope_exit (cf [github] issue ticket #30)
+# Plus atomic (which we copied in anyway since 1.58.0 in May 2015)
 boostextras="filesystem spirit foreach algorithm iostreams \
             dynamic_bitset heap any circular_buffer geometry fusion graph \
-            multiprcecision phoenix bimap icl flyweight"
+            multiprcecision phoenix bimap icl flyweight property_tree \
+            scope_exit atomic"
+
+echo "Copying (extra) Boost libraries into BH"
 
 bcp --boost=${boostroot}  ${boostextras}   ${pkgincl}   > /dev/null   2>&1
 
 # TODO: check with other CRAN packages about what may be needed
-
-## At least atomic needs to be complete with actual copy
-cp -vax ${boostroot}/boost/atomic ${pkgincl}/boost
-
 
 ## (9) Some post processing and cleanup
 rm -rf ${pkgincl}/libs \
