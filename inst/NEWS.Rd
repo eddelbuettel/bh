@@ -9,9 +9,10 @@
 
 \section{Changes in version 1.62.0-1 (2016-11-13)}{
   \itemize{
+    \item Upgraded to \boost 1.62 installed directly from upstream source
     \item Added Boost \boostPkg{property_tree} as requested in \ghit{29}
     by Aydin Demircioglu
-    \item Added Boost \boostPkg{scopted_exit} as requested in \ghit{30} by
+    \item Added Boost \boostPkg{scope_exit} as requested in \ghit{30} by
     Kirill Mueller
     \item Added Boost \boostPkg{atomic} which we had informally added
     since 1.58.0
