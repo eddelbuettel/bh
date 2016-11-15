@@ -28,7 +28,9 @@ namespace boost { namespace detail { namespace variant {
 
 BOOST_NORETURN inline void forced_return_no_return() { // fixes `must return a value` warnings
     using namespace std;
-    abort(); // some implementations have no std::abort
+    //abort(); // some implementations have no std::abort
+#include <R_ext/Error.h>
+    Rf_error("Forced return to R");
 }
 
 

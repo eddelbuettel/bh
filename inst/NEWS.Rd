@@ -7,7 +7,7 @@
 \newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
-\section{Changes in version 1.62.0-1 (2016-11-13)}{
+\section{Changes in version 1.62.0-1 (2016-11-15)}{
   \itemize{
     \item Upgraded to \boost 1.62 installed directly from upstream source
     \item Added Boost \boostPkg{property_tree} as requested in \ghit{29}
