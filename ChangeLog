@@ -1,9 +1,14 @@
-2016-11-15  Dirk Eddelbuettel  <edd@debian.org>
+2016-11-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 1.62.0-1
 
+	* inst/include/boost/variant/detail/forced_return.hpp: Ensure
+	R_NO_REMAP is defined
+
+2016-11-15  Dirk Eddelbuettel  <edd@debian.org>
+
 	* inst/include/boost/variant/detail/forced_return.hpp
-	(forced_return_no_return): Call (Rf_)error() not abort()
+	(forced_return_no_return): Call Rf_error() not abort()
 
 2016-11-13  Dirk Eddelbuettel  <edd@debian.org>
 

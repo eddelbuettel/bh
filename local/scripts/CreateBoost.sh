@@ -13,7 +13,7 @@ pkgdir="${HOME}/git/bh"
 boosttargz="boost_1_62_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
 version="1.62.0-1"
-date="2016-11-13"
+date="2016-11-18"
 
 
 

@@ -17,6 +17,9 @@
 #include <boost/variant/detail/generic_result_type.hpp>
 #include <boost/assert.hpp>
 #include <cstdlib> // std::abort
+#ifndef R_NO_REMAP
+#define R_NO_REMAP
+#endif
 #include <R_ext/Error.h>        // Rf_error()
 
 #ifdef BOOST_MSVC
@@ -29,7 +32,7 @@ namespace boost { namespace detail { namespace variant {
 BOOST_NORETURN inline void forced_return_no_return() { // fixes `must return a value` warnings
     using namespace std;
     //abort(); // some implementations have no std::abort
-    Rf_error("Forced return to R");
+    ::Rf_error("Forced return to R");
 }
 
 
