@@ -1,3 +1,8 @@
+2016-12-04  Dirk Eddelbuettel  <edd@debian.org>
+
+	* local/scripts/git-remove.sh: Script contributed in GitHub Issue #34
+	to reduce disk footprint of the archive
+
 2016-11-18  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION: Release 1.62.0-1
