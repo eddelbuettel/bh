@@ -1,3 +1,7 @@
+2016-12-05  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Updated as repo now has a more manageable footprint
+
 2016-12-04  Dirk Eddelbuettel  <edd@debian.org>
 
 	* local/scripts/git-remove.sh: Script contributed in GitHub Issue #34

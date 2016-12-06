@@ -64,16 +64,23 @@ version to a newer version of [Boost](http://www.boost.org/).
 
 ### But what about the size?
 
-The repo has a large footprint. We know. We erroneously thought that committing 
-the Boost tarballs would be a good idea. It wasn't. First attempts at pruning 
-the history [using bfg](https://rtyley.github.io/bfg-repo-cleaner/) were not that
-successful.  If someone has a script doing this well we would take another
-look.
+That used to be a concern, and we wrote:
 
-Otherwise we recommend to just start from
-[CreateBoost.sh](https://github.com/eddelbuettel/bh/blob/master/local/scripts/CreateBoost.sh). 
+> The repo has a large footprint. We know. We erroneously thought that committing 
+> the Boost tarballs would be a good idea. It wasn't. First attempts at pruning 
+> the history [using bfg](https://rtyley.github.io/bfg-repo-cleaner/) were not that
+> successful.  If someone has a script doing this well we would take another
+> look.
+> 
+> Otherwise we recommend to just start from
+> [CreateBoost.sh](https://github.com/eddelbuettel/bh/blob/master/local/scripts/CreateBoost.sh). 
 
-### Authors 
+and lo and behold, we got help via
+[this script](https://github.com/eddelbuettel/bh/blob/master/local/scripts/git-remove.sh) as
+[discussed here](https://github.com/eddelbuettel/bh/issues/34).  The old tarballs are now removed;
+six commits were filtered and the repo has a much saner nice so it can be forked more easily.
+
+### Authors
 
 Dirk Eddelbuettel, Jay Emerson and Michael Kane
 
