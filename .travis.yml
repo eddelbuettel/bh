@@ -13,7 +13,8 @@ env:
     - _R_CHECK_FORCE_SUGGESTS_=FALSE
 
 before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+  - curl -OL https://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+  - sha256sum travis-tool.sh | grep -q 0aa65b33dd4f6b5280b80e2ed9d7f8738a753d7f59ca6066cc900696971b5571
   - chmod 755 ./travis-tool.sh
   - ./travis-tool.sh bootstrap
 
