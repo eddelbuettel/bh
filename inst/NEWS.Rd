@@ -7,6 +7,12 @@
 \newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
+\section{Changes in version 1.64.0-1 (2017-xx-yy)}{
+  \itemize{
+    \item Updated Travis CI support via newer \code{run.sh}
+  }
+}
+
 \section{Changes in version 1.62.0-1 (2016-11-15)}{
   \itemize{
     \item Upgraded to \boost 1.62 installed directly from upstream source
