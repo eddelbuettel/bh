@@ -22,6 +22,7 @@
 #endif
 #include <R_ext/Error.h>        // Rf_error()
 
+
 #ifdef BOOST_MSVC
 # pragma warning( push )
 # pragma warning( disable : 4702 ) // unreachable code
