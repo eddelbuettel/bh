@@ -9,6 +9,12 @@
 
 \section{Changes in version 1.64.0-1 (2017-xx-yy)}{
   \itemize{
+    \item Upgraded to \boost 1.64 installed directly from upstream
+    source with three minor tweaks
+    \item Added Boost \boostPkg{align}) (as requested in \ghit{32})
+    \item Added Boost \boostPkg{sort}) (as requested in \ghit{35})
+    \item Added Boost \boostPkg{mulitprecision} by fixing typo in script
+    (as requested in \ghit{42})
     \item Updated Travis CI support via newer \code{run.sh}
   }
 }
