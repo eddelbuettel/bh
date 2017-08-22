@@ -1,3 +1,16 @@
+2017-08-22  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Rolled to test release 1.64.0-0
+
+	* inst/include/boost/*: Upgraded to Boost 1.65
+
+	* inst/include/boost/numeric/odeint/stepper/generation/: As before
+	rename karp54_classic.hpp to karp54_cl.hpp, adjust generation.hpp
+	* inst/include/boost/variant/detail/forced_return.hpp: As before
+	ensure R_NO_REMAP is defined; call Rf_error() in lieu of abort()
+	* inst/include/boost/numeric/ublas/storage.hpp : Add missing include
+	for boost/serialization/array_wrapper.hpp
+
 2017-08-12  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Rolled to test release 1.64.0-0
