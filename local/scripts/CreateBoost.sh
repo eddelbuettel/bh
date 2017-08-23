@@ -151,13 +151,13 @@ rm -rf ${pkgincl}/libs \
 ## (10) Some file manips -- or rather, we might as well do this by hand ...
 #cp -p ${localfiles}/NAMESPACE    ${pkgdir}
 #cp -p ${localfiles}/inst/NEWS.Rd ${pkgdir}/inst/
-cp -p ${localfiles}/man/*.Rd     ${pkgdir}/man
+#cp -p ${localfiles}/man/*.Rd     ${pkgdir}/man
 
 #sed -e "s/XXX/${version}/g" \
 #    -e "s/YYY/${date}/g"    \
 #    ${localfiles}/DESCRIPTION  >  ${pkgdir}/DESCRIPTION
-sed -e "s/XXX/${version}/g" -e "s/YYY/${date}/g" \
-    ${localfiles}/man/BH-package.Rd > ${pkgdir}/man/BH-package.Rd 
+#sed -e "s/XXX/${version}/g" -e "s/YYY/${date}/g" \
+#    ${localfiles}/man/BH-package.Rd > ${pkgdir}/man/BH-package.Rd 
 
 
 ## (11) Unconditional cleanup

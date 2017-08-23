@@ -7,13 +7,13 @@
 \newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
-\section{Changes in version 1.64.0-1 (2017-xx-yy)}{
+\section{Changes in version 1.65.0-1 (2017-xx-yy)}{
   \itemize{
-    \item Upgraded to \boost 1.64 installed directly from upstream
-    source with three minor tweaks
+    \item Upgraded to \boost 1.64 and then 1.65 installed directly from
+    upstream source with four minor tweaks
     \item Added Boost \boostPkg{align}) (as requested in \ghit{32})
     \item Added Boost \boostPkg{sort}) (as requested in \ghit{35})
-    \item Added Boost \boostPkg{mulitprecision} by fixing typo in script
+    \item Added Boost \boostPkg{multiprecision} by fixing a script typo
     (as requested in \ghit{42})
     \item Updated Travis CI support via newer \code{run.sh}
   }
