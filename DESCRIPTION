@@ -12,7 +12,7 @@ Description: Boost provides free peer-reviewed portable C++ source
  for template use among CRAN package. By placing these libraries in 
  this package, we offer a more efficient distribution system for CRAN 
  as replication of this code in the sources of other packages is 
- avoided. As of release 1.64.0-1, the following Boost libraries are
+ avoided. As of release 1.65.0-1, the following Boost libraries are
  included: 'algorithm' 'align' 'any' 'atomic' 'bimap' 'bind'
  'circular_buffer' 'concept' 'config' 'container' 'date'_'time'
  'detail' 'dynamic_bitset' 'exception' 'filesystem' 'flyweight'
