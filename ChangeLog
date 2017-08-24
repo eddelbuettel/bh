@@ -1,3 +1,9 @@
+2017-08-24  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Date, Version): Releease 1.65.0-1
+
+	* .aspell/: Added for new R-devel spell checker interface
+
 2017-08-23  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/boost/numeric/ublas/matrix_expression.hpp (boost):
