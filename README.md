@@ -20,7 +20,7 @@ It can be used via the `LinkingTo:` field in the `DESCRIPTION` field of an R
 package --- and the R package infrastructure tools will then know how to set
 include flags correctly on all architectures supported by R.
 
-Not that this can be used solely by headers-only Boost libraries. This
+Note that this can be used solely by headers-only Boost libraries. This
 covers most of Boost, but excludes some libraries which require linking for
 parts or all of their functionality. 
 
