@@ -10,10 +10,10 @@
 ## -- on a standard git checkout, this repo it may be ~/git/bh
 pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
-boosttargz="boost_1_65_0.tar.gz"
+boosttargz="boost_1_66_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.65.0-1"
-date="2017-08-22"
+version="1.66.0-1"
+date="2018-02-11"
 
 
 
@@ -127,10 +127,11 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus atomic (which we copied in anyway since 1.58.0 in May 2015)
 # Plus align (issue ticket #32)
 # Plus sort (issue ticket #35)
+# Plus compute (issue ticket #16 -- and now at last in upstream Boost)
 boostextras="filesystem spirit foreach algorithm iostreams \
             dynamic_bitset heap any circular_buffer geometry fusion graph \
             multiprecision phoenix bimap icl flyweight property_tree \
-            scope_exit atomic align sort"
+            scope_exit atomic align sort compute"
 
 echo "Copying (extra) Boost libraries into BH"
 

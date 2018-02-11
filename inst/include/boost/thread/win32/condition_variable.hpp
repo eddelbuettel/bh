@@ -76,7 +76,7 @@ namespace boost
             void release(unsigned count_to_release)
             {
                 notified=true;
-                detail::win32::ReleaseSemaphore(semaphore,count_to_release,0);
+                detail::winapi::ReleaseSemaphore(semaphore,count_to_release,0);
             }
 
             void release_waiters()
@@ -96,7 +96,7 @@ namespace boost
 
             bool woken()
             {
-                unsigned long const woken_result=detail::win32::WaitForSingleObjectEx(wake_sem,0,0);
+                unsigned long const woken_result=detail::winapi::WaitForSingleObjectEx(wake_sem,0,0);
                 BOOST_ASSERT((woken_result==detail::win32::timeout) || (woken_result==0));
                 return woken_result==0;
             }
@@ -135,7 +135,7 @@ namespace boost
             void wake_waiters(long count_to_wake)
             {
                 detail::interlocked_write_release(&total_count,total_count-count_to_wake);
-                detail::win32::ReleaseSemaphore(wake_sem,count_to_wake,0);
+                detail::winapi::ReleaseSemaphore(wake_sem,count_to_wake,0);
             }
 
             template<typename lock_type>
@@ -211,7 +211,7 @@ namespace boost
                 {}
 #endif
 
-                void remove_waiter()
+                void remove_waiter_and_reset()
                 {
                   if (entry) {
                     boost::lock_guard<boost::mutex> internal_lock(internal_mutex);
@@ -221,7 +221,7 @@ namespace boost
                 }
                 ~entry_manager() BOOST_NOEXCEPT_IF(false)
                 {
-                    remove_waiter();
+                  remove_waiter_and_reset();
                 }
 
                 list_entry* operator->()
@@ -250,7 +250,7 @@ namespace boost
                   woken=entry->woken();
               }
               // do it here to avoid throwing on the destructor
-              entry->remove_waiter();
+              entry.remove_waiter_and_reset();
               locker.lock();
               return woken;
             }
