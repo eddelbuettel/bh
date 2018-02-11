@@ -1,0 +1,70 @@
+diff --git a/inst/include/boost/numeric/odeint/stepper/generation.hpp b/inst/include/boost/numeric/odeint/stepper/generation.hpp
+index 90ad2b9a..26d0b986 100644
+--- a/inst/include/boost/numeric/odeint/stepper/generation.hpp
++++ b/inst/include/boost/numeric/odeint/stepper/generation.hpp
+@@ -24,7 +24,7 @@
+ #include <boost/numeric/odeint/stepper/generation/generation_controlled_runge_kutta.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_dense_output_runge_kutta.hpp>
+ 
+-#include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp>
++#include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_cl.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_dopri5.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_fehlberg78.hpp>
+diff --git a/inst/include/boost/numeric/ublas/matrix_expression.hpp b/inst/include/boost/numeric/ublas/matrix_expression.hpp
+index a3631309..c12f24d7 100644
+--- a/inst/include/boost/numeric/ublas/matrix_expression.hpp
++++ b/inst/include/boost/numeric/ublas/matrix_expression.hpp
+@@ -2221,10 +2221,12 @@ namespace boost { namespace numeric { namespace ublas {
+                         index1 = it1_.index1 ();
+                 }
+                 size_type index2 = (*this) ().size1 ();
+-                if (it2_ != it2_end_)
++                // cf warning from g++, also noted at GH repo at
++                // https://github.com/boostorg/ublas/issues/40
++                if (it2_ != it2_end_) {
+                     if (it2_.index1 () <= i_)
+                         ++ it2_;
+-                    if (it2_ != it2_end_) {
++                    if (it2_ != it2_end_) 
+                         index2 = it2_.index1 ();
+                 }
+                 i_ = (std::min) (index1, index2);
+diff --git a/inst/include/boost/numeric/ublas/storage.hpp b/inst/include/boost/numeric/ublas/storage.hpp
+index bd648925..a452e2f2 100644
+--- a/inst/include/boost/numeric/ublas/storage.hpp
++++ b/inst/include/boost/numeric/ublas/storage.hpp
+@@ -19,6 +19,7 @@
+ #endif
+ 
+ #include <boost/serialization/array.hpp>
++#include <boost/serialization/array_wrapper.hpp>
+ #include <boost/serialization/collection_size_type.hpp>
+ #include <boost/serialization/nvp.hpp>
+ 
+diff --git a/inst/include/boost/variant/detail/forced_return.hpp b/inst/include/boost/variant/detail/forced_return.hpp
+index 333393a2..a74eba71 100644
+--- a/inst/include/boost/variant/detail/forced_return.hpp
++++ b/inst/include/boost/variant/detail/forced_return.hpp
+@@ -17,6 +17,10 @@
+ #include <boost/variant/detail/generic_result_type.hpp>
+ #include <boost/assert.hpp>
+ #include <cstdlib> // std::abort
++#ifndef R_NO_REMAP
++#define R_NO_REMAP
++#endif
++#include <R_ext/Error.h>        // Rf_error()
+ 
+ 
+ #ifdef BOOST_MSVC
+@@ -28,7 +32,9 @@ namespace boost { namespace detail { namespace variant {
+ 
+ BOOST_NORETURN inline void forced_return_no_return() { // fixes `must return a value` warnings
+     using namespace std;
+-    abort(); // some implementations have no std::abort
++    ::Rf_error("Forced return to R");
++    //abort(); // some implementations have no std::abort
++    
+ }
+ 
+ 
