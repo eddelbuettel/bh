@@ -1,3 +1,18 @@
+2018-02-11  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Date, Version): Releease 1.66.0-1
+
+	* inst/include/boost/*: Upgraded to Boost 1.66; added Boost compute
+
+	* inst/include/boost/numeric/odeint/stepper/generation/: As before
+	rename karp54_classic.hpp to karp54_cl.hpp, adjust generation.hpp
+	* inst/include/boost/variant/detail/forced_return.hpp: As before
+	ensure R_NO_REMAP is defined; call Rf_error() in lieu of abort()
+	* inst/include/boost/numeric/ublas/storage.hpp : Add missing include
+	for boost/serialization/array_wrapper.hpp
+	* inst/include/boost/numeric/ublas/matrix_expression.hpp (boost):
+	Fourth local change suppressing a g++ warning, also see #40 upstream
+
 2017-08-24  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Date, Version): Releease 1.65.0-1
@@ -27,7 +42,7 @@
 	* DESCRIPTION (Version, Date): Rolled to test release 1.64.0-0
 
 	* inst/include/boost/*: Upgraded to Boost 1.64; added new
-	libraries 'align' and 'sort'; include full 'multiprecision' 
+	libraries 'align' and 'sort'; include full 'multiprecision'
 
 	* inst/include/boost/numeric/odeint/stepper/generation/: As before
 	rename karp54_classic.hpp to karp54_cl.hpp, adjust generation.hpp

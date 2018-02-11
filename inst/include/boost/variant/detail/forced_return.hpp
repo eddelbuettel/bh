@@ -34,6 +34,7 @@ BOOST_NORETURN inline void forced_return_no_return() { // fixes `must return a v
     using namespace std;
     ::Rf_error("Forced return to R");
     //abort(); // some implementations have no std::abort
+    
 }
 
 
