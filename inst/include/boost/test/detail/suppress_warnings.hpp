@@ -28,11 +28,11 @@
 
 #if BOOST_CLANG
 # pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wvariadic-macros"
+// # pragma clang diagnostic ignored "-Wvariadic-macros"
 #endif
 
 #if defined(BOOST_GCC) && (BOOST_GCC >= 4 * 10000 + 6 * 100)
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wvariadic-macros"
+// # pragma GCC diagnostic ignored "-Wvariadic-macros"
 #endif
 

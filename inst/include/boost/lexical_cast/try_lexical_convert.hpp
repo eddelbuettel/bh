@@ -27,7 +27,7 @@
     !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) && \
     (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
+// #pragma GCC diagnostic ignored "-Wuninitialized"
 #endif
 
 #include <string>

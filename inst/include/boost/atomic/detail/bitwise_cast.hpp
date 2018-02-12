@@ -28,7 +28,7 @@
 #if defined(BOOST_GCC) && (BOOST_GCC+0) >= 40600
 #pragma GCC diagnostic push
 // missing initializer for member var
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+//#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
 
 namespace boost {
