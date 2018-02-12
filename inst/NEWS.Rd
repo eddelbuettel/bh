@@ -7,6 +7,13 @@
 \newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
+\section{Changes in version 1.66.0-1 (2018-02-12)}{
+  \itemize{
+    \item Upgraded to \boost 1.66.0 (plus the few local tweaks)
+    \item Added Boost \boostPkg{compute}) (as requested in \ghit{16})
+  }
+}
+    
 \section{Changes in version 1.65.0-1 (2017-08-24)}{
   \itemize{
     \item Upgraded to \boost 1.64 and then 1.65 installed directly from
