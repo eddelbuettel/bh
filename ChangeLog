@@ -1,3 +1,7 @@
+2018-09-02  Dirk Eddelbuettel  <edd@debian.org>
+
+	* .travis.yml: Very minor update
+
 2018-02-12  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Date, Version): Releease 1.66.0-1
