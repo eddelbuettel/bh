@@ -10,7 +10,7 @@
 \section{Changes in version 1.66.0-1 (2018-02-12)}{
   \itemize{
     \item Upgraded to \boost 1.66.0 (plus the few local tweaks)
-    \item Added Boost \boostPkg{compute}) (as requested in \ghit{16})
+    \item Added Boost \boostPkg{compute} (as requested in \ghit{16})
   }
 }
     
@@ -20,8 +20,8 @@
     upstream source with several minor tweaks (as before)
     \item Fourth tweak corrects a misplaced curly brace (see the
     Boost ublas GitHub repo and its issue #40)
-    \item Added Boost \boostPkg{align}) (as requested in \ghit{32})
-    \item Added Boost \boostPkg{sort}) (as requested in \ghit{35})
+    \item Added Boost \boostPkg{align} (as requested in \ghit{32})
+    \item Added Boost \boostPkg{sort} (as requested in \ghit{35})
     \item Added Boost \boostPkg{multiprecision} by fixing a script typo
     (as requested in \ghit{42})
     \item Updated Travis CI support via newer \code{run.sh}
