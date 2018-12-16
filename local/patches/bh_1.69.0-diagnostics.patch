@@ -1,0 +1,2441 @@
+41 files changed, 409 insertions(+), 418 deletions(-)
+inst/include/boost/asio/detail/push_options.hpp    |   2 +-
+.../boost/atomic/detail/extra_fp_ops_generic.hpp   |   2 +-
+inst/include/boost/bind.hpp                        |   2 +-
+.../boost/container/detail/copy_move_algo.hpp      |   6 +-
+inst/include/boost/container/detail/tree.hpp       |   4 +-
+inst/include/boost/container/list.hpp              |   2 +-
+inst/include/boost/container/slist.hpp             |   2 +-
+inst/include/boost/container/stable_vector.hpp     |   4 +-
+inst/include/boost/container/string.hpp            |  30 +--
+inst/include/boost/core/lightweight_test.hpp       |   4 +-
+inst/include/boost/function/function_base.hpp      |   2 +-
+inst/include/boost/get_pointer.hpp                 |   6 +-
+.../boost/interprocess/detail/config_begin.hpp     |   2 +-
+.../interprocess/detail/config_external_begin.hpp  |   2 +-
+.../boost/interprocess/detail/win32_api.hpp        |  16 +-
+inst/include/boost/intrusive/pointer_plus_bits.hpp |   4 +-
+.../boost/lexical_cast/try_lexical_convert.hpp     |  13 +-
+inst/include/boost/log/detail/header.hpp           |   8 +-
+inst/include/boost/move/detail/std_ns_begin.hpp    |   3 +-
+inst/include/boost/mpl/assert.hpp                  |  24 +-
+inst/include/boost/mpl/print.hpp                   |  18 +-
+inst/include/boost/multi_array.hpp                 |  20 +-
+.../multi_index/detail/ignore_wstrict_aliasing.hpp |   2 +-
+.../detail/reversible_ptr_container.hpp            | 266 ++++++++++----------
+.../boost/ptr_container/ptr_sequence_adapter.hpp   | 276 ++++++++++-----------
+inst/include/boost/ptr_container/ptr_vector.hpp    |  26 +-
+.../boost/random/detail/disable_warnings.hpp       |   2 +-
+inst/include/boost/regex/v4/instances.hpp          |  29 +--
+inst/include/boost/smart_ptr/bad_weak_ptr.hpp      |   2 +-
+.../boost/smart_ptr/detail/shared_count.hpp        |   8 +-
+.../smart_ptr/detail/sp_counted_base_clang.hpp     |   4 +-
+inst/include/boost/smart_ptr/scoped_ptr.hpp        |   2 +-
+inst/include/boost/smart_ptr/shared_ptr.hpp        |  10 +-
+.../boost/system/detail/generic_category.hpp       |   2 +-
+inst/include/boost/system/error_code.hpp           |   2 +-
+.../boost/test/detail/suppress_warnings.hpp        |   9 +-
+inst/include/boost/tuple/detail/tuple_basic.hpp    |   2 +-
+.../type_traits/detail/has_prefix_operator.hpp     |   3 +-
+inst/include/boost/type_traits/has_logical_not.hpp |   2 +-
+inst/include/boost/variant/get.hpp                 |   2 +-
+inst/include/boost/winapi/basic_types.hpp          |   2 +-
+
+modified   inst/include/boost/asio/detail/push_options.hpp
+@@ -73,7 +73,7 @@
+ 
+ # if (__GNUC__ >= 7)
+ #  pragma GCC diagnostic push
+-#  pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
++//#  pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+ # endif // (__GNUC__ >= 7)
+ 
+ #elif defined(__KCC)
+modified   inst/include/boost/atomic/detail/extra_fp_ops_generic.hpp
+@@ -30,7 +30,7 @@
+ #if defined(BOOST_GCC) && (BOOST_GCC+0) >= 60000
+ #pragma GCC diagnostic push
+ // ignoring attributes on template argument X - this warning is because we need to pass storage_type as a template argument; no problem in this case
+-#pragma GCC diagnostic ignored "-Wignored-attributes"
++//#pragma GCC diagnostic ignored "-Wignored-attributes"
+ #endif
+ 
+ namespace boost {
+modified   inst/include/boost/bind.hpp
+@@ -26,7 +26,7 @@
+ #if defined(BOOST_CLANG)
+ # pragma clang diagnostic push
+ # if  __has_warning("-Wheader-hygiene")
+-#  pragma clang diagnostic ignored "-Wheader-hygiene"
++//#  pragma clang diagnostic ignored "-Wheader-hygiene"
+ # endif
+ #endif
+ 
+modified   inst/include/boost/container/detail/copy_move_algo.hpp
+@@ -40,14 +40,14 @@
+ #pragma GCC diagnostic push
+ //pair memcpy optimizations rightfully detected by GCC
+ #  if defined(BOOST_GCC) && (BOOST_GCC >= 80000)
+-#     pragma GCC diagnostic ignored "-Wclass-memaccess"
++//#     pragma GCC diagnostic ignored "-Wclass-memaccess"
+ #  endif
+ //GCC 8 seems a bit confused about array access error with static_vector
+ //when out of bound exceptions are being thrown.
+ #  if defined(BOOST_GCC) && (BOOST_GCC >= 80000) && (BOOST_GCC < 80200)
+-#     pragma GCC diagnostic ignored "-Wstringop-overflow"
++//#     pragma GCC diagnostic ignored "-Wstringop-overflow"
+ #  endif
+-#  pragma GCC diagnostic ignored "-Warray-bounds"
++//#  pragma GCC diagnostic ignored "-Warray-bounds"
+ #endif
+ 
+ namespace boost {
+modified   inst/include/boost/container/detail/tree.hpp
+@@ -140,7 +140,7 @@ struct tree_node
+ 
+    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600) && (BOOST_GCC < 80000)
+       #pragma GCC diagnostic push
+-      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
++      //#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+       #define BOOST_CONTAINER_DISABLE_ALIASING_WARNING
+    #  endif
+ 
+@@ -1478,7 +1478,7 @@ struct has_trivial_destructor_after_move;
+ //!specialization for optimizations
+ template <class T, class KeyOfValue, class Compare, class Allocator, class Options>
+ struct has_trivial_destructor_after_move
+-   < 
++   <
+       ::boost::container::dtl::tree
+          <T, KeyOfValue, Compare, Allocator, Options>
+    >
+modified   inst/include/boost/container/list.hpp
+@@ -81,7 +81,7 @@ struct list_node
+ 
+    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600) && (BOOST_GCC < 80000)
+       #pragma GCC diagnostic push
+-      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
++      //#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+       #define BOOST_CONTAINER_DISABLE_ALIASING_WARNING
+    #  endif
+ 
+modified   inst/include/boost/container/slist.hpp
+@@ -86,7 +86,7 @@ struct slist_node
+ 
+    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600) && (BOOST_GCC < 80000)
+       #pragma GCC diagnostic push
+-      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
++      //#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+       #define BOOST_CONTAINER_DISABLE_ALIASING_WARNING
+    #  endif
+ 
+modified   inst/include/boost/container/stable_vector.hpp
+@@ -160,7 +160,7 @@ struct node
+ 
+    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600) && (BOOST_GCC < 80000)
+       #pragma GCC diagnostic push
+-      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
++      //#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+       #define BOOST_CONTAINER_DISABLE_ALIASING_WARNING
+    #  endif
+ 
+@@ -772,7 +772,7 @@ class stable_vector
+       : internal_data(a), index(a)
+    {
+       if(this->priv_node_alloc() == x.priv_node_alloc()){
+-         this->index.swap(x.index);         
++         this->index.swap(x.index);
+          this->priv_swap_members(x);
+       }
+       else{
+modified   inst/include/boost/container/string.hpp
+@@ -307,7 +307,7 @@ class basic_string_base
+       return this->members_.plong_repr();
+    }
+ 
+-  
++
+    protected:
+ 
+    typedef dtl::integral_constant<unsigned,
+@@ -398,7 +398,7 @@ class basic_string_base
+    //GCC seems a bit confused about uninitialized accesses
+    #if defined(BOOST_GCC) && (BOOST_GCC >= 40700)
+    #pragma GCC diagnostic push
+-   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++  //#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+    #endif
+ 
+    pointer priv_long_addr() const
+@@ -3133,8 +3133,8 @@ operator==(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
+ }
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+-inline 
+-   BOOST_CONTAINER_DOC1ST( bool, 
++inline
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+       operator==( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
+@@ -3145,7 +3145,7 @@ inline
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+       operator==( const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
+@@ -3172,7 +3172,7 @@ operator!=(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+ operator!=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
+@@ -3180,7 +3180,7 @@ operator!=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,All
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+ operator!=( const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
+@@ -3210,7 +3210,7 @@ operator<(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+ operator<( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
+@@ -3218,7 +3218,7 @@ operator<( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allo
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+ operator<(  const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
+@@ -3245,7 +3245,7 @@ operator>(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+ operator>( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
+@@ -3253,7 +3253,7 @@ operator>( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allo
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+ operator>( const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
+@@ -3279,7 +3279,7 @@ operator<=(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+ operator<=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
+@@ -3287,7 +3287,7 @@ operator<=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,All
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+ operator<=( const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
+@@ -3311,7 +3311,7 @@ operator>=(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+ operator>=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
+@@ -3319,7 +3319,7 @@ operator>=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,All
+ 
+ template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
+ inline
+-   BOOST_CONTAINER_DOC1ST( bool, 
++   BOOST_CONTAINER_DOC1ST( bool,
+                            typename dtl::disable_if
+                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
+ operator>=( const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
+modified   inst/include/boost/core/lightweight_test.hpp
+@@ -116,11 +116,11 @@ inline void throw_failed_impl(char const * excep, char const * file, int line, c
+ #elif defined(__clang__) && defined(__has_warning)
+ # if __has_warning("-Wsign-compare")
+ #  pragma clang diagnostic push
+-#  pragma clang diagnostic ignored "-Wsign-compare"
++//#  pragma clang diagnostic ignored "-Wsign-compare"
+ # endif
+ #elif defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wsign-compare"
++//# pragma GCC diagnostic ignored "-Wsign-compare"
+ #endif
+ 
+ // specialize test output for char pointers to avoid printing as cstring
+modified   inst/include/boost/function/function_base.hpp
+@@ -704,7 +704,7 @@ public: // should be protected, but GCC 2.95.3 will fail to allow access
+ 
+ #if defined(BOOST_CLANG)
+ #   pragma clang diagnostic push
+-#   pragma clang diagnostic ignored "-Wweak-vtables"
++//#   pragma clang diagnostic ignored "-Wweak-vtables"
+ #endif
+ /**
+  * The bad_function_call exception class is thrown when a boost::function
+modified   inst/include/boost/get_pointer.hpp
+@@ -9,11 +9,11 @@
+ 
+ // In order to avoid circular dependencies with Boost.TR1
+ // we make sure that our include of <memory> doesn't try to
+-// pull in the TR1 headers: that's why we use this header 
++// pull in the TR1 headers: that's why we use this header
+ // rather than including <memory> directly:
+ #include <boost/config/no_tr1/memory.hpp>  // std::auto_ptr
+ 
+-namespace boost { 
++namespace boost {
+ 
+ // get_pointer(p) extracts a ->* capable pointer from p
+ 
+@@ -41,7 +41,7 @@ template<class T> T * get_pointer(T * p)
+ #if defined( BOOST_CORE_DETAIL_DISABLE_LIBSTDCXX_DEPRECATED_WARNINGS )
+ // Disable libstdc++ warnings about std::auto_ptr being deprecated in C++11 mode
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #define BOOST_CORE_DETAIL_DISABLED_DEPRECATED_WARNINGS
+ #endif
+ 
+modified   inst/include/boost/interprocess/detail/config_begin.hpp
+@@ -46,5 +46,5 @@
+ 
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+modified   inst/include/boost/interprocess/detail/config_external_begin.hpp
+@@ -14,5 +14,5 @@
+ 
+ #if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 406)
+ #  pragma GCC diagnostic push
+-#  pragma GCC diagnostic ignored "-Wshadow"
++//#  pragma GCC diagnostic ignored "-Wshadow"
+ #endif
+modified   inst/include/boost/interprocess/detail/win32_api.hpp
+@@ -36,19 +36,19 @@
+ //#define BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED
+ 
+ #ifdef BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME
+-#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME_VALUE 1 
++#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME_VALUE 1
+ #else
+ #  define BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME_VALUE 0
+ #endif
+ 
+ #ifdef BOOST_INTERPROCESS_BOOTSTAMP_IS_EVENTLOG_BASED
+-#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_EVENTLOG_BASED_VALUE 1 
++#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_EVENTLOG_BASED_VALUE 1
+ #else
+ #  define BOOST_INTERPROCESS_BOOTSTAMP_IS_EVENTLOG_BASED_VALUE 0
+ #endif
+ 
+ #ifdef BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED
+-#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED_VALUE 1 
++#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED_VALUE 1
+ #else
+ #  define BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED_VALUE 0
+ #endif
+@@ -105,17 +105,17 @@
+ #  if (BOOST_GCC >= 40600)
+ #     pragma GCC diagnostic push
+ #     if (BOOST_GCC >= 40800)
+-#        pragma GCC diagnostic ignored "-Wpedantic"
++//#        pragma GCC diagnostic ignored "-Wpedantic"
+ #     else
+-#        pragma GCC diagnostic ignored "-pedantic"
++//#        pragma GCC diagnostic ignored "-pedantic"
+ #     endif
+-#     pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
++//#     pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+ #  else
+ #     pragma GCC system_header
+ #  endif
+-//When loading DLLs we have no option but reinterpret casting function types  
++//When loading DLLs we have no option but reinterpret casting function types
+ #  if (BOOST_GCC >= 80000)
+-#        pragma GCC diagnostic ignored "-Wcast-function-type"
++//#        pragma GCC diagnostic ignored "-Wcast-function-type"
+ #  endif
+ #endif
+ 
+modified   inst/include/boost/intrusive/pointer_plus_bits.hpp
+@@ -29,9 +29,9 @@
+ #if defined(BOOST_GCC)
+ #  if (BOOST_GCC >= 40600)
+ #     pragma GCC diagnostic push
+-#     pragma GCC diagnostic ignored "-Wuninitialized"
++//#     pragma GCC diagnostic ignored "-Wuninitialized"
+ #     if (BOOST_GCC >= 40700)
+-#        pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//#        pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #     endif
+ #  endif
+ #endif
+modified   inst/include/boost/lexical_cast/try_lexical_convert.hpp
+@@ -27,8 +27,8 @@
+     !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) && \
+     (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wuninitialized"
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wuninitialized"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
+ #endif
+ 
+ 
+@@ -81,18 +81,18 @@ namespace boost {
+                     boost::is_arithmetic<Source>::value &&
+                     boost::is_arithmetic<Target>::value
+                 > type;
+-        
++
+             BOOST_STATIC_CONSTANT(bool, value = (
+                 type::value
+             ));
+         };
+ 
+         /*
+-         * is_xchar_to_xchar<Target, Source>::value is true, 
++         * is_xchar_to_xchar<Target, Source>::value is true,
+          * Target and Souce are char types of the same size 1 (char, signed char, unsigned char).
+          */
+         template<typename Target, typename Source>
+-        struct is_xchar_to_xchar 
++        struct is_xchar_to_xchar
+         {
+             typedef boost::integral_constant<
+                 bool,
+@@ -101,7 +101,7 @@ namespace boost {
+                      boost::detail::is_character<Target>::value &&
+                      boost::detail::is_character<Source>::value
+                 > type;
+-                
++
+             BOOST_STATIC_CONSTANT(bool, value = (
+                 type::value
+             ));
+@@ -229,4 +229,3 @@ namespace boost {
+ #endif
+ 
+ #endif // BOOST_LEXICAL_CAST_TRY_LEXICAL_CONVERT_HPP
+-
+modified   inst/include/boost/log/detail/header.hpp
+@@ -50,15 +50,15 @@
+ 
+ #pragma GCC diagnostic push
+ // 'var' defined but not used
+-#pragma GCC diagnostic ignored "-Wunused-variable"
++//#pragma GCC diagnostic ignored "-Wunused-variable"
+ // unused parameter 'arg'
+-#pragma GCC diagnostic ignored "-Wunused-parameter"
++//#pragma GCC diagnostic ignored "-Wunused-parameter"
+ // missing initializer for member var
+-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
++//#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+ 
+ #if (__GNUC__ * 100 + __GNUC_MINOR__) >= 407
+ // typedef 'foo' locally defined but not used
+-#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
++//#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+ #endif
+ 
+ #endif
+modified   inst/include/boost/move/detail/std_ns_begin.hpp
+@@ -13,7 +13,7 @@
+    #if defined(__clang__)
+       #define BOOST_MOVE_STD_NS_GCC_DIAGNOSTIC_PUSH
+       #pragma GCC diagnostic push
+-      #pragma GCC diagnostic ignored "-Wc++11-extensions"
++      //#pragma GCC diagnostic ignored "-Wc++11-extensions"
+    #endif
+    #define BOOST_MOVE_STD_NS_BEG _LIBCPP_BEGIN_NAMESPACE_STD
+    #define BOOST_MOVE_STD_NS_END _LIBCPP_END_NAMESPACE_STD
+@@ -27,4 +27,3 @@
+    #define BOOST_MOVE_STD_NS_BEG namespace std{
+    #define BOOST_MOVE_STD_NS_END }
+ #endif
+-
+modified   inst/include/boost/mpl/assert.hpp
+@@ -4,8 +4,8 @@
+ 
+ // Copyright Aleksey Gurtovoy 2000-2006
+ //
+-// Distributed under the Boost Software License, Version 1.0. 
+-// (See accompanying file LICENSE_1_0.txt or copy at 
++// Distributed under the Boost Software License, Version 1.0.
++// (See accompanying file LICENSE_1_0.txt or copy at
+ // http://www.boost.org/LICENSE_1_0.txt)
+ //
+ // See http://www.boost.org/libs/mpl for documentation.
+@@ -52,8 +52,8 @@
+ #   define BOOST_MPL_CFG_ASSERT_BROKEN_POINTER_TO_POINTER_TO_MEMBER
+ #endif
+ 
+-// agurt, 10/nov/06: use enums for Borland (which cannot cope with static constants) 
+-// and GCC (which issues "unused variable" warnings when static constants are used 
++// agurt, 10/nov/06: use enums for Borland (which cannot cope with static constants)
++// and GCC (which issues "unused variable" warnings when static constants are used
+ // at a function scope)
+ #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610)) \
+     || (BOOST_MPL_CFG_GCC != 0) || (BOOST_MPL_CFG_GPU != 0) || defined(__PGI)
+@@ -67,7 +67,7 @@ BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
+ 
+ struct failed {};
+ 
+-// agurt, 24/aug/04: MSVC 7.1 workaround here and below: return/accept 
++// agurt, 24/aug/04: MSVC 7.1 workaround here and below: return/accept
+ // 'assert<false>' by reference; can't apply it unconditionally -- apparently it
+ // degrades the quality of GCC diagnostics
+ #if BOOST_WORKAROUND(BOOST_MSVC, == 1310)
+@@ -117,7 +117,7 @@ bool operator<=( failed, failed );
+ template< bool (*)(failed, failed), long x, long y > struct assert_relation {};
+ #   define BOOST_MPL_AUX_ASSERT_RELATION(x, y, r) assert_relation<r,x,y>
+ #else
+-template< BOOST_MPL_AUX_NTTP_DECL(long, x), BOOST_MPL_AUX_NTTP_DECL(long, y), bool (*)(failed, failed) > 
++template< BOOST_MPL_AUX_NTTP_DECL(long, x), BOOST_MPL_AUX_NTTP_DECL(long, y), bool (*)(failed, failed) >
+ struct assert_relation {};
+ #   define BOOST_MPL_AUX_ASSERT_RELATION(x, y, r) assert_relation<x,y,r>
+ #endif
+@@ -133,7 +133,7 @@ boost::mpl::aux::weighted_tag<6>::type operator<=( assert_, assert_ );
+ 
+ template< assert_::relations r, long x, long y > struct assert_relation {};
+ 
+-#endif 
++#endif
+ 
+ #if BOOST_WORKAROUND(BOOST_MSVC, == 1700)
+ 
+@@ -187,7 +187,7 @@ template< typename P > struct assert_arg_pred_not
+ #if defined(BOOST_GCC) && BOOST_GCC >= 80000
+ #define BOOST_MPL_IGNORE_PARENTHESES_WARNING
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wparentheses"
++//#pragma GCC diagnostic ignored "-Wparentheses"
+ #endif
+ 
+ template< typename Pred >
+@@ -215,7 +215,7 @@ assert_not_arg( void (*)(Pred), typename assert_arg_pred<Pred>::type );
+ 
+ 
+ #else // BOOST_MPL_CFG_ASSERT_BROKEN_POINTER_TO_POINTER_TO_MEMBER
+-        
++
+ template< bool c, typename Pred > struct assert_arg_type_impl
+ {
+     typedef failed      ************ Pred::* mwcw83_wknd;
+@@ -233,11 +233,11 @@ template< typename Pred > struct assert_arg_type
+ };
+ 
+ template< typename Pred >
+-typename assert_arg_type<Pred>::type 
++typename assert_arg_type<Pred>::type
+ assert_arg(void (*)(Pred), int);
+ 
+ template< typename Pred >
+-typename assert_arg_type< boost::mpl::not_<Pred> >::type 
++typename assert_arg_type< boost::mpl::not_<Pred> >::type
+ assert_not_arg(void (*)(Pred), int);
+ 
+ #   if !defined(BOOST_MPL_CFG_ASSERT_USE_RELATION_NAMES)
+@@ -408,7 +408,7 @@ BOOST_MPL_AUX_ASSERT_CONSTANT( \
+ #endif
+ 
+ 
+-// BOOST_MPL_ASSERT_MSG( (pred<x,...>::value), USER_PROVIDED_MESSAGE, (types<x,...>) ) 
++// BOOST_MPL_ASSERT_MSG( (pred<x,...>::value), USER_PROVIDED_MESSAGE, (types<x,...>) )
+ 
+ #if BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3202))
+ #   define BOOST_MPL_ASSERT_MSG_IMPL( counter, c, msg, types_ ) \
+modified   inst/include/boost/mpl/print.hpp
+@@ -5,8 +5,8 @@
+ // Copyright David Abrahams 2003
+ // Copyright Aleksey Gurtovoy 2004
+ //
+-// Distributed under the Boost Software License, Version 1.0. 
+-// (See accompanying file LICENSE_1_0.txt or copy at 
++// Distributed under the Boost Software License, Version 1.0.
++// (See accompanying file LICENSE_1_0.txt or copy at
+ // http://www.boost.org/LICENSE_1_0.txt)
+ //
+ // See http://www.boost.org/libs/mpl for documentation.
+@@ -19,7 +19,7 @@
+ #include <boost/mpl/identity.hpp>
+ 
+ namespace boost { namespace mpl {
+-  
++
+ namespace aux {
+ #if defined(BOOST_MSVC)
+ # pragma warning(push, 3)
+@@ -44,27 +44,27 @@ struct print
+     : mpl::identity<T>
+ #if defined(__MWERKS__)
+     , aux::print_base
+-#endif 
++#endif
+ {
+ #if defined(__clang__)
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wc++11-extensions"
++//# pragma clang diagnostic ignored "-Wc++11-extensions"
+     const int m_x = 1 / (sizeof(T) - sizeof(T));
+ # pragma clang diagnostic pop
+ #elif defined(BOOST_MSVC)
+     enum { n = sizeof(T) + -1 };
+ #elif defined(__MWERKS__)
+     void f(int);
+-#else 
++#else
+     enum {
+         n =
+ # if defined(__EDG_VERSION__)
+            aux::dependent_unsigned<T>::value > -1
+-# else 
++# else
+            sizeof(T) > -1
+-# endif 
++# endif
+         };
+-#endif 
++#endif
+ };
+ 
+ #if defined(BOOST_MSVC)
+modified   inst/include/boost/multi_array.hpp
+@@ -3,7 +3,7 @@
+ // Copyright 2018 Glen Joseph Fernandes
+ // (glenjofe@gmail.com)
+ 
+-// Use, modification and distribution is subject to the Boost Software 
++// Use, modification and distribution is subject to the Boost Software
+ // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+ // http://www.boost.org/LICENSE_1_0.txt)
+ 
+@@ -23,7 +23,7 @@
+ 
+ #if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 406)
+ #  pragma GCC diagnostic push
+-#  pragma GCC diagnostic ignored "-Wshadow"
++//#  pragma GCC diagnostic ignored "-Wshadow"
+ #endif
+ 
+ #include "boost/multi_array/base.hpp"
+@@ -94,7 +94,7 @@ template <>
+ struct disable_multi_array_impl_impl<true>
+ {
+     // forming a pointer to a reference triggers SFINAE
+-    typedef int& type; 
++    typedef int& type;
+ };
+ 
+ 
+@@ -153,7 +153,7 @@ public:
+     super_type((T*)initial_base_,c_storage_order(),
+                /*index_bases=*/0, /*extents=*/0),
+     alloc_base(boost::empty_init_t(),alloc) {
+-    allocate_space(); 
++    allocate_space();
+   }
+ 
+   template <class ExtentList>
+@@ -173,7 +173,7 @@ public:
+     allocate_space();
+   }
+ 
+-    
++
+   template <class ExtentList>
+   explicit multi_array(ExtentList const& extents,
+                        const general_storage_order<NumDims>& so) :
+@@ -239,8 +239,8 @@ public:
+   // array_view object.  The following constructors ensure that.
+   //
+ 
+-  // Due to limited support for partial template ordering, 
+-  // MSVC 6&7 confuse the following with the most basic ExtentList 
++  // Due to limited support for partial template ordering,
++  // MSVC 6&7 confuse the following with the most basic ExtentList
+   // constructor.
+ #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+   template <typename OPtr>
+@@ -404,7 +404,7 @@ public:
+     allocate_space();
+     std::copy(rhs.begin(),rhs.end(),this->begin());
+   }
+-    
++
+   multi_array(const detail::multi_array::
+               multi_array_view<T,NumDims>& rhs,
+               const general_storage_order<NumDims>& so,
+@@ -415,7 +415,7 @@ public:
+     allocate_space();
+     std::copy(rhs.begin(),rhs.end(),this->begin());
+   }
+-    
++
+   // Since assignment is a deep copy, multi_array_ref
+   // contains all the necessary code.
+   template <typename ConstMultiArray>
+@@ -444,7 +444,7 @@ public:
+       typedef typename gen_type::range range_type;
+       ranges.ranges_[i] = range_type(0,extents[i]);
+     }
+-    
++
+     return this->resize(ranges);
+   }
+ 
+modified   inst/include/boost/multi_index/detail/ignore_wstrict_aliasing.hpp
+@@ -11,7 +11,7 @@
+ #if defined(BOOST_GCC)&&(BOOST_GCC>=4*10000+6*100)
+ #if !defined(BOOST_MULTI_INDEX_DETAIL_RESTORE_WSTRICT_ALIASING)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
++//#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+ #else
+ #pragma GCC diagnostic pop
+ #endif
+modified   inst/include/boost/ptr_container/detail/reversible_ptr_container.hpp
+@@ -40,15 +40,15 @@
+ #include <typeinfo>
+ #include <memory>
+ 
+-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)  
+-#pragma warning(push)  
++#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
++#pragma warning(push)
+ #pragma warning(disable:4127)
+ #pragma warning(disable:4224) // formal parameter was previously defined as a type.
+-#endif  
++#endif
+ 
+ #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+@@ -77,7 +77,7 @@ namespace ptr_container_detail
+         static_clone_deleter() { }
+         template< class Dummy >
+         static_clone_deleter( const Dummy& ) { }
+-            
++
+         template< class T >
+         void operator()( const T* p ) const
+         {
+@@ -99,12 +99,12 @@ namespace ptr_container_detail
+     struct associative_container_tag {};
+     struct ordered_associative_container_tag : associative_container_tag {};
+     struct unordered_associative_container_tag : associative_container_tag {};
+-    
+ 
+-    
++
++
+     template
+-    < 
+-        class Config, 
++    <
++        class Config,
+         class CloneAllocator
+     >
+     class reversible_ptr_container : CloneAllocator
+@@ -117,74 +117,74 @@ namespace ptr_container_detail
+         typedef BOOST_DEDUCED_TYPENAME Config::void_container_type  container_type;
+         typedef dynamic_clone_deleter<reversible_ptr_container>     dynamic_deleter_type;
+         typedef static_clone_deleter<CloneAllocator>                static_deleter_type;
+-        
++
+         container_type c_;
+ 
+     public:
+         container_type&       base()               { return c_; }
+     protected: // having this public could break encapsulation
+-        const container_type& base() const         { return c_; }        
+-        
++        const container_type& base() const         { return c_; }
++
+     public: // typedefs
+         typedef  Ty_           object_type;
+         typedef  Ty_*          value_type;
+         typedef  Ty_*          pointer;
+         typedef  Ty_&          reference;
+         typedef  const Ty_&    const_reference;
+-        
+-        typedef  BOOST_DEDUCED_TYPENAME Config::iterator 
++
++        typedef  BOOST_DEDUCED_TYPENAME Config::iterator
+                                    iterator;
+         typedef  BOOST_DEDUCED_TYPENAME Config::const_iterator
+                                    const_iterator;
+-        typedef  boost::reverse_iterator< iterator > 
+-                                   reverse_iterator;  
+-        typedef  boost::reverse_iterator< const_iterator >     
++        typedef  boost::reverse_iterator< iterator >
++                                   reverse_iterator;
++        typedef  boost::reverse_iterator< const_iterator >
+                                    const_reverse_iterator;
+         typedef  BOOST_DEDUCED_TYPENAME container_type::difference_type
+-                                   difference_type; 
++                                   difference_type;
+         typedef  BOOST_DEDUCED_TYPENAME container_type::size_type
+                                    size_type;
+         typedef  BOOST_DEDUCED_TYPENAME Config::allocator_type
+                                    allocator_type;
+         typedef CloneAllocator     clone_allocator_type;
+-        typedef ptr_container_detail::static_move_ptr<Ty_, 
++        typedef ptr_container_detail::static_move_ptr<Ty_,
+                      BOOST_DEDUCED_TYPENAME boost::mpl::if_c<is_clone_allocator_empty,
+                                                                 static_deleter_type,
+-                                                                dynamic_deleter_type>::type 
++                                                                dynamic_deleter_type>::type
+                                                      >
+                                    auto_type;
+-            
+-    protected: 
+-            
++
++    protected:
++
+         typedef ptr_container_detail::scoped_deleter<reversible_ptr_container>
+                                    scoped_deleter;
+         typedef BOOST_DEDUCED_TYPENAME container_type::iterator
+-                                   ptr_iterator; 
++                                   ptr_iterator;
+         typedef BOOST_DEDUCED_TYPENAME container_type::const_iterator
+-                                   ptr_const_iterator; 
++                                   ptr_const_iterator;
+     private:
+ 
+-        template< class InputIterator >  
+-        void copy( InputIterator first, InputIterator last ) 
++        template< class InputIterator >
++        void copy( InputIterator first, InputIterator last )
+         {
+             std::copy( first, last, begin() );
+         }
+-        
++
+         void copy( const reversible_ptr_container& r )
+-        { 
++        {
+             this->copy( r.begin(), r.end() );
+         }
+-        
++
+         void copy_clones_and_release( scoped_deleter& sd ) // nothrow
+         {
+             BOOST_ASSERT( size_type( std::distance( sd.begin(), sd.end() ) ) == c_.size() );
+             std::copy( sd.begin(), sd.end(), c_.begin() );
+-            sd.release(); 
++            sd.release();
+         }
+-        
++
+         template< class ForwardIterator >
+-        void clone_assign( ForwardIterator first, 
+-                           ForwardIterator last ) // strong 
++        void clone_assign( ForwardIterator first,
++                           ForwardIterator last ) // strong
+         {
+             BOOST_ASSERT( first != last );
+             scoped_deleter sd( *this, first, last ); // strong
+@@ -199,23 +199,23 @@ namespace ptr_container_detail
+             scoped_deleter sd( *this, first, last );
+             insert_clones_and_release( sd, end() );
+         }
+-        
+-        void remove_all() 
++
++        void remove_all()
+         {
+-            this->remove( begin(), end() ); 
++            this->remove( begin(), end() );
+         }
+ 
+     protected:
+ 
+-        void insert_clones_and_release( scoped_deleter& sd, 
++        void insert_clones_and_release( scoped_deleter& sd,
+                                         iterator where ) // strong
+         {
+             //
+             // 'c_.insert' always provides the strong guarantee for T* elements
+             // since a copy constructor of a pointer cannot throw
+             //
+-            c_.insert( where.base(), 
+-                       sd.begin(), sd.end() ); 
++            c_.insert( where.base(),
++                       sd.begin(), sd.end() );
+             sd.release();
+         }
+ 
+@@ -230,15 +230,15 @@ namespace ptr_container_detail
+         {
+             this->deallocate_clone( ptr );
+         }
+-        
++
+         template< class I >
+         void remove( I i )
+-        { 
++        {
+             this->deallocate_clone( Config::get_const_pointer(i) );
+         }
+ 
+         template< class I >
+-        void remove( I first, I last ) 
++        void remove( I first, I last )
+         {
+             for( ; first != last; ++first )
+                 this->remove( first );
+@@ -248,7 +248,7 @@ namespace ptr_container_detail
+         {
+             if( !allow_null )
+             {
+-                BOOST_PTR_CONTAINER_THROW_EXCEPTION( 0 == x && "null not allowed", 
++                BOOST_PTR_CONTAINER_THROW_EXCEPTION( 0 == x && "null not allowed",
+                                                      bad_pointer, msg );
+             }
+         }
+@@ -279,7 +279,7 @@ namespace ptr_container_detail
+         {
+             return this->null_policy_allocate_clone(Config::get_const_pointer(i));
+         }
+-        
++
+         void null_policy_deallocate_clone( const Ty_* x )
+         {
+             if( allow_null )
+@@ -290,15 +290,15 @@ namespace ptr_container_detail
+ 
+             this->get_clone_allocator().deallocate_clone( x );
+         }
+-        
++
+     private:
+         template< class ForwardIterator >
+-        ForwardIterator advance( ForwardIterator begin, size_type n ) 
++        ForwardIterator advance( ForwardIterator begin, size_type n )
+         {
+             ForwardIterator iter = begin;
+             std::advance( iter, n );
+             return iter;
+-        }        
++        }
+ 
+         template< class I >
+         void constructor_impl( I first, I last, std::input_iterator_tag ) // basic
+@@ -325,7 +325,7 @@ namespace ptr_container_detail
+                 return;
+ 
+             scoped_deleter sd( *this, first, last );
+-            insert_clones_and_release( sd );             
++            insert_clones_and_release( sd );
+         }
+ 
+     public: // foundation: should be protected, but public for poor compilers' sake.
+@@ -343,12 +343,12 @@ namespace ptr_container_detail
+         { }
+ 
+         template< class SizeType >
+-        reversible_ptr_container( SizeType n, const allocator_type& a, 
++        reversible_ptr_container( SizeType n, const allocator_type& a,
+                                   fixed_length_sequence_tag )
+           : c_( n, a )
+         { }
+-        
+-        explicit reversible_ptr_container( const allocator_type& a ) 
++
++        explicit reversible_ptr_container( const allocator_type& a )
+          : c_( a )
+         { }
+ 
+@@ -367,15 +367,15 @@ namespace ptr_container_detail
+         }
+ #endif
+ 
+-        reversible_ptr_container( const reversible_ptr_container& r ) 
++        reversible_ptr_container( const reversible_ptr_container& r )
+         {
+-            constructor_impl( r.begin(), r.end(), std::forward_iterator_tag() ); 
++            constructor_impl( r.begin(), r.end(), std::forward_iterator_tag() );
+         }
+ 
+         template< class C, class V >
+-        reversible_ptr_container( const reversible_ptr_container<C,V>& r ) 
++        reversible_ptr_container( const reversible_ptr_container<C,V>& r )
+         {
+-            constructor_impl( r.begin(), r.end(), std::forward_iterator_tag() ); 
++            constructor_impl( r.begin(), r.end(), std::forward_iterator_tag() );
+         }
+ 
+ #ifndef BOOST_NO_AUTO_PTR
+@@ -395,25 +395,25 @@ namespace ptr_container_detail
+         }
+ #endif
+ 
+-        reversible_ptr_container& operator=( reversible_ptr_container r ) // strong 
++        reversible_ptr_container& operator=( reversible_ptr_container r ) // strong
+         {
+             swap( r );
+             return *this;
+         }
+-        
++
+         // overhead: null-initilization of container pointer (very cheap compared to cloning)
+         // overhead: 1 heap allocation (very cheap compared to cloning)
+         template< class InputIterator >
+-        reversible_ptr_container( InputIterator first, 
++        reversible_ptr_container( InputIterator first,
+                                   InputIterator last,
+                                   const allocator_type& a = allocator_type() ) // basic, strong
+           : c_( a )
+-        { 
+-            constructor_impl( first, last, 
++        {
++            constructor_impl( first, last,
+ #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+ #else
+                               BOOST_DEDUCED_TYPENAME
+-#endif                              
++#endif
+                               iterator_category<InputIterator>::type() );
+         }
+ 
+@@ -428,7 +428,7 @@ namespace ptr_container_detail
+                                   fixed_length_sequence_tag )
+           : c_( std::distance(first,last) )
+         {
+-            constructor_impl( first, last, 
++            constructor_impl( first, last,
+                               std::forward_iterator_tag() );
+         }
+ 
+@@ -439,11 +439,11 @@ namespace ptr_container_detail
+                                   fixed_length_sequence_tag )
+           : c_( n )
+         {
+-            constructor_impl( first, last, 
++            constructor_impl( first, last,
+ #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+ #else
+                               BOOST_DEDUCED_TYPENAME
+-#endif                              
++#endif
+                               iterator_category<InputIterator>::type() );
+         }
+ 
+@@ -453,7 +453,7 @@ namespace ptr_container_detail
+                                   associative_container_tag )
+           : c_( comp, a )
+         { }
+-                
++
+         template< class InputIterator >
+         reversible_ptr_container( InputIterator first,
+                                   InputIterator last,
+@@ -461,14 +461,14 @@ namespace ptr_container_detail
+         {
+             associative_constructor_impl( first, last );
+         }
+-        
++
+         template< class InputIterator, class Compare >
+         reversible_ptr_container( InputIterator first,
+                                   InputIterator last,
+                                   const Compare& comp,
+                                   const allocator_type& a,
+                                   associative_container_tag )
+-          : c_( comp, a ) 
++          : c_( comp, a )
+         {
+             associative_constructor_impl( first, last );
+         }
+@@ -493,64 +493,64 @@ namespace ptr_container_detail
+             associative_constructor_impl( first, last );
+         }
+ 
+-    public:        
++    public:
+         ~reversible_ptr_container()
+-        { 
++        {
+             remove_all();
+         }
+-        
++
+     public:
+-        
+-        allocator_type get_allocator() const                   
++
++        allocator_type get_allocator() const
+         {
+-            return c_.get_allocator(); 
++            return c_.get_allocator();
+         }
+-        
++
+         clone_allocator_type& get_clone_allocator()
+         {
+             return static_cast<clone_allocator_type&>(*this);
+         }
+- 
++
+         const clone_allocator_type& get_clone_allocator() const
+         {
+             return static_cast<const clone_allocator_type&>(*this);
+         }
+- 
++
+     public: // container requirements
+-        iterator begin()            
++        iterator begin()
+             { return iterator( c_.begin() ); }
+-        const_iterator begin() const      
++        const_iterator begin() const
+             { return const_iterator( c_.begin() ); }
+-        iterator end()              
++        iterator end()
+             { return iterator( c_.end() ); }
+-        const_iterator end() const        
++        const_iterator end() const
+             { return const_iterator( c_.end() ); }
+-        
+-        reverse_iterator rbegin()           
+-            { return reverse_iterator( this->end() ); } 
+-        const_reverse_iterator rbegin() const     
+-            { return const_reverse_iterator( this->end() ); } 
+-        reverse_iterator rend()             
+-            { return reverse_iterator( this->begin() ); } 
+-        const_reverse_iterator rend() const       
+-            { return const_reverse_iterator( this->begin() ); } 
+-
+-        const_iterator cbegin() const      
++
++        reverse_iterator rbegin()
++            { return reverse_iterator( this->end() ); }
++        const_reverse_iterator rbegin() const
++            { return const_reverse_iterator( this->end() ); }
++        reverse_iterator rend()
++            { return reverse_iterator( this->begin() ); }
++        const_reverse_iterator rend() const
++            { return const_reverse_iterator( this->begin() ); }
++
++        const_iterator cbegin() const
+             { return const_iterator( c_.begin() ); }
+-        const_iterator cend() const             
++        const_iterator cend() const
+             { return const_iterator( c_.end() ); }
+ 
+-        const_reverse_iterator crbegin() const      
++        const_reverse_iterator crbegin() const
+             { return const_reverse_iterator( this->end() ); }
+-        const_reverse_iterator crend() const             
++        const_reverse_iterator crend() const
+             { return const_reverse_iterator( this->begin() ); }
+ 
+         void swap( reversible_ptr_container& r ) // nothrow
+-        { 
++        {
+             boost::swap( get_clone_allocator(), r.get_clone_allocator() ); // nothrow
+             c_.swap( r.c_ ); // nothrow
+         }
+-          
++
+         size_type size() const // nothrow
+         {
+             return c_.size();
+@@ -558,9 +558,9 @@ namespace ptr_container_detail
+ 
+         size_type max_size() const // nothrow
+         {
+-            return c_.max_size(); 
++            return c_.max_size();
+         }
+-        
++
+         bool empty() const // nothrow
+         {
+             return c_.empty();
+@@ -569,7 +569,7 @@ namespace ptr_container_detail
+     public: // optional container requirements
+ 
+         bool operator==( const reversible_ptr_container& r ) const // nothrow
+-        { 
++        {
+             if( size() != r.size() )
+                 return false;
+             else
+@@ -580,23 +580,23 @@ namespace ptr_container_detail
+         {
+             return !(*this == r);
+         }
+-        
+-        bool operator<( const reversible_ptr_container& r ) const // nothrow 
++
++        bool operator<( const reversible_ptr_container& r ) const // nothrow
+         {
+              return std::lexicographical_compare( begin(), end(), r.begin(), r.end() );
+         }
+ 
+-        bool operator<=( const reversible_ptr_container& r ) const // nothrow 
++        bool operator<=( const reversible_ptr_container& r ) const // nothrow
+         {
+             return !(r < *this);
+         }
+ 
+-        bool operator>( const reversible_ptr_container& r ) const // nothrow 
++        bool operator>( const reversible_ptr_container& r ) const // nothrow
+         {
+             return r < *this;
+         }
+ 
+-        bool operator>=( const reversible_ptr_container& r ) const // nothrow 
++        bool operator>=( const reversible_ptr_container& r ) const // nothrow
+         {
+             return !(*this < r);
+         }
+@@ -655,32 +655,32 @@ namespace ptr_container_detail
+             remove_all();
+             c_.clear();
+         }
+-        
++
+     public: // access interface
+-        
++
+         auto_type release( iterator where )
+-        { 
++        {
+             BOOST_ASSERT( where != end() );
+-            
++
+             BOOST_PTR_CONTAINER_THROW_EXCEPTION( empty(), bad_ptr_container_operation,
+-                                                 "'release()' on empty container" ); 
+-            
++                                                 "'release()' on empty container" );
++
+             auto_type ptr( Config::get_pointer(where), *this );  // nothrow
+             c_.erase( where.base() );                            // nothrow
+-            return boost::ptr_container_detail::move( ptr ); 
++            return boost::ptr_container_detail::move( ptr );
+         }
+ 
+-        auto_type replace( iterator where, Ty_* x ) // strong  
+-        { 
++        auto_type replace( iterator where, Ty_* x ) // strong
++        {
+             BOOST_ASSERT( where != end() );
+-            enforce_null_policy( x, "Null pointer in 'replace()'" );            
++            enforce_null_policy( x, "Null pointer in 'replace()'" );
+ 
+             auto_type ptr( x, *this );
+             BOOST_PTR_CONTAINER_THROW_EXCEPTION( empty(), bad_ptr_container_operation,
+                                                  "'replace()' on empty container" );
+ 
+-            auto_type old( Config::get_pointer(where), *this );  // nothrow            
+-            const_cast<void*&>(*where.base()) = ptr.release();                
++            auto_type old( Config::get_pointer(where), *this );  // nothrow
++            const_cast<void*&>(*where.base()) = ptr.release();
+             return boost::ptr_container_detail::move( old );
+         }
+ 
+@@ -701,16 +701,16 @@ namespace ptr_container_detail
+ 
+         auto_type replace( size_type idx, Ty_* x ) // strong
+         {
+-            enforce_null_policy( x, "Null pointer in 'replace()'" );            
++            enforce_null_policy( x, "Null pointer in 'replace()'" );
+ 
+-            auto_type ptr( x, *this ); 
+-            BOOST_PTR_CONTAINER_THROW_EXCEPTION( idx >= size(), bad_index, 
++            auto_type ptr( x, *this );
++            BOOST_PTR_CONTAINER_THROW_EXCEPTION( idx >= size(), bad_index,
+                                                  "'replace()' out of bounds" );
+-            
++
+             auto_type old( static_cast<Ty_*>(c_[idx]), *this ); // nothrow
+             c_[idx] = ptr.release();                            // nothrow, commit
+             return boost::ptr_container_detail::move( old );
+-        } 
++        }
+ 
+ #ifndef BOOST_NO_AUTO_PTR
+         template< class U >
+@@ -726,17 +726,17 @@ namespace ptr_container_detail
+             return replace( idx, x.release() );
+         }
+ #endif
+-                
++
+     }; // 'reversible_ptr_container'
+ 
+ 
+-#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))    
++#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+ #define BOOST_PTR_CONTAINER_DEFINE_RELEASE( base_type ) \
+     typename base_type::auto_type                   \
+     release( typename base_type::iterator i )       \
+     {                                               \
+         return boost::ptr_container_detail::move(base_type::release(i)); \
+-    }                                               
++    }
+ #else
+ #define BOOST_PTR_CONTAINER_DEFINE_RELEASE( base_type ) \
+     using base_type::release;
+@@ -820,7 +820,7 @@ namespace ptr_container_detail
+         this->swap( r );                                              \
+         return *this;                                                 \
+     }                                                                 \
+-                                                                           
++
+ 
+ #define BOOST_PTR_CONTAINER_DEFINE_CONSTRUCTORS( PC, base_type )                       \
+     typedef BOOST_DEDUCED_TYPENAME base_type::iterator        iterator;                \
+@@ -833,8 +833,8 @@ namespace ptr_container_detail
+     PC( InputIterator first, InputIterator last ) : base_type( first, last ) {}        \
+     template< class InputIterator >                                                    \
+     PC( InputIterator first, InputIterator last,                                       \
+-        const allocator_type& a ) : base_type( first, last, a ) {}  
+-                 
++        const allocator_type& a ) : base_type( first, last, a ) {}
++
+ #define BOOST_PTR_CONTAINER_DEFINE_NON_INHERITED_MEMBERS( PC, base_type, this_type )           \
+    BOOST_PTR_CONTAINER_DEFINE_CONSTRUCTORS( PC, base_type )                                    \
+    BOOST_PTR_CONTAINER_DEFINE_RELEASE_AND_CLONE( PC, base_type, this_type )
+@@ -849,18 +849,18 @@ namespace ptr_container_detail
+     // @remark: expose movability of internal move-pointer
+     //
+     namespace ptr_container
+-    {        
++    {
+         using ptr_container_detail::move;
+     }
+ 
+-} // namespace 'boost'  
++} // namespace 'boost'
+ 
+ #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)
+ #pragma GCC diagnostic pop
+ #endif
+ 
+-#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)  
+-#pragma warning(pop)  
+-#endif  
++#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
++#pragma warning(pop)
++#endif
+ 
+ #endif
+modified   inst/include/boost/ptr_container/ptr_sequence_adapter.hpp
+@@ -27,16 +27,16 @@
+ 
+ #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+-{   
++{
+ namespace ptr_container_detail
+-{    
++{
+     template
+-    < 
+-        class T, 
++    <
++        class T,
+         class VoidPtrSeq
+     >
+     struct sequence_config
+@@ -48,13 +48,13 @@ namespace ptr_container_detail
+ 
+         typedef BOOST_DEDUCED_TYPENAME VoidPtrSeq::allocator_type
+                     allocator_type;
+-        
++
+         typedef U   value_type;
+ 
+         typedef void_ptr_iterator<
+-                        BOOST_DEDUCED_TYPENAME VoidPtrSeq::iterator, U > 
++                        BOOST_DEDUCED_TYPENAME VoidPtrSeq::iterator, U >
+                     iterator;
+-       
++
+         typedef void_ptr_iterator<
+                         BOOST_DEDUCED_TYPENAME VoidPtrSeq::const_iterator, const U >
+                     const_iterator;
+@@ -66,7 +66,7 @@ namespace ptr_container_detail
+         {
+             return static_cast<U*>( *i.base() );
+         }
+-        
++
+ #else
+         template< class Iter >
+         static U* get_pointer( void_ptr_iterator<Iter,U> i )
+@@ -79,7 +79,7 @@ namespace ptr_container_detail
+         {
+             return &*i;
+         }
+-#endif        
++#endif
+ 
+ #if defined(BOOST_NO_SFINAE) && !BOOST_WORKAROUND(__MWERKS__, <= 0x3003)
+ 
+@@ -88,7 +88,7 @@ namespace ptr_container_detail
+         {
+             return static_cast<const U*>( *i.base() );
+         }
+-        
++
+ #else // BOOST_NO_SFINAE
+ 
+ #if BOOST_WORKAROUND(__MWERKS__, <= 0x3003)
+@@ -114,7 +114,7 @@ namespace ptr_container_detail
+ 
+         BOOST_STATIC_CONSTANT(bool, allow_null = boost::is_nullable<T>::value );
+     };
+-    
++
+ } // ptr_container_detail
+ 
+ 
+@@ -125,40 +125,40 @@ namespace ptr_container_detail
+     }
+ 
+ 
+-    
++
+     template
+-    < 
++    <
+         class T,
+-        class VoidPtrSeq, 
++        class VoidPtrSeq,
+         class CloneAllocator = heap_clone_allocator
+     >
+-    class ptr_sequence_adapter : public 
+-        ptr_container_detail::reversible_ptr_container< ptr_container_detail::sequence_config<T,VoidPtrSeq>, 
++    class ptr_sequence_adapter : public
++        ptr_container_detail::reversible_ptr_container< ptr_container_detail::sequence_config<T,VoidPtrSeq>,
+                                             CloneAllocator >
+     {
+         typedef ptr_container_detail::reversible_ptr_container< ptr_container_detail::sequence_config<T,VoidPtrSeq>,
+                                                     CloneAllocator >
+              base_type;
+-        
+-        typedef ptr_sequence_adapter<T,VoidPtrSeq,CloneAllocator>                         
++
++        typedef ptr_sequence_adapter<T,VoidPtrSeq,CloneAllocator>
+             this_type;
+ 
+     protected:
+         typedef BOOST_DEDUCED_TYPENAME base_type::scoped_deleter scoped_deleter;
+-         
++
+     public:
+-        typedef BOOST_DEDUCED_TYPENAME base_type::value_type  value_type; 
+-        typedef BOOST_DEDUCED_TYPENAME base_type::reference   reference; 
+-        typedef BOOST_DEDUCED_TYPENAME base_type::const_reference 
++        typedef BOOST_DEDUCED_TYPENAME base_type::value_type  value_type;
++        typedef BOOST_DEDUCED_TYPENAME base_type::reference   reference;
++        typedef BOOST_DEDUCED_TYPENAME base_type::const_reference
+                                                               const_reference;
+         typedef BOOST_DEDUCED_TYPENAME base_type::auto_type   auto_type;
+         typedef BOOST_DEDUCED_TYPENAME base_type::clone_allocator_type
+                                                               clone_allocator_type;
+-        typedef BOOST_DEDUCED_TYPENAME base_type::iterator    iterator;          
+-        typedef BOOST_DEDUCED_TYPENAME base_type::size_type   size_type;  
+-        typedef BOOST_DEDUCED_TYPENAME base_type::allocator_type  
++        typedef BOOST_DEDUCED_TYPENAME base_type::iterator    iterator;
++        typedef BOOST_DEDUCED_TYPENAME base_type::size_type   size_type;
++        typedef BOOST_DEDUCED_TYPENAME base_type::allocator_type
+                                                               allocator_type;
+-                
++
+         ptr_sequence_adapter()
+         { }
+ 
+@@ -168,13 +168,13 @@ namespace ptr_container_detail
+         { }
+ 
+         template< class SizeType >
+-        ptr_sequence_adapter( SizeType n, 
++        ptr_sequence_adapter( SizeType n,
+                               ptr_container_detail::fixed_length_sequence_tag tag )
+           : base_type( n, tag )
+         { }
+ 
+         template< class SizeType, class Allocator >
+-        ptr_sequence_adapter( SizeType n, const Allocator& a, 
++        ptr_sequence_adapter( SizeType n, const Allocator& a,
+                               ptr_container_detail::fixed_length_sequence_tag tag )
+           : base_type( n, a, tag )
+         { }
+@@ -208,23 +208,23 @@ namespace ptr_container_detail
+         ptr_sequence_adapter( const ptr_sequence_adapter& r )
+           : base_type( r )
+         { }
+-        
++
+         template< class U >
+         ptr_sequence_adapter( const ptr_sequence_adapter<U,VoidPtrSeq,CloneAllocator>& r )
+           : base_type( r )
+         { }
+-        
++
+         ptr_sequence_adapter( const ptr_sequence_adapter& r,
+                               ptr_container_detail::fixed_length_sequence_tag tag )
+           : base_type( r, tag )
+         { }
+-        
++
+         template< class U >
+         ptr_sequence_adapter( const ptr_sequence_adapter<U,VoidPtrSeq,CloneAllocator>& r,
+                               ptr_container_detail::fixed_length_sequence_tag tag )
+           : base_type( r, tag )
+         { }
+-        
++
+ #ifndef BOOST_NO_AUTO_PTR
+         template< class PtrContainer >
+         explicit ptr_sequence_adapter( std::auto_ptr<PtrContainer> clone )
+@@ -241,9 +241,9 @@ namespace ptr_container_detail
+         ptr_sequence_adapter& operator=( const ptr_sequence_adapter r )
+         {
+             this->swap( r );
+-            return *this; 
++            return *this;
+         }
+-        
++
+ #ifndef BOOST_NO_AUTO_PTR
+         template< class PtrContainer >
+         ptr_sequence_adapter& operator=( std::auto_ptr<PtrContainer> clone )
+@@ -265,7 +265,7 @@ namespace ptr_container_detail
+         // modifiers
+         /////////////////////////////////////////////////////////////
+ 
+-        void push_back( value_type x )  // strong               
++        void push_back( value_type x )  // strong
+         {
+             this->enforce_null_policy( x, "Null pointer in 'push_back()'" );
+             auto_type ptr( x, *this );    // notrow
+@@ -287,11 +287,11 @@ namespace ptr_container_detail
+             push_back( x.release() );
+         }
+ #endif
+-        
+-        void push_front( value_type x )                
++
++        void push_front( value_type x )
+         {
+             this->enforce_null_policy( x, "Null pointer in 'push_front()'" );
+-            auto_type ptr( x, *this );    // nothrow            
++            auto_type ptr( x, *this );    // nothrow
+             this->base().push_front( x ); // strong, commit
+             ptr.release();                // nothrow
+         }
+@@ -313,9 +313,9 @@ namespace ptr_container_detail
+ 
+         auto_type pop_back()
+         {
+-            BOOST_ASSERT( !this->empty() && 
++            BOOST_ASSERT( !this->empty() &&
+                           "'pop_back()' on empty container" );
+-            auto_type ptr( static_cast<value_type>(this->base().back()), *this );      
++            auto_type ptr( static_cast<value_type>(this->base().back()), *this );
+                                                        // nothrow
+             this->base().pop_back();                   // nothrow
+             return ptr_container_detail::move( ptr );  // nothrow
+@@ -324,23 +324,23 @@ namespace ptr_container_detail
+         auto_type pop_front()
+         {
+             BOOST_ASSERT( !this->empty() &&
+-                          "'pop_front()' on empty container" ); 
+-            auto_type ptr( static_cast<value_type>(this->base().front()), *this ); 
+-                                         // nothrow 
++                          "'pop_front()' on empty container" );
++            auto_type ptr( static_cast<value_type>(this->base().front()), *this );
++                                         // nothrow
+             this->base().pop_front();    // nothrow
+-            return ptr_container_detail::move( ptr ); 
++            return ptr_container_detail::move( ptr );
+         }
+-        
+-        reference front()        
+-        { 
++
++        reference front()
++        {
+             BOOST_ASSERT( !this->empty() &&
+                           "accessing 'front()' on empty container" );
+ 
+             BOOST_ASSERT( !::boost::is_null( this->begin() ) );
+-            return *this->begin(); 
++            return *this->begin();
+         }
+ 
+-        const_reference front() const  
++        const_reference front() const
+         {
+             return const_cast<ptr_sequence_adapter*>(this)->front();
+         }
+@@ -350,7 +350,7 @@ namespace ptr_container_detail
+             BOOST_ASSERT( !this->empty() &&
+                           "accessing 'back()' on empty container" );
+             BOOST_ASSERT( !::boost::is_null( --this->end() ) );
+-            return *--this->end(); 
++            return *--this->end();
+         }
+ 
+         const_reference back() const
+@@ -359,52 +359,52 @@ namespace ptr_container_detail
+         }
+ 
+     public: // deque/vector inerface
+-        
+-        reference operator[]( size_type n ) // nothrow 
++
++        reference operator[]( size_type n ) // nothrow
+         {
+             BOOST_ASSERT( n < this->size() );
+             BOOST_ASSERT( !this->is_null( n ) );
+-            return *static_cast<value_type>( this->base()[n] ); 
++            return *static_cast<value_type>( this->base()[n] );
+         }
+-        
+-        const_reference operator[]( size_type n ) const // nothrow  
+-        { 
+-            BOOST_ASSERT( n < this->size() ); 
++
++        const_reference operator[]( size_type n ) const // nothrow
++        {
++            BOOST_ASSERT( n < this->size() );
+             BOOST_ASSERT( !this->is_null( n ) );
+             return *static_cast<value_type>( this->base()[n] );
+         }
+-        
++
+         reference at( size_type n )
+         {
+-            BOOST_PTR_CONTAINER_THROW_EXCEPTION( n >= this->size(), bad_index, 
++            BOOST_PTR_CONTAINER_THROW_EXCEPTION( n >= this->size(), bad_index,
+                                                  "'at()' out of bounds" );
+             BOOST_ASSERT( !this->is_null( n ) );
+             return (*this)[n];
+         }
+-        
++
+         const_reference at( size_type n ) const
+         {
+-            BOOST_PTR_CONTAINER_THROW_EXCEPTION( n >= this->size(), bad_index, 
++            BOOST_PTR_CONTAINER_THROW_EXCEPTION( n >= this->size(), bad_index,
+                                                  "'at()' out of bounds" );
+             BOOST_ASSERT( !this->is_null( n ) );
+-            return (*this)[n]; 
++            return (*this)[n];
+         }
+-        
++
+     public: // vector interface
+-        
++
+         size_type capacity() const
+         {
+             return this->base().capacity();
+         }
+-        
++
+         void reserve( size_type n )
+         {
+-            this->base().reserve( n ); 
++            this->base().reserve( n );
+         }
+ 
+         void reverse()
+         {
+-            this->base().reverse(); 
++            this->base().reverse();
+         }
+ 
+     public: // assign, insert, transfer
+@@ -412,7 +412,7 @@ namespace ptr_container_detail
+         // overhead: 1 heap allocation (very cheap compared to cloning)
+         template< class InputIterator >
+         void assign( InputIterator first, InputIterator last ) // strong
+-        { 
++        {
+             base_type temp( first, last );
+             this->swap( temp );
+         }
+@@ -434,22 +434,22 @@ namespace ptr_container_detail
+         template< class I >
+         void insert_impl( iterator before, I first, I last, std::forward_iterator_tag ) // strong
+         {
+-            if( first == last ) 
++            if( first == last )
+                 return;
+             scoped_deleter sd( *this, first, last );         // strong
+-            this->insert_clones_and_release( sd, before );   // strong, commit 
++            this->insert_clones_and_release( sd, before );   // strong, commit
+         }
+ 
+     public:
+ 
+         using base_type::insert;
+-        
++
+         template< class InputIterator >
+         void insert( iterator before, InputIterator first, InputIterator last ) // strong
+         {
+             insert_impl( before, first, last, BOOST_DEDUCED_TYPENAME
+                          iterator_category<InputIterator>::type() );
+-        } 
++        }
+ 
+ #if defined(BOOST_NO_SFINAE) || defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+ #else
+@@ -462,11 +462,11 @@ namespace ptr_container_detail
+         }
+ 
+ #endif
+-        
++
+         template< class PtrSeqAdapter >
+-        void transfer( iterator before, 
+-                       BOOST_DEDUCED_TYPENAME PtrSeqAdapter::iterator first, 
+-                       BOOST_DEDUCED_TYPENAME PtrSeqAdapter::iterator last, 
++        void transfer( iterator before,
++                       BOOST_DEDUCED_TYPENAME PtrSeqAdapter::iterator first,
++                       BOOST_DEDUCED_TYPENAME PtrSeqAdapter::iterator last,
+                        PtrSeqAdapter& from ) // strong
+         {
+             BOOST_ASSERT( (void*)&from != (void*)this );
+@@ -478,20 +478,20 @@ namespace ptr_container_detail
+         }
+ 
+         template< class PtrSeqAdapter >
+-        void transfer( iterator before, 
+-                       BOOST_DEDUCED_TYPENAME PtrSeqAdapter::iterator object, 
++        void transfer( iterator before,
++                       BOOST_DEDUCED_TYPENAME PtrSeqAdapter::iterator object,
+                        PtrSeqAdapter& from ) // strong
+         {
+             BOOST_ASSERT( (void*)&from != (void*)this );
+             if( from.empty() )
+                 return;
+-            this->base().insert( before.base(), *object.base() ); // strong 
+-            from.base().erase( object.base() );                  // nothrow 
++            this->base().insert( before.base(), *object.base() ); // strong
++            from.base().erase( object.base() );                  // nothrow
+         }
+ 
+ #if defined(BOOST_NO_SFINAE) || defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+ #else
+-        
++
+         template< class PtrSeqAdapter, class Range >
+         BOOST_DEDUCED_TYPENAME boost::disable_if< boost::is_same< Range,
+                       BOOST_DEDUCED_TYPENAME PtrSeqAdapter::iterator > >::type
+@@ -514,14 +514,14 @@ namespace ptr_container_detail
+         }
+ 
+     public: // C-array support
+-    
+-        void transfer( iterator before, value_type* from, 
+-                       size_type size, bool delete_from = true ) // strong 
++
++        void transfer( iterator before, value_type* from,
++                       size_type size, bool delete_from = true ) // strong
+         {
+             BOOST_ASSERT( from != 0 );
+             if( delete_from )
+             {
+-                BOOST_DEDUCED_TYPENAME base_type::scoped_deleter 
++                BOOST_DEDUCED_TYPENAME base_type::scoped_deleter
+                     deleter( *this, from, size );                         // nothrow
+                 this->base().insert( before.base(), from, from + size );  // strong
+                 deleter.release();                                        // nothrow
+@@ -541,7 +541,7 @@ namespace ptr_container_detail
+         }
+ 
+     public: // null functions
+-         
++
+         bool is_null( size_type idx ) const
+         {
+             BOOST_ASSERT( idx < this->size() );
+@@ -555,13 +555,13 @@ namespace ptr_container_detail
+             size_type old_size = this->size();
+             if( old_size > size )
+             {
+-                this->erase( boost::next( this->begin(), size ), this->end() );  
++                this->erase( boost::next( this->begin(), size ), this->end() );
+             }
+             else if( size > old_size )
+             {
+                 for( ; old_size != size; ++old_size )
+-                    this->push_back( new BOOST_DEDUCED_TYPENAME 
+-                                     boost::remove_pointer<value_type>::type() ); 
++                    this->push_back( new BOOST_DEDUCED_TYPENAME
++                                     boost::remove_pointer<value_type>::type() );
+             }
+ 
+             BOOST_ASSERT( this->size() == size );
+@@ -572,15 +572,15 @@ namespace ptr_container_detail
+             size_type old_size = this->size();
+             if( old_size > size )
+             {
+-                this->erase( boost::next( this->begin(), size ), this->end() );  
++                this->erase( boost::next( this->begin(), size ), this->end() );
+             }
+             else if( size > old_size )
+             {
+                 for( ; old_size != size; ++old_size )
+-                    this->push_back( this->null_policy_allocate_clone( to_clone ) ); 
++                    this->push_back( this->null_policy_allocate_clone( to_clone ) );
+             }
+ 
+-            BOOST_ASSERT( this->size() == size );        
++            BOOST_ASSERT( this->size() == size );
+         }
+ 
+         void rresize( size_type size ) // basic
+@@ -588,14 +588,14 @@ namespace ptr_container_detail
+             size_type old_size = this->size();
+             if( old_size > size )
+             {
+-                this->erase( this->begin(), 
+-                             boost::next( this->begin(), old_size - size ) );  
++                this->erase( this->begin(),
++                             boost::next( this->begin(), old_size - size ) );
+             }
+             else if( size > old_size )
+             {
+                 for( ; old_size != size; ++old_size )
+-                    this->push_front( new BOOST_DEDUCED_TYPENAME 
+-                                      boost::remove_pointer<value_type>::type() ); 
++                    this->push_front( new BOOST_DEDUCED_TYPENAME
++                                      boost::remove_pointer<value_type>::type() );
+             }
+ 
+             BOOST_ASSERT( this->size() == size );
+@@ -606,25 +606,25 @@ namespace ptr_container_detail
+             size_type old_size = this->size();
+             if( old_size > size )
+             {
+-                this->erase( this->begin(), 
+-                             boost::next( this->begin(), old_size - size ) );  
++                this->erase( this->begin(),
++                             boost::next( this->begin(), old_size - size ) );
+             }
+             else if( size > old_size )
+             {
+                 for( ; old_size != size; ++old_size )
+-                    this->push_front( this->null_policy_allocate_clone( to_clone ) ); 
++                    this->push_front( this->null_policy_allocate_clone( to_clone ) );
+             }
+ 
+             BOOST_ASSERT( this->size() == size );
+-        }           
+-                
++        }
++
+     public: // algorithms
+ 
+         void sort( iterator first, iterator last )
+         {
+             sort( first, last, std::less<T>() );
+         }
+-        
++
+         void sort()
+         {
+             sort( this->begin(), this->end() );
+@@ -635,23 +635,23 @@ namespace ptr_container_detail
+         {
+             BOOST_ASSERT( first <= last && "out of range sort()" );
+             BOOST_ASSERT( this->begin() <= first && "out of range sort()" );
+-            BOOST_ASSERT( last <= this->end() && "out of range sort()" ); 
++            BOOST_ASSERT( last <= this->end() && "out of range sort()" );
+             // some static assert on the arguments of the comparison
+-            std::sort( first.base(), last.base(), 
++            std::sort( first.base(), last.base(),
+                        void_ptr_indirect_fun<Compare,T>(comp) );
+         }
+-        
++
+         template< class Compare >
+         void sort( Compare comp )
+         {
+             sort( this->begin(), this->end(), comp );
+         }
+-        
++
+         void unique( iterator first, iterator last )
+         {
+             unique( first, last, std::equal_to<T>() );
+         }
+-        
++
+         void unique()
+         {
+             unique( this->begin(), this->end() );
+@@ -669,23 +669,23 @@ namespace ptr_container_detail
+ 
+     protected:
+         template< class Fun, class Arg1 >
+-        class void_ptr_delete_if 
++        class void_ptr_delete_if
+         {
+             Fun fun;
+         public:
+-        
++
+             void_ptr_delete_if() : fun(Fun())
+             { }
+-        
++
+             void_ptr_delete_if( Fun f ) : fun(f)
+             { }
+-        
++
+             bool operator()( void* r ) const
+             {
+                BOOST_ASSERT( r != 0 );
+                Arg1 arg1 = static_cast<Arg1>(r);
+                if( fun( *arg1 ) )
+-               { 
++               {
+                    clone_allocator_type::deallocate_clone( arg1 );
+                    return true;
+                }
+@@ -696,15 +696,15 @@ namespace ptr_container_detail
+     private:
+         void compact_and_erase_nulls( iterator first, iterator last ) // nothrow
+         {
+-            typename base_type::ptr_iterator p = std::stable_partition( 
+-                                                    first.base(), 
+-                                                    last.base(), 
++            typename base_type::ptr_iterator p = std::stable_partition(
++                                                    first.base(),
++                                                    last.base(),
+                                                     is_not_zero_ptr() );
+             this->base().erase( p, this->end().base() );
+-            
++
+         }
+ 
+-        void range_check_impl( iterator, iterator, 
++        void range_check_impl( iterator, iterator,
+                                std::bidirectional_iterator_tag )
+         { /* do nothing */ }
+ 
+@@ -713,22 +713,22 @@ namespace ptr_container_detail
+         {
+             BOOST_ASSERT( first <= last && "out of range unique()/erase_if()" );
+             BOOST_ASSERT( this->begin() <= first && "out of range unique()/erase_if()" );
+-            BOOST_ASSERT( last <= this->end() && "out of range unique()/erase_if)(" );             
++            BOOST_ASSERT( last <= this->end() && "out of range unique()/erase_if)(" );
+         }
+-        
++
+         void range_check( iterator first, iterator last )
+         {
+-            range_check_impl( first, last, 
++            range_check_impl( first, last,
+                               BOOST_DEDUCED_TYPENAME iterator_category<iterator>::type() );
+         }
+-        
++
+     public:
+-        
++
+         template< class Compare >
+         void unique( iterator first, iterator last, Compare comp )
+         {
+             range_check(first,last);
+-            
++
+             iterator prev = first;
+             iterator next = first;
+             ++next;
+@@ -750,7 +750,7 @@ namespace ptr_container_detail
+ 
+             compact_and_erase_nulls( first, last );
+         }
+-        
++
+         template< class Compare >
+         void unique( Compare comp )
+         {
+@@ -761,11 +761,11 @@ namespace ptr_container_detail
+         void erase_if( iterator first, iterator last, Pred pred )
+         {
+             range_check(first,last);
+-            this->base().erase( std::remove_if( first.base(), last.base(), 
++            this->base().erase( std::remove_if( first.base(), last.base(),
+                                                 void_ptr_delete_if<Pred,value_type>(pred) ),
+-                                last.base() );  
++                                last.base() );
+         }
+-        
++
+         template< class Pred >
+         void erase_if( Pred pred )
+         {
+@@ -773,44 +773,44 @@ namespace ptr_container_detail
+         }
+ 
+ 
+-        void merge( iterator first, iterator last, 
++        void merge( iterator first, iterator last,
+                     ptr_sequence_adapter& from )
+         {
+              merge( first, last, from, std::less<T>() );
+         }
+-        
++
+         template< class BinPred >
+-        void merge( iterator first, iterator last, 
++        void merge( iterator first, iterator last,
+                     ptr_sequence_adapter& from, BinPred pred )
+         {
+             void_ptr_indirect_fun<BinPred,T>  bin_pred(pred);
+-            size_type                         current_size = this->size(); 
++            size_type                         current_size = this->size();
+             this->transfer( this->end(), first, last, from );
+             typename base_type::ptr_iterator middle = this->begin().base();
+-            std::advance(middle,current_size); 
++            std::advance(middle,current_size);
+             std::inplace_merge( this->begin().base(),
+                                 middle,
+                                 this->end().base(),
+                                 bin_pred );
+         }
+-        
++
+         void merge( ptr_sequence_adapter& r )
+         {
+             merge( r, std::less<T>() );
+             BOOST_ASSERT( r.empty() );
+         }
+-        
++
+         template< class BinPred >
+         void merge( ptr_sequence_adapter& r, BinPred pred )
+         {
+             merge( r.begin(), r.end(), r, pred );
+-            BOOST_ASSERT( r.empty() );    
++            BOOST_ASSERT( r.empty() );
+         }
+-        
++
+     };
+ 
+ 
+-} // namespace 'boost'  
++} // namespace 'boost'
+ 
+ #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)
+ #pragma GCC diagnostic pop
+modified   inst/include/boost/ptr_container/ptr_vector.hpp
+@@ -22,42 +22,42 @@
+ 
+ #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+ {
+ 
+     template
+-    < 
+-        class T, 
++    <
++        class T,
+         class CloneAllocator = heap_clone_allocator,
+         class Allocator      = std::allocator<typename ptr_container_detail::void_ptr<T>::type>
+     >
+-    class ptr_vector : public 
++    class ptr_vector : public
+         ptr_sequence_adapter< T, std::vector<
+-            typename ptr_container_detail::void_ptr<T>::type,Allocator>, 
++            typename ptr_container_detail::void_ptr<T>::type,Allocator>,
+                               CloneAllocator >
+-    {  
++    {
+         typedef ptr_sequence_adapter< T, std::vector<
+-            typename ptr_container_detail::void_ptr<T>::type,Allocator>, 
+-                                      CloneAllocator > 
++            typename ptr_container_detail::void_ptr<T>::type,Allocator>,
++                                      CloneAllocator >
+             base_class;
+ 
+         typedef ptr_vector<T,CloneAllocator,Allocator> this_type;
+-        
++
+     public:
+ 
+-        BOOST_PTR_CONTAINER_DEFINE_SEQEUENCE_MEMBERS( ptr_vector, 
++        BOOST_PTR_CONTAINER_DEFINE_SEQEUENCE_MEMBERS( ptr_vector,
+                                                       base_class,
+                                                       this_type )
+-        
++
+         explicit ptr_vector( size_type n,
+                              const allocator_type& alloc = allocator_type() )
+           : base_class(alloc)
+         {
+             this->base().reserve( n );
+-        }        
++        }
+     };
+ 
+     //////////////////////////////////////////////////////////////////////////////
+@@ -77,7 +77,7 @@ namespace boost
+     {
+         l.swap(r);
+     }
+-    
++
+ }
+ 
+ #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)
+modified   inst/include/boost/random/detail/disable_warnings.hpp
+@@ -25,5 +25,5 @@
+ 
+ #if defined(BOOST_GCC) && BOOST_GCC >= 40600
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wlogical-op"
++//#pragma GCC diagnostic ignored "-Wlogical-op"
+ #endif
+modified   inst/include/boost/regex/v4/instances.hpp
+@@ -126,11 +126,11 @@ template class BOOST_REGEX_TEMPLATE_DECL ::boost::BOOST_REGEX_DETAIL_NS::perl_ma
+ #  pragma clang diagnostic push
+ #  if defined(__APPLE_CC__)
+ #    if (__clang_major__ > 6)
+-#      pragma clang diagnostic ignored "-Wkeyword-macro"
++//#      pragma clang diagnostic ignored "-Wkeyword-macro"
+ #    endif
+ #  else
+ #    if (__clang_major__ > 3) || ((__clang_major__ == 3) && (__clang_minor__ > 5))
+-#      pragma clang diagnostic ignored "-Wkeyword-macro"
++//#      pragma clang diagnostic ignored "-Wkeyword-macro"
+ #    endif
+ #  endif
+ #endif
+@@ -149,18 +149,18 @@ template BOOST_REGEX_DECL
+ std::locale cpp_regex_traits_base<BOOST_REGEX_CHAR_T>::imbue(const std::locale& l);
+ 
+ template BOOST_REGEX_DECL
+-cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type 
++cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type
+    cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::transform_primary(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
+ template BOOST_REGEX_DECL
+-cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type 
++cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type
+    cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::transform(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
+ template BOOST_REGEX_DECL
+-cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type 
++cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::string_type
+    cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::lookup_collatename(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
+ template BOOST_REGEX_DECL
+ void cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::init();
+ template BOOST_REGEX_DECL
+-cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::char_class_type 
++cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::char_class_type
+    cpp_regex_traits_implementation<BOOST_REGEX_CHAR_T>::lookup_classname_imp(const BOOST_REGEX_CHAR_T* p1, const BOOST_REGEX_CHAR_T* p2) const;
+ #ifdef BOOST_REGEX_BUGGY_CTYPE_FACET
+ template BOOST_REGEX_DECL
+@@ -181,15 +181,15 @@ static_mutex& cpp_regex_traits<BOOST_REGEX_CHAR_T>::get_mutex_inst();
+ #endif
+ #endif
+ 
+-template BOOST_REGEX_DECL basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >& 
++template BOOST_REGEX_DECL basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >&
+    basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >::do_assign(
+-      const BOOST_REGEX_CHAR_T* p1, 
+-      const BOOST_REGEX_CHAR_T* p2, 
++      const BOOST_REGEX_CHAR_T* p1,
++      const BOOST_REGEX_CHAR_T* p2,
+       flag_type f);
+-template BOOST_REGEX_DECL basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >::locale_type BOOST_REGEX_CALL 
++template BOOST_REGEX_DECL basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >::locale_type BOOST_REGEX_CALL
+    basic_regex<BOOST_REGEX_CHAR_T BOOST_REGEX_TRAITS_T >::imbue(locale_type l);
+ 
+-template BOOST_REGEX_DECL void BOOST_REGEX_CALL 
++template BOOST_REGEX_DECL void BOOST_REGEX_CALL
+    match_results<const BOOST_REGEX_CHAR_T*>::maybe_assign(
+       const match_results<const BOOST_REGEX_CHAR_T*>& m);
+ 
+@@ -205,7 +205,7 @@ template BOOST_REGEX_DECL bool perl_matcher<BOOST_REGEX_CHAR_T const *, match_re
+    && !defined(__SGI_STL_PORT)\
+    && !defined(_STLPORT_VERSION)
+ // std:basic_string<>::const_iterator instances as well:
+-template BOOST_REGEX_DECL void BOOST_REGEX_CALL 
++template BOOST_REGEX_DECL void BOOST_REGEX_CALL
+    match_results<std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator>::maybe_assign(
+       const match_results<std::basic_string<BOOST_REGEX_CHAR_T>::const_iterator>& m);
+ 
+@@ -229,8 +229,3 @@ template BOOST_REGEX_DECL bool perl_matcher<std::basic_string<BOOST_REGEX_CHAR_T
+ } // namespace boost
+ 
+ #endif // BOOST_REGEX_NO_EXTERNAL_TEMPLATES
+-
+-
+-
+-
+-
+modified   inst/include/boost/smart_ptr/bad_weak_ptr.hpp
+@@ -40,7 +40,7 @@ namespace boost
+ #if defined(BOOST_CLANG)
+ // Intel C++ on Mac defines __clang__ but doesn't support the pragma
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wweak-vtables"
++//# pragma clang diagnostic ignored "-Wweak-vtables"
+ #endif
+ 
+ class bad_weak_ptr: public std::exception
+modified   inst/include/boost/smart_ptr/detail/shared_count.hpp
+@@ -32,7 +32,7 @@
+ #include <boost/detail/workaround.hpp>
+ // In order to avoid circular dependencies with Boost.TR1
+ // we make sure that our include of <memory> doesn't try to
+-// pull in the TR1 headers: that's why we use this header 
++// pull in the TR1 headers: that's why we use this header
+ // rather than including <memory> directly:
+ #include <boost/config/no_tr1/memory.hpp>  // std::auto_ptr
+ #include <functional>       // std::less
+@@ -45,7 +45,7 @@
+ 
+ #if defined( BOOST_SP_DISABLE_DEPRECATED )
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+@@ -75,7 +75,7 @@ template< class D > struct sp_inplace_tag
+ };
+ 
+ template< class T > class sp_reference_wrapper
+-{ 
++{
+ public:
+ 
+     explicit sp_reference_wrapper( T & t): t_( boost::addressof( t ) )
+@@ -369,7 +369,7 @@ public:
+         r.release();
+     }
+ 
+-#endif 
++#endif
+ 
+ #if !defined( BOOST_NO_CXX11_SMART_PTR )
+ 
+modified   inst/include/boost/smart_ptr/detail/sp_counted_base_clang.hpp
+@@ -56,12 +56,12 @@ inline boost::int_least32_t atomic_conditional_increment( atomic_int_least32_t *
+         {
+             return r;
+         }
+-    }    
++    }
+ }
+ 
+ #if defined(__clang__)
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wweak-vtables"
++//# pragma clang diagnostic ignored "-Wweak-vtables"
+ #endif
+ 
+ class BOOST_SYMBOL_VISIBLE sp_counted_base
+modified   inst/include/boost/smart_ptr/scoped_ptr.hpp
+@@ -24,7 +24,7 @@
+ 
+ #if defined( BOOST_SP_DISABLE_DEPRECATED )
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+modified   inst/include/boost/smart_ptr/shared_ptr.hpp
+@@ -18,7 +18,7 @@
+ 
+ // In order to avoid circular dependencies with Boost.TR1
+ // we make sure that our include of <memory> doesn't try to
+-// pull in the TR1 headers: that's why we use this header 
++// pull in the TR1 headers: that's why we use this header
+ // rather than including <memory> directly:
+ #include <boost/config/no_tr1/memory.hpp>  // std::auto_ptr
+ 
+@@ -51,7 +51,7 @@
+ 
+ #if defined( BOOST_SP_DISABLE_DEPRECATED )
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+@@ -256,7 +256,7 @@ template< class T, class R > struct sp_enable_if_auto_ptr
+ template< class T, class R > struct sp_enable_if_auto_ptr< std::auto_ptr< T >, R >
+ {
+     typedef R type;
+-}; 
++};
+ 
+ #endif
+ 
+@@ -728,13 +728,13 @@ public:
+         BOOST_ASSERT( px != 0 );
+         return *px;
+     }
+-    
++
+     typename boost::detail::sp_member_access< T >::type operator-> () const BOOST_SP_NOEXCEPT_WITH_ASSERT
+     {
+         BOOST_ASSERT( px != 0 );
+         return px;
+     }
+-    
++
+     typename boost::detail::sp_array_access< T >::type operator[] ( std::ptrdiff_t i ) const BOOST_SP_NOEXCEPT_WITH_ASSERT
+     {
+         BOOST_ASSERT( px != 0 );
+modified   inst/include/boost/system/detail/generic_category.hpp
+@@ -53,7 +53,7 @@ inline std::string generic_error_category_message( int ev )
+ # elif defined(__clang__) && defined(__has_warning)
+ #  pragma clang diagnostic push
+ #  if __has_warning("-Wdeprecated-declarations")
+-#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
++//#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
+ #  endif
+ # endif
+ 
+modified   inst/include/boost/system/error_code.hpp
+@@ -852,7 +852,7 @@ inline char const * error_category::message( int ev, char * buffer, std::size_t
+ # elif defined(__clang__) && defined(__has_warning)
+ #  pragma clang diagnostic push
+ #  if __has_warning("-Wdeprecated-declarations")
+-#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
++//#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
+ #  endif
+ # endif
+ 
+modified   inst/include/boost/test/detail/suppress_warnings.hpp
+@@ -28,13 +28,12 @@
+ 
+ #if defined(BOOST_CLANG) && (BOOST_CLANG == 1)
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wvariadic-macros"
+-# pragma clang diagnostic ignored "-Wmissing-declarations"
++//# pragma clang diagnostic ignored "-Wvariadic-macros"
++//# pragma clang diagnostic ignored "-Wmissing-declarations"
+ #endif
+ 
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 4 * 10000 + 6 * 100)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wvariadic-macros"
+-# pragma GCC diagnostic ignored "-Wmissing-declarations"
++//# pragma GCC diagnostic ignored "-Wvariadic-macros"
++//# pragma GCC diagnostic ignored "-Wmissing-declarations"
+ #endif
+-
+modified   inst/include/boost/tuple/detail/tuple_basic.hpp
+@@ -43,7 +43,7 @@
+ 
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 40700)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
++//#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+ #endif
+ 
+ namespace boost {
+modified   inst/include/boost/type_traits/detail/has_prefix_operator.hpp
+@@ -20,7 +20,7 @@
+ 
+ #ifdef BOOST_GCC
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated"
++//#pragma GCC diagnostic ignored "-Wdeprecated"
+ #endif
+ #if defined(BOOST_MSVC)
+ #   pragma warning ( push )
+@@ -277,4 +277,3 @@ struct BOOST_TT_TRAIT_NAME : public integral_constant<bool, (::boost::detail::BO
+ #endif
+ 
+ #endif
+-
+modified   inst/include/boost/type_traits/has_logical_not.hpp
+@@ -11,7 +11,7 @@
+ 
+ #if defined(__GNUC__) && (__GNUC__*10000 + __GNUC_MINOR__*100 + __GNUC_PATCHLEVEL__ > 40800)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wunused-value"
++//#pragma GCC diagnostic ignored "-Wunused-value"
+ #endif
+ 
+ #define BOOST_TT_TRAIT_NAME has_logical_not
+modified   inst/include/boost/variant/get.hpp
+@@ -32,7 +32,7 @@ namespace boost {
+ 
+ #if defined(BOOST_CLANG)
+ #   pragma clang diagnostic push
+-#   pragma clang diagnostic ignored "-Wweak-vtables"
++//#   pragma clang diagnostic ignored "-Wweak-vtables"
+ #endif
+ //////////////////////////////////////////////////////////////////////////
+ // class bad_get
+modified   inst/include/boost/winapi/basic_types.hpp
+@@ -160,7 +160,7 @@ typedef ::LPCWSTR LPCWSTR_;
+     && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
+ #pragma GCC diagnostic push
+ // ISO C++ 1998 does not support 'long long'
+-#pragma GCC diagnostic ignored "-Wlong-long"
++//#pragma GCC diagnostic ignored "-Wlong-long"
+ #endif
+ 
+ typedef int BOOL_;
+
