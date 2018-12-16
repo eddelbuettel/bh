@@ -36,19 +36,19 @@
 //#define BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED
 
 #ifdef BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME
-#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME_VALUE 1 
+#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME_VALUE 1
 #else
 #  define BOOST_INTERPROCESS_BOOTSTAMP_IS_LASTBOOTUPTIME_VALUE 0
 #endif
 
 #ifdef BOOST_INTERPROCESS_BOOTSTAMP_IS_EVENTLOG_BASED
-#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_EVENTLOG_BASED_VALUE 1 
+#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_EVENTLOG_BASED_VALUE 1
 #else
 #  define BOOST_INTERPROCESS_BOOTSTAMP_IS_EVENTLOG_BASED_VALUE 0
 #endif
 
 #ifdef BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED
-#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED_VALUE 1 
+#  define BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED_VALUE 1
 #else
 #  define BOOST_INTERPROCESS_BOOTSTAMP_IS_SESSION_MANAGER_BASED_VALUE 0
 #endif
@@ -105,17 +105,17 @@
 #  if (BOOST_GCC >= 40600)
 #     pragma GCC diagnostic push
 #     if (BOOST_GCC >= 40800)
-#        pragma GCC diagnostic ignored "-Wpedantic"
+//#        pragma GCC diagnostic ignored "-Wpedantic"
 #     else
-#        pragma GCC diagnostic ignored "-pedantic"
+//#        pragma GCC diagnostic ignored "-pedantic"
 #     endif
-#     pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+//#     pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #  else
 #     pragma GCC system_header
 #  endif
-//When loading DLLs we have no option but reinterpret casting function types  
+//When loading DLLs we have no option but reinterpret casting function types
 #  if (BOOST_GCC >= 80000)
-#        pragma GCC diagnostic ignored "-Wcast-function-type"
+//#        pragma GCC diagnostic ignored "-Wcast-function-type"
 #  endif
 #endif
 

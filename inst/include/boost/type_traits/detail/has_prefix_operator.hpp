@@ -20,7 +20,7 @@
 
 #ifdef BOOST_GCC
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated"
+//#pragma GCC diagnostic ignored "-Wdeprecated"
 #endif
 #if defined(BOOST_MSVC)
 #   pragma warning ( push )
@@ -277,4 +277,3 @@ struct BOOST_TT_TRAIT_NAME : public integral_constant<bool, (::boost::detail::BO
 #endif
 
 #endif
-

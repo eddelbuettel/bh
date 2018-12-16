@@ -307,7 +307,7 @@ class basic_string_base
       return this->members_.plong_repr();
    }
 
-  
+
    protected:
 
    typedef dtl::integral_constant<unsigned,
@@ -398,7 +398,7 @@ class basic_string_base
    //GCC seems a bit confused about uninitialized accesses
    #if defined(BOOST_GCC) && (BOOST_GCC >= 40700)
    #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+  //#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
    #endif
 
    pointer priv_long_addr() const
@@ -3133,8 +3133,8 @@ operator==(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
 }
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
-inline 
-   BOOST_CONTAINER_DOC1ST( bool, 
+inline
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
       operator==( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
@@ -3145,7 +3145,7 @@ inline
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
       operator==( const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
@@ -3172,7 +3172,7 @@ operator!=(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
 operator!=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
@@ -3180,7 +3180,7 @@ operator!=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,All
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
 operator!=( const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
@@ -3210,7 +3210,7 @@ operator<(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
 operator<( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
@@ -3218,7 +3218,7 @@ operator<( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allo
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
 operator<(  const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
@@ -3245,7 +3245,7 @@ operator>(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
 operator>( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
@@ -3253,7 +3253,7 @@ operator>( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allo
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
 operator>( const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
@@ -3279,7 +3279,7 @@ operator<=(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
 operator<=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
@@ -3287,7 +3287,7 @@ operator<=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,All
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
 operator<=( const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)
@@ -3311,7 +3311,7 @@ operator>=(const basic_string<CharT,Traits,Allocator>& x, const CharT* s)
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
 operator>=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,Allocator>& y)
@@ -3319,7 +3319,7 @@ operator>=( BasicStringView<CharT,Traits> x, const basic_string<CharT,Traits,All
 
 template <class CharT, class Traits, class Allocator, template <class, class> class BasicStringView>
 inline
-   BOOST_CONTAINER_DOC1ST( bool, 
+   BOOST_CONTAINER_DOC1ST( bool,
                            typename dtl::disable_if
                               <is_string< BasicStringView<CharT BOOST_MOVE_I Traits> > BOOST_MOVE_I bool >::type)
 operator>=( const basic_string<CharT,Traits,Allocator>& x, BasicStringView<CharT,Traits> y)

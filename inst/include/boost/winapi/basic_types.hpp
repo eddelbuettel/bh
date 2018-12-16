@@ -160,7 +160,7 @@ typedef ::LPCWSTR LPCWSTR_;
     && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
 #pragma GCC diagnostic push
 // ISO C++ 1998 does not support 'long long'
-#pragma GCC diagnostic ignored "-Wlong-long"
+//#pragma GCC diagnostic ignored "-Wlong-long"
 #endif
 
 typedef int BOOL_;
