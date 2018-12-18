@@ -1,3 +1,19 @@
+2018-12-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/boost/*: Upgraded to Boost 1.69
+
+	* inst/include/boost/numeric/odeint/stepper/generation/: As before
+	rename karp54_classic.hpp to karp54_cl.hpp, adjust generation.hpp
+	* inst/include/boost/variant/detail/forced_return.hpp: As before
+	ensure R_NO_REMAP is defined; call Rf_error() in lieu of abort()
+	* inst/include/boost/numeric/ublas/storage.hpp : Add missing include
+	for boost/serialization/array_wrapper.hpp
+	* inst/include/boost/numeric/ublas/matrix_expression.hpp (boost):
+	Fourth local change suppressing a g++ warning, also see #40 upstream
+
+	* inst/include/boost/*: As before disable all diagnostic pragmas in
+	accordance with the CRAN Policy (though this may not be a good idea...)
+
 2018-10-20  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Added dependencies badge
