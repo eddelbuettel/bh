@@ -5,15 +5,15 @@
 ## Jay Emerson and Dirk Eddelbuettel,  2012 - 2016
 
 
-## (1) Adjust these variables as needed 
-## 
+## (1) Adjust these variables as needed
+##
 ## -- on a standard git checkout, this repo it may be ~/git/bh
 pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
-boosttargz="boost_1_66_0.tar.gz"
+boosttargz="boost_1_69_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.66.0-1"
-date="2018-02-11"
+version="1.69.0-1"
+date="2018-12-16"
 
 
 
@@ -64,7 +64,7 @@ for prog in ${progs}; do
 done
 
 if [ ! -f "${boostsources}" ]; then
-    echo "Boost input file ${boostsources} missing, exiting." 
+    echo "Boost input file ${boostsources} missing, exiting."
     exit 1
 fi
 
@@ -108,7 +108,7 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # (8) Plus other Boost libraries:  filesystem, random, unordered, spirit
 # Plus foreach (cf issue ticket #2527)
 # Plus math/distributions + algorithm (cf issue ticket #2533)
-# Plus iostream (cf issue ticket #2768) 
+# Plus iostream (cf issue ticket #2768)
 # Plus dynamic_bitset (cf issue ticket #4991 -- may be non-issue and already implied)
 # Plus all of math (ie removing "/distributions" from "math/distributions"
 # Plus heap (request of package RcppMLPACK)
@@ -145,7 +145,7 @@ rm -rf ${pkgincl}/libs \
        ${pkgincl}/boost.png \
        ${pkgincl}/doc \
        ${pkgincl}/boost.css \
-       ${pkgincl}/rst.css 
+       ${pkgincl}/rst.css
 
 
 
@@ -158,7 +158,7 @@ rm -rf ${pkgincl}/libs \
 #    -e "s/YYY/${date}/g"    \
 #    ${localfiles}/DESCRIPTION  >  ${pkgdir}/DESCRIPTION
 #sed -e "s/XXX/${version}/g" -e "s/YYY/${date}/g" \
-#    ${localfiles}/man/BH-package.Rd > ${pkgdir}/man/BH-package.Rd 
+#    ${localfiles}/man/BH-package.Rd > ${pkgdir}/man/BH-package.Rd
 
 
 ## (11) Unconditional cleanup
@@ -168,4 +168,3 @@ rm -rf ${boostroot}
 
 ## (12) And done
 echo "Now check with 'git status' and add and commit as needed."
-
