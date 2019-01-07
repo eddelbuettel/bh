@@ -1,3 +1,12 @@
+2019-01-07  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Date, Version): Releease 1.69.0-1
+
+        * inst/include/boost/detail/lightweight_test_report.hpp: Add newline
+        * inst/include/boost/interprocess/sync/windows/named_mutex.hpp: Idem
+        * inst/include/boost/numeric/odeint/integrate/check_adapter.hpp: Idem
+        * inst/include/boost/typeof/unsupported.hpp: Idem
+
 2018-12-16  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/boost/*: Upgraded to Boost 1.69

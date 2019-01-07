@@ -7,11 +7,14 @@
 \newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
-\section{Changes in version 1.69.0-1 (2018-12-16)}{
+\section{Changes in version 1.69.0-1 (2019-01-07)}{
   \itemize{
     \item Upgraded to \boost 1.69.0 (plus the few local tweaks)
     \item Applied the standard minimal patch with required changes, as
     well as the newer changeset for diagnostics pragma suppression.
+    \item Following a pre-release in December, maintainers of three
+    packages affected by the 1.66 to 1.69 were contacted, and changes
+    were prepared.
   }
 }
 
