@@ -9,7 +9,7 @@ Description: Boost provides free peer-reviewed portable C++ source
  libraries.  A large part of Boost is provided as C++ template code
  which is resolved entirely at compile-time without linking.  This 
  package aims to provide the most useful subset of Boost libraries 
- for template use among CRAN package. By placing these libraries in 
+ for template use among CRAN packages. By placing these libraries in 
  this package, we offer a more efficient distribution system for CRAN 
  as replication of this code in the sources of other packages is 
  avoided. As of release 1.69.0-1, the following Boost libraries are
