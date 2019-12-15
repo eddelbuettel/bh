@@ -2,6 +2,16 @@
 
 	* inst/include/boost/*: Upgraded to Boost 1.72
 
+	* inst/include/boost/numeric/odeint/stepper/generation/: As before
+	rename karp54_classic.hpp to karp54_cl.hpp, adjust generation.hpp
+	* inst/include/boost/numeric/ublas/storage.hpp : Add missing include
+	for boost/serialization/array_wrapper.hpp
+
+	* inst/include/boost/numeric/odeint/stepper/generation/: As before
+	New adjust for generation_controlled_adams_bashforth_moulton.hpp
+	* inst/include/boost/math/special_functions/hypergeometric_1F1.hpp:
+	Adjust to renamed hypergeometric_1F1_small_a_negative_b_by_ratio.hpp
+
 2019-01-07  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Date, Version): Releease 1.69.0-1
