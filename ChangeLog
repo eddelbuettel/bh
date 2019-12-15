@@ -12,6 +12,9 @@
 	* inst/include/boost/math/special_functions/hypergeometric_1F1.hpp:
 	Adjust to renamed hypergeometric_1F1_small_a_negative_b_by_ratio.hpp
 
+	* inst/include/boost/*: As before disable all diagnostic pragmas in
+	accordance with the CRAN Policy (though this may not be a good idea...)
+
 2019-01-07  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Date, Version): Releease 1.69.0-1

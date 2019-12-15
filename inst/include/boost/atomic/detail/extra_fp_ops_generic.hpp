@@ -30,7 +30,7 @@
 #if defined(BOOST_GCC) && (BOOST_GCC+0) >= 60000
 #pragma GCC diagnostic push
 // ignoring attributes on template argument X - this warning is because we need to pass storage_type as a template argument; no problem in this case
-#pragma GCC diagnostic ignored "-Wignored-attributes"
+//#pragma GCC diagnostic ignored "-Wignored-attributes"
 #endif
 
 namespace boost {

@@ -62,7 +62,7 @@ inline boost::int_least32_t atomic_conditional_increment( atomic_int_least32_t *
 
 #if defined(__clang__)
 # pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wweak-vtables"
+  //# pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 
 class BOOST_SYMBOL_VISIBLE sp_counted_base

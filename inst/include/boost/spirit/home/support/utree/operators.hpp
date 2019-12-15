@@ -537,7 +537,7 @@ namespace boost { namespace spirit
     BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(shift_right, a>>b)
 #if defined(__GNUC__) && (__GNUC__ >= 7)
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wbool-operation" // '~' on an expression of type bool
+    //# pragma GCC diagnostic ignored "-Wbool-operation" // '~' on an expression of type bool
 #endif
     BOOST_SPIRIT_UTREE_CREATE_INTEGRAL_FUNCTION(invert, ~a)
 #if defined(__GNUC__) && (__GNUC__ >= 7)

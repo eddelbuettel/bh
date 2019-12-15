@@ -41,7 +41,7 @@ template<class T> T * get_pointer(T * p)
 #if defined( BOOST_CORE_DETAIL_DISABLE_LIBSTDCXX_DEPRECATED_WARNINGS )
 // Disable libstdc++ warnings about std::auto_ptr being deprecated in C++11 mode
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  //#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #define BOOST_CORE_DETAIL_DISABLED_DEPRECATED_WARNINGS
 #endif
 

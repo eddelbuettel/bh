@@ -157,7 +157,7 @@ template<> struct is_error_condition_enum<errc::errc_t>
 // class error_category
 #if ( defined( BOOST_GCC ) && BOOST_GCC >= 40600 ) || defined( BOOST_CLANG )
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+  //#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #endif
 
 #ifdef BOOST_MSVC
@@ -867,7 +867,7 @@ inline char const * error_category::message( int ev, char * buffer, std::size_t 
 # elif defined(__clang__) && defined(__has_warning)
 #  pragma clang diagnostic push
 #  if __has_warning("-Wdeprecated-declarations")
-#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        //#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #  endif
 # endif
 
