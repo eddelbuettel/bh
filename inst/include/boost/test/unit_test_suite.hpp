@@ -235,12 +235,15 @@ struct BOOST_AUTO_TC_INVOKER( test_name ) {                             \
     template<typename TestType>                                         \
     static void run( boost::type<TestType>* = 0 )                       \
     {                                                                   \
-        BOOST_TEST_CHECKPOINT('"' << #test_name <<"\" fixture entry."); \
-        test_name<TestType> t; boost::unit_test::setup_conditional(t);  \
-        BOOST_TEST_CHECKPOINT('"' << #test_name << "\" entry.");        \
+        BOOST_TEST_CHECKPOINT('"' << #test_name << "\" fixture ctor");  \
+        test_name<TestType> t;                                          \
+        BOOST_TEST_CHECKPOINT('"' << #test_name << "\" fixture setup"); \
+        boost::unit_test::setup_conditional(t);                         \
+        BOOST_TEST_CHECKPOINT('"' << #test_name << "\" test entry");    \
         t.test_method();                                                \
-        BOOST_TEST_CHECKPOINT('"' << #test_name << "\" exit.");         \
+        BOOST_TEST_CHECKPOINT('"' << #test_name << "\" fixture teardown");\
         boost::unit_test::teardown_conditional(t);                      \
+        BOOST_TEST_CHECKPOINT('"' << #test_name << "\" fixture dtor");  \
     }                                                                   \
 };                                                                      \
                                                                         \
@@ -322,7 +325,7 @@ static boost::unit_test::ut_detail::global_fixture_impl<F> BOOST_JOIN( gf_, F ) 
 
 #define BOOST_TEST_DECORATOR( D )                                       \
 static boost::unit_test::decorator::collector_t const&                  \
-BOOST_TEST_APPEND_UNIQUE_ID(decorator_collector) = D;                   \
+BOOST_TEST_APPEND_UNIQUE_ID(decorator_collector) BOOST_ATTRIBUTE_UNUSED = D; \
 /**/
 
 // ************************************************************************** //
@@ -362,7 +365,7 @@ typedef ::boost::unit_test::ut_detail::nil_t BOOST_AUTO_TEST_CASE_FIXTURE;
 
 #define BOOST_AUTO_TU_REGISTRAR( test_name )                       \
 static boost::unit_test::ut_detail::auto_test_unit_registrar       \
-BOOST_TEST_APPEND_UNIQUE_ID( BOOST_JOIN( test_name, _registrar ) ) \
+BOOST_TEST_APPEND_UNIQUE_ID( BOOST_JOIN( test_name, _registrar ) ) BOOST_ATTRIBUTE_UNUSED \
 /**/
 #define BOOST_AUTO_TC_INVOKER( test_name )      BOOST_JOIN( test_name, _invoker )
 #define BOOST_AUTO_TC_UNIQUE_ID( test_name )    BOOST_JOIN( test_name, _id )
@@ -373,17 +376,17 @@ BOOST_TEST_APPEND_UNIQUE_ID( BOOST_JOIN( test_name, _registrar ) ) \
 
 #if defined(BOOST_TEST_MAIN)
 
+// initializing the master test suite name from the user defined macros
+// this function should be seen exactly once.
+#ifdef BOOST_TEST_MODULE
+static const boost::unit_test::framework::impl::master_test_suite_name_setter mtsetter(BOOST_TEST_STRINGIZE( BOOST_TEST_MODULE ).trim( "\"" ));
+#endif
+
 #ifdef BOOST_TEST_ALTERNATIVE_INIT_API
 bool init_unit_test()                   {
 #else
 ::boost::unit_test::test_suite*
 init_unit_test_suite( int, char* [] )   {
-#endif
-
-#ifdef BOOST_TEST_MODULE
-    using namespace ::boost::unit_test;
-    assign_op( framework::master_test_suite().p_name.value, BOOST_TEST_STRINGIZE( BOOST_TEST_MODULE ).trim( "\"" ), 0 );
-
 #endif
 
 #ifdef BOOST_TEST_ALTERNATIVE_INIT_API

@@ -1,4 +1,4 @@
 local/boost_*.tar.gz
 .Rproj.user
-BH_.*\.tar\.gz
+BH_*\.tar\.gz
 inst/include/boost.orig

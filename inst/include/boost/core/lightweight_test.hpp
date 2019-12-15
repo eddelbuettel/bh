@@ -22,8 +22,8 @@
 //  http://www.boost.org/LICENSE_1_0.txt
 //
 
-#include <boost/core/no_exceptions_support.hpp>
 #include <boost/current_function.hpp>
+#include <boost/config.hpp>
 #include <iostream>
 #include <iterator>
 #include <cstdlib>
@@ -110,17 +110,17 @@ inline void throw_failed_impl(char const * excep, char const * file, int line, c
 // In the comparisons below, it is possible that T and U are signed and unsigned integer types, which generates warnings in some compilers.
 // A cleaner fix would require common_type trait or some meta-programming, which would introduce a dependency on Boost.TypeTraits. To avoid
 // the dependency we just disable the warnings.
-#if defined(_MSC_VER)
-# pragma warning(push)
-# pragma warning(disable: 4389)
-#elif defined(__clang__) && defined(__has_warning)
+#if defined(__clang__) && defined(__has_warning)
 # if __has_warning("-Wsign-compare")
 #  pragma clang diagnostic push
-//#  pragma clang diagnostic ignored "-Wsign-compare"
+  //#  pragma clang diagnostic ignored "-Wsign-compare"
 # endif
+#elif defined(_MSC_VER)
+# pragma warning(push)
+# pragma warning(disable: 4389)
 #elif defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
 # pragma GCC diagnostic push
-//# pragma GCC diagnostic ignored "-Wsign-compare"
+  //# pragma GCC diagnostic ignored "-Wsign-compare"
 #endif
 
 // specialize test output for char pointers to avoid printing as cstring
@@ -361,12 +361,12 @@ void test_all_with_impl(FormattedOutputFunction& output,
     }
 }
 
-#if defined(_MSC_VER)
-# pragma warning(pop)
-#elif defined(__clang__) && defined(__has_warning)
+#if defined(__clang__) && defined(__has_warning)
 # if __has_warning("-Wsign-compare")
 #  pragma clang diagnostic pop
 # endif
+#elif defined(_MSC_VER)
+# pragma warning(pop)
 #elif defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
 # pragma GCC diagnostic pop
 #endif
@@ -379,18 +379,20 @@ inline int report_errors()
     result.done();
 
     int errors = result.errors();
+
     if( errors == 0 )
     {
         BOOST_LIGHTWEIGHT_TEST_OSTREAM
           << "No errors detected." << std::endl;
-        return 0;
     }
     else
     {
         BOOST_LIGHTWEIGHT_TEST_OSTREAM
           << errors << " error" << (errors == 1? "": "s") << " detected." << std::endl;
-        return 1;
     }
+
+    // `return report_errors();` from main only supports 8 bit exit codes
+    return errors < 256? errors: 255;
 }
 
 } // namespace boost

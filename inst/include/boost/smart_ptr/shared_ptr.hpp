@@ -18,7 +18,7 @@
 
 // In order to avoid circular dependencies with Boost.TR1
 // we make sure that our include of <memory> doesn't try to
-// pull in the TR1 headers: that's why we use this header
+// pull in the TR1 headers: that's why we use this header 
 // rather than including <memory> directly:
 #include <boost/config/no_tr1/memory.hpp>  // std::auto_ptr
 
@@ -256,7 +256,7 @@ template< class T, class R > struct sp_enable_if_auto_ptr
 template< class T, class R > struct sp_enable_if_auto_ptr< std::auto_ptr< T >, R >
 {
     typedef R type;
-};
+}; 
 
 #endif
 
@@ -728,13 +728,13 @@ public:
         BOOST_ASSERT( px != 0 );
         return *px;
     }
-
+    
     typename boost::detail::sp_member_access< T >::type operator-> () const BOOST_SP_NOEXCEPT_WITH_ASSERT
     {
         BOOST_ASSERT( px != 0 );
         return px;
     }
-
+    
     typename boost::detail::sp_array_access< T >::type operator[] ( std::ptrdiff_t i ) const BOOST_SP_NOEXCEPT_WITH_ASSERT
     {
         BOOST_ASSERT( px != 0 );
@@ -777,12 +777,12 @@ public:
         return pn < rhs.pn;
     }
 
-    void * _internal_get_deleter( boost::detail::sp_typeinfo const & ti ) const BOOST_SP_NOEXCEPT
+    void * _internal_get_deleter( boost::detail::sp_typeinfo_ const & ti ) const BOOST_SP_NOEXCEPT
     {
         return pn.get_deleter( ti );
     }
 
-    void * _internal_get_local_deleter( boost::detail::sp_typeinfo const & ti ) const BOOST_SP_NOEXCEPT
+    void * _internal_get_local_deleter( boost::detail::sp_typeinfo_ const & ti ) const BOOST_SP_NOEXCEPT
     {
         return pn.get_local_deleter( ti );
     }
@@ -797,7 +797,7 @@ public:
         return px == r.px && pn == r.pn;
     }
 
-    boost::detail::shared_count _internal_count() const BOOST_NOEXCEPT
+    boost::detail::shared_count _internal_count() const BOOST_SP_NOEXCEPT
     {
         return pn;
     }
@@ -1008,7 +1008,7 @@ namespace detail
 
 template<class D, class T> D * basic_get_deleter( shared_ptr<T> const & p ) BOOST_SP_NOEXCEPT
 {
-    return static_cast<D *>( p._internal_get_deleter(BOOST_SP_TYPEID(D)) );
+    return static_cast<D *>( p._internal_get_deleter(BOOST_SP_TYPEID_(D)) );
 }
 
 template<class D, class T> D * basic_get_local_deleter( D *, shared_ptr<T> const & p ) BOOST_SP_NOEXCEPT;
@@ -1022,7 +1022,7 @@ private:
 
 public:
 
-    esft2_deleter_wrapper()
+    esft2_deleter_wrapper() BOOST_SP_NOEXCEPT
     {
     }
 
@@ -1165,12 +1165,12 @@ namespace detail
 
 template<class D, class T> D * basic_get_local_deleter( D *, shared_ptr<T> const & p ) BOOST_SP_NOEXCEPT
 {
-    return static_cast<D *>( p._internal_get_local_deleter( BOOST_SP_TYPEID(local_sp_deleter<D>) ) );
+    return static_cast<D *>( p._internal_get_local_deleter( BOOST_SP_TYPEID_(local_sp_deleter<D>) ) );
 }
 
 template<class D, class T> D const * basic_get_local_deleter( D const *, shared_ptr<T> const & p ) BOOST_SP_NOEXCEPT
 {
-    return static_cast<D *>( p._internal_get_local_deleter( BOOST_SP_TYPEID(local_sp_deleter<D>) ) );
+    return static_cast<D *>( p._internal_get_local_deleter( BOOST_SP_TYPEID_(local_sp_deleter<D>) ) );
 }
 
 } // namespace detail

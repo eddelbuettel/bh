@@ -1,7 +1,8 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
 
-// Copyright (c) 2018 Oracle and/or its affiliates.
+// Copyright (c) 2018-2019 Oracle and/or its affiliates.
 // Contributed and/or modified by Vissarion Fisikopoulos, on behalf of Oracle
+// Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
 
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +12,14 @@
 #define BOOST_GEOMETRY_STRATEGIES_SPHERICAL_DISTANCE_SEGMENT_BOX_HPP
 
 #include <boost/geometry/algorithms/detail/distance/segment_to_box.hpp>
+
+#include <boost/geometry/strategies/distance.hpp>
+#include <boost/geometry/strategies/normalize.hpp>
+#include <boost/geometry/strategies/spherical/disjoint_box_box.hpp>
+#include <boost/geometry/strategies/spherical/distance_cross_track.hpp>
+#include <boost/geometry/strategies/spherical/point_in_point.hpp>
+#include <boost/geometry/strategies/cartesian/point_in_box.hpp> // spherical
+#include <boost/geometry/strategies/spherical/ssf.hpp>
 
 namespace boost { namespace geometry
 {
@@ -29,7 +38,10 @@ struct generic_segment_box
             typename BoxPoint,
             typename SegmentBoxStrategy,
             typename AzimuthStrategy,
-            typename EnvelopeSegmentStrategy
+            typename EnvelopeSegmentStrategy,
+            typename NormalizePointStrategy,
+            typename DisjointPointBoxStrategy,
+            typename DisjointBoxBoxStrategy
     >
     static inline ReturnType segment_below_of_box(
             SegmentPoint const& p0,
@@ -39,19 +51,36 @@ struct generic_segment_box
             BoxPoint const& bottom_left,
             BoxPoint const& bottom_right,
             SegmentBoxStrategy const& sb_strategy,
-            AzimuthStrategy & az_strategy,
-            EnvelopeSegmentStrategy & es_strategy)
+            AzimuthStrategy const& az_strategy,
+            EnvelopeSegmentStrategy const& es_strategy,
+            NormalizePointStrategy const& np_strategy,
+            DisjointPointBoxStrategy const& dpb_strategy,
+            DisjointBoxBoxStrategy const& dbb_strategy)
     {
         ReturnType result;
         typename LessEqual::other less_equal;
-        typedef geometry::model::segment<SegmentPoint> Segment;
-        typedef typename cs_tag<Segment>::type segment_cs_type;
+        typedef geometry::model::segment<SegmentPoint> segment_type;
+        // if cs_tag is spherical_tag check segment's cs_tag with spherical_equatorial_tag as default
+        typedef typename boost::mpl::if_c
+            <
+                boost::is_same<typename SegmentBoxStrategy::cs_tag, spherical_tag>::value,
+                typename boost::mpl::if_c
+                    <
+                        boost::is_same
+                            <
+                                typename geometry::cs_tag<segment_type>::type,
+                                spherical_polar_tag
+                            >::value,
+                        spherical_polar_tag, spherical_equatorial_tag
+                    >::type,
+                typename SegmentBoxStrategy::cs_tag
+            >::type cs_tag;
         typedef geometry::detail::disjoint::
-                disjoint_segment_box_sphere_or_spheroid<segment_cs_type>
+                disjoint_segment_box_sphere_or_spheroid<cs_tag>
                 disjoint_sb;
         typedef typename disjoint_sb::disjoint_info disjoint_info_type;
 
-        Segment seg(p0, p1);
+        segment_type seg(p0, p1);
 
         geometry::model::box<BoxPoint> input_box;
         geometry::set_from_radian<geometry::min_corner, 0>
@@ -66,7 +95,8 @@ struct generic_segment_box
         SegmentPoint p_max;
 
         disjoint_info_type disjoint_result = disjoint_sb::
-                apply(seg, input_box, az_strategy, p_max);
+                apply(seg, input_box, p_max,
+                      az_strategy, np_strategy, dpb_strategy, dbb_strategy);
 
         if (disjoint_result == disjoint_info_type::intersect) //intersect
         {
@@ -85,6 +115,12 @@ struct generic_segment_box
             CT lon2 = geometry::get_as_radian<0>(p1);
             CT lat2 = geometry::get_as_radian<1>(p1);
 
+            if (lon1 > lon2)
+            {
+                std::swap(lon1, lon2);
+                std::swap(lat1, lat2);
+            }
+
             CT vertex_lat;
             CT lat_sum = lat1 + lat2;
             if (lat_sum > CT(0))
@@ -99,7 +135,7 @@ struct generic_segment_box
             CT vertex_lon = geometry::formula::vertex_longitude
                     <
                     CT,
-                    segment_cs_type
+                    cs_tag
                     >::apply(lon1, lat1, lon2, lat2,
                              vertex_lat, alp1, az_strategy);
 
@@ -175,6 +211,8 @@ struct spherical_segment_box
           >
     {};
 
+    typedef spherical_tag cs_tag;
+
     // strategy getters
 
     // point-point strategy getters
@@ -196,6 +234,32 @@ struct spherical_segment_box
     inline typename distance_ps_strategy::type get_distance_ps_strategy() const
     {
         return typename distance_ps_strategy::type();
+    }
+
+    struct distance_pb_strategy
+    {
+        typedef cross_track_point_box<CalculationType, Strategy> type;
+    };
+
+    inline typename distance_pb_strategy::type get_distance_pb_strategy() const
+    {
+        return typename distance_pb_strategy::type();
+    }
+
+    // TODO: why is the Radius not propagated above?
+
+    typedef side::spherical_side_formula<CalculationType> side_strategy_type;
+
+    static inline side_strategy_type get_side_strategy()
+    {
+        return side_strategy_type();
+    }
+
+    typedef within::spherical_point_point equals_point_point_strategy_type;
+
+    static inline equals_point_point_strategy_type get_equals_point_point_strategy()
+    {
+        return equals_point_point_strategy_type();
     }
 
     // methods
@@ -222,7 +286,10 @@ struct spherical_segment_box
                     ReturnType
                >(p0,p1,top_left,top_right,bottom_left,bottom_right,
                  spherical_segment_box<CalculationType>(),
-                 az_strategy, es_strategy);
+                 az_strategy, es_strategy,
+                 normalize::spherical_point(),
+                 covered_by::spherical_point_box(),
+                 disjoint::spherical_box_box());
     }
 
     template <typename SPoint, typename BPoint>

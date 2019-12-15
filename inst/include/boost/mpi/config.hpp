@@ -32,9 +32,33 @@
  */
 #define BOOST_MPI_HOMOGENEOUS
 
+#if defined MPI_VERSION
+/** @brief Major version of the underlying MPI implementation supproted standard.
+ * 
+ * If, for some reason, MPI_VERSION is not supported, you should probably set that
+ * according to your MPI documentation
+ */
+# define BOOST_MPI_VERSION MPI_VERSION
+#else 
+// assume a safe default
+# define BOOST_MPI_VERSION 2
+#endif
+
+#if defined MPI_SUBVERSION
+/** @brief Major version of the underlying MPI implementation supported standard.
+ * 
+ * If, for some reason, MPI_SUBVERSION is not supported, you should probably set that
+ * according to your MPI documentation
+ */
+# define BOOST_MPI_SUBVERSION MPI_SUBVERSION
+#else 
+// assume a safe default
+# define BOOST_MPI_SUBVERSION 2
+#endif
+
 // If this is an MPI-2 implementation, define configuration macros for
 // the features we are interested in.
-#if defined(MPI_VERSION) && MPI_VERSION >= 2
+#if BOOST_MPI_VERSION >= 2
 /** @brief Determine if the MPI implementation has support for memory
  *  allocation.
  *
@@ -92,8 +116,28 @@
 #  define BOOST_MPI_HAS_MEMORY_ALLOCATION
 #  define BOOST_MPI_HAS_NOARG_INITIALIZATION
 #  undef  BOOST_MPI_BCAST_BOTTOM_WORKS_FINE
-#elif defined(MPICH_NAME)
+#endif
+
+#if defined(MPICH_NAME)
 // Configuration for MPICH
+#endif
+
+#if defined(OPEN_MPI)
+// We do not want to import C++ binding
+#define OMPI_BUILD_CXX_BINDINGS 1
+#endif
+
+#if BOOST_MPI_VERSION >= 3 
+// MPI_Probe an friends should work
+#  if defined(I_MPI_NUMVERSION)
+// Excepted for some Intel versions.
+// Note that I_MPI_NUMVERSION is not always defined with Intel.
+#    if I_MPI_NUMVERSION > 20190004000
+#      define BOOST_MPI_USE_IMPROBE 1
+#    endif
+#  else
+#    define BOOST_MPI_USE_IMPROBE 1
+#  endif
 #endif
 
 /*****************************************************************************

@@ -4,7 +4,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright (c) 2003 Eric Friedman, Itay Maman
-// Copyright (c) 2014 Antony Polukhin
+// Copyright (c) 2014-2019 Antony Polukhin
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -32,7 +32,7 @@ namespace boost {
 
 #if defined(BOOST_CLANG)
 #   pragma clang diagnostic push
-//#   pragma clang diagnostic ignored "-Wweak-vtables"
+  //#   pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 //////////////////////////////////////////////////////////////////////////
 // class bad_get

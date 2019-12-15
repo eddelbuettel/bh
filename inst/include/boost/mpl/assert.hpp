@@ -4,8 +4,8 @@
 
 // Copyright Aleksey Gurtovoy 2000-2006
 //
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
@@ -52,8 +52,8 @@
 #   define BOOST_MPL_CFG_ASSERT_BROKEN_POINTER_TO_POINTER_TO_MEMBER
 #endif
 
-// agurt, 10/nov/06: use enums for Borland (which cannot cope with static constants)
-// and GCC (which issues "unused variable" warnings when static constants are used
+// agurt, 10/nov/06: use enums for Borland (which cannot cope with static constants) 
+// and GCC (which issues "unused variable" warnings when static constants are used 
 // at a function scope)
 #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610)) \
     || (BOOST_MPL_CFG_GCC != 0) || (BOOST_MPL_CFG_GPU != 0) || defined(__PGI)
@@ -67,7 +67,7 @@ BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 
 struct failed {};
 
-// agurt, 24/aug/04: MSVC 7.1 workaround here and below: return/accept
+// agurt, 24/aug/04: MSVC 7.1 workaround here and below: return/accept 
 // 'assert<false>' by reference; can't apply it unconditionally -- apparently it
 // degrades the quality of GCC diagnostics
 #if BOOST_WORKAROUND(BOOST_MSVC, == 1310)
@@ -117,7 +117,7 @@ bool operator<=( failed, failed );
 template< bool (*)(failed, failed), long x, long y > struct assert_relation {};
 #   define BOOST_MPL_AUX_ASSERT_RELATION(x, y, r) assert_relation<r,x,y>
 #else
-template< BOOST_MPL_AUX_NTTP_DECL(long, x), BOOST_MPL_AUX_NTTP_DECL(long, y), bool (*)(failed, failed) >
+template< BOOST_MPL_AUX_NTTP_DECL(long, x), BOOST_MPL_AUX_NTTP_DECL(long, y), bool (*)(failed, failed) > 
 struct assert_relation {};
 #   define BOOST_MPL_AUX_ASSERT_RELATION(x, y, r) assert_relation<x,y,r>
 #endif
@@ -133,7 +133,7 @@ boost::mpl::aux::weighted_tag<6>::type operator<=( assert_, assert_ );
 
 template< assert_::relations r, long x, long y > struct assert_relation {};
 
-#endif
+#endif 
 
 #if BOOST_WORKAROUND(BOOST_MSVC, == 1700)
 
@@ -215,7 +215,7 @@ assert_not_arg( void (*)(Pred), typename assert_arg_pred<Pred>::type );
 
 
 #else // BOOST_MPL_CFG_ASSERT_BROKEN_POINTER_TO_POINTER_TO_MEMBER
-
+        
 template< bool c, typename Pred > struct assert_arg_type_impl
 {
     typedef failed      ************ Pred::* mwcw83_wknd;
@@ -233,11 +233,11 @@ template< typename Pred > struct assert_arg_type
 };
 
 template< typename Pred >
-typename assert_arg_type<Pred>::type
+typename assert_arg_type<Pred>::type 
 assert_arg(void (*)(Pred), int);
 
 template< typename Pred >
-typename assert_arg_type< boost::mpl::not_<Pred> >::type
+typename assert_arg_type< boost::mpl::not_<Pred> >::type 
 assert_not_arg(void (*)(Pred), int);
 
 #   if !defined(BOOST_MPL_CFG_ASSERT_USE_RELATION_NAMES)
@@ -408,7 +408,7 @@ BOOST_MPL_AUX_ASSERT_CONSTANT( \
 #endif
 
 
-// BOOST_MPL_ASSERT_MSG( (pred<x,...>::value), USER_PROVIDED_MESSAGE, (types<x,...>) )
+// BOOST_MPL_ASSERT_MSG( (pred<x,...>::value), USER_PROVIDED_MESSAGE, (types<x,...>) ) 
 
 #if BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3202))
 #   define BOOST_MPL_ASSERT_MSG_IMPL( counter, c, msg, types_ ) \

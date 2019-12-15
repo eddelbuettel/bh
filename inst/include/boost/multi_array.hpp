@@ -3,7 +3,7 @@
 // Copyright 2018 Glen Joseph Fernandes
 // (glenjofe@gmail.com)
 
-// Use, modification and distribution is subject to the Boost Software
+// Use, modification and distribution is subject to the Boost Software 
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
@@ -33,7 +33,7 @@
 #include "boost/multi_array/subarray.hpp"
 #include "boost/multi_array/multi_array_ref.hpp"
 #include "boost/multi_array/algorithm.hpp"
-#include "boost/multi_array/allocators.hpp"
+#include "boost/core/alloc_construct.hpp"
 #include "boost/core/empty_value.hpp"
 #include "boost/array.hpp"
 #include "boost/mpl/if.hpp"
@@ -94,7 +94,7 @@ template <>
 struct disable_multi_array_impl_impl<true>
 {
     // forming a pointer to a reference triggers SFINAE
-    typedef int& type;
+    typedef int& type; 
 };
 
 
@@ -153,7 +153,7 @@ public:
     super_type((T*)initial_base_,c_storage_order(),
                /*index_bases=*/0, /*extents=*/0),
     alloc_base(boost::empty_init_t(),alloc) {
-    allocate_space();
+    allocate_space(); 
   }
 
   template <class ExtentList>
@@ -173,7 +173,7 @@ public:
     allocate_space();
   }
 
-
+    
   template <class ExtentList>
   explicit multi_array(ExtentList const& extents,
                        const general_storage_order<NumDims>& so) :
@@ -239,8 +239,8 @@ public:
   // array_view object.  The following constructors ensure that.
   //
 
-  // Due to limited support for partial template ordering,
-  // MSVC 6&7 confuse the following with the most basic ExtentList
+  // Due to limited support for partial template ordering, 
+  // MSVC 6&7 confuse the following with the most basic ExtentList 
   // constructor.
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   template <typename OPtr>
@@ -404,7 +404,7 @@ public:
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
   }
-
+    
   multi_array(const detail::multi_array::
               multi_array_view<T,NumDims>& rhs,
               const general_storage_order<NumDims>& so,
@@ -415,7 +415,7 @@ public:
     allocate_space();
     std::copy(rhs.begin(),rhs.end(),this->begin());
   }
-
+    
   // Since assignment is a deep copy, multi_array_ref
   // contains all the necessary code.
   template <typename ConstMultiArray>
@@ -444,7 +444,7 @@ public:
       typedef typename gen_type::range range_type;
       ranges.ranges_[i] = range_type(0,extents[i]);
     }
-
+    
     return this->resize(ranges);
   }
 
@@ -545,12 +545,12 @@ private:
     base_ = allocator().allocate(this->num_elements());
     this->set_base_ptr(base_);
     allocated_elements_ = this->num_elements();
-    detail::multi_array::construct(allocator(),base_,base_+allocated_elements_);
+    boost::alloc_construct_n(allocator(),base_,allocated_elements_);
   }
 
   void deallocate_space() {
     if(base_) {
-      detail::multi_array::destroy(allocator(),base_,base_+allocated_elements_);
+      boost::alloc_destroy_n(allocator(),base_,allocated_elements_);
       allocator().deallocate(base_,allocated_elements_);
     }
   }
