@@ -2,6 +2,8 @@
 
 	* inst/include/boost/*: Upgraded to Boost 1.72
 
+	* README.md: Updated package list for 1.72
+
 	* inst/include/boost/numeric/odeint/stepper/generation/: As before
 	rename karp54_classic.hpp to karp54_cl.hpp, adjust generation.hpp
 	* inst/include/boost/numeric/ublas/storage.hpp : Add missing include
