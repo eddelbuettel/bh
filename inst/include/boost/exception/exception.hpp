@@ -21,6 +21,7 @@ namespace boost { namespace exception_detail { using boost::shared_ptr; } }
 #endif
 #if defined(_MSC_VER) && !defined(BOOST_EXCEPTION_ENABLE_WARNINGS)
 #pragma warning(push,1)
+#pragma warning(disable: 4265)
 #endif
 
 namespace
@@ -165,7 +166,7 @@ boost
 
             protected:
 
-            ~error_info_container() throw()
+            ~error_info_container() BOOST_NOEXCEPT_OR_NOTHROW
                 {
                 }
             };
@@ -233,7 +234,7 @@ boost
 #ifdef __HP_aCC
         //On HP aCC, this protected copy constructor prevents throwing boost::exception.
         //On all other platforms, the same effect is achieved by the pure virtual destructor.
-        exception( exception const & x ) throw():
+        exception( exception const & x ) BOOST_NOEXCEPT_OR_NOTHROW:
             data_(x.data_),
             throw_function_(x.throw_function_),
             throw_file_(x.throw_file_),
@@ -242,7 +243,7 @@ boost
             }
 #endif
 
-        virtual ~exception() throw()
+        virtual ~exception() BOOST_NOEXCEPT_OR_NOTHROW
 #ifndef __HP_aCC
             = 0 //Workaround for HP aCC, =0 incorrectly leads to link errors.
 #endif
@@ -287,7 +288,7 @@ boost
 
     inline
     exception::
-    ~exception() throw()
+    ~exception() BOOST_NOEXCEPT_OR_NOTHROW
         {
         }
 
@@ -337,7 +338,7 @@ boost
                 {
                 }
 
-            ~error_info_injector() throw()
+            ~error_info_injector() BOOST_NOEXCEPT_OR_NOTHROW
                 {
                 }
             };
@@ -398,7 +399,7 @@ boost
             virtual void rethrow() const = 0;
 
             virtual
-            ~clone_base() throw()
+            ~clone_base() BOOST_NOEXCEPT_OR_NOTHROW
                 {
                 }
             };
@@ -445,7 +446,7 @@ boost
                 copy_boost_exception(this,&x);
                 }
 
-            ~clone_impl() throw()
+            ~clone_impl() BOOST_NOEXCEPT_OR_NOTHROW
                 {
                 }
 
@@ -487,7 +488,7 @@ boost
             {
             }
 
-        ~wrapexcept() throw()
+        ~wrapexcept() BOOST_NOEXCEPT_OR_NOTHROW
             {
             }
         };

@@ -15,6 +15,7 @@
 
 #include <boost/math/constants/constants.hpp>
 
+#include <boost/geometry/core/assert.hpp>
 #include <boost/geometry/core/radius.hpp>
 
 #include <boost/geometry/util/condition.hpp>
@@ -67,13 +68,6 @@ public:
         CT const lon1 = lo1;
         CT const lat1 = la1;
 
-        if ( math::equals(distance, Dist(0)) || distance < Dist(0) )
-        {
-            result.lon2 = lon1;
-            result.lat2 = lat1;
-            return result;
-        }
-
         CT const c0 = 0;
         CT const c1 = 1;
         CT const c2 = 2;
@@ -86,6 +80,8 @@ public:
 
         CT const pi = math::pi<CT>();
         CT const pi_half = pi / c2;
+
+        BOOST_GEOMETRY_ASSERT(-pi <= azimuth12 && azimuth12 <= pi);
 
         // keep azimuth small - experiments show low accuracy
         // if the azimuth is closer to (+-)180 deg.

@@ -29,8 +29,8 @@ namespace date_time {
       This design allows the subclass duration types to provide custom
       construction policies or other custom features not provided here.
 
-      @param T The subclass type
-      @param rep_type The time resolution traits for this duration type.
+      @tparam T The subclass type
+      @tparam rep_type The time resolution traits for this duration type.
   */
   template<class T, typename rep_type>
   class BOOST_SYMBOL_VISIBLE time_duration : private
@@ -144,9 +144,25 @@ namespace date_time {
     {
       return duration_type(ticks_ * (-1));
     }
+    duration_type abs() const
+    {
+      if ( is_negative() )
+      {
+        return invert_sign();
+      }
+      return duration_type(ticks_);
+    }
     bool is_negative() const
     {
       return ticks_ < 0;
+    }
+    bool is_zero() const
+    {
+      return ticks_ == 0;
+    }
+    bool is_positive() const
+    {
+      return ticks_ > 0;
     }
     bool operator<(const time_duration& rhs)  const
     {

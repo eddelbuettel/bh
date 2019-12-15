@@ -2,7 +2,12 @@
 
 // Copyright (c) 2018 Adeel Ahmad, Islamabad, Pakistan.
 
-// Contributed and/or modified by Adeel Ahmad, as part of Google Summer of Code 2018 program.
+// Contributed and/or modified by Adeel Ahmad,
+//   as part of Google Summer of Code 2018 program.
+
+// This file was modified by Oracle on 2018.
+// Modifications copyright (c) 2018 Oracle and/or its affiliates.
+// Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
 
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -30,12 +35,13 @@
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/special_functions/hypot.hpp>
 
-#include <boost/geometry/util/math.hpp>
-#include <boost/geometry/util/series_expansion.hpp>
-#include <boost/geometry/util/normalize_spheroidal_coordinates.hpp>
-
 #include <boost/geometry/formulas/flattening.hpp>
 #include <boost/geometry/formulas/result_direct.hpp>
+
+#include <boost/geometry/util/condition.hpp>
+#include <boost/geometry/util/math.hpp>
+#include <boost/geometry/util/normalize_spheroidal_coordinates.hpp>
+#include <boost/geometry/util/series_expansion.hpp>
 
 
 namespace boost { namespace geometry { namespace formula
@@ -82,15 +88,6 @@ public:
         Azi azi12 = azimuth12;
         math::normalize_azimuth<degree, Azi>(azi12);
 
-        Dist const dist_c0 = 0;
-
-        if (math::equals(distance, dist_c0) || distance < dist_c0)
-        {
-            result.lon2 = lon1;
-            result.lat2 = lat1;
-            return result;
-        }
-
         CT const c0 = 0;
         CT const c1 = 1;
         CT const c2 = 2;
@@ -105,11 +102,11 @@ public:
         CT const ep2 = e2 / math::sqr(one_minus_f);
 
         CT sin_alpha1, cos_alpha1;
-        math::sin_cos_degrees<CT>(math::round_angle<CT>(azi12), sin_alpha1, cos_alpha1);
+        math::sin_cos_degrees<CT>(azi12, sin_alpha1, cos_alpha1);
 
         // Find the reduced latitude.
         CT sin_beta1, cos_beta1;
-        math::sin_cos_degrees<CT>(math::round_angle<CT>(lat1), sin_beta1, cos_beta1);
+        math::sin_cos_degrees<CT>(lat1, sin_beta1, cos_beta1);
         sin_beta1 *= one_minus_f;
 
         math::normalize_unit_vector<CT>(sin_beta1, cos_beta1);

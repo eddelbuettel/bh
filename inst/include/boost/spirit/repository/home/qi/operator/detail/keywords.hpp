@@ -67,7 +67,7 @@ namespace boost { namespace spirit { namespace repository { namespace qi { names
                     {
                         return true;
                     }
-                    save = save;
+                    first = save;
                     return false;
                 }
 
@@ -86,10 +86,14 @@ namespace boost { namespace spirit { namespace repository { namespace qi { names
                     {
                         return true;
                     }
-                    save = save;
+                    first = save;
                     return false;
                 }
 
+#if defined(_MSC_VER)
+# pragma warning(push)
+# pragma warning(disable: 4127) // conditional expression is constant
+#endif
             // Handle unused attributes
             template <typename T> bool call(T &idx, mpl::false_) const{
  
@@ -114,6 +118,9 @@ namespace boost { namespace spirit { namespace repository { namespace qi { names
                   }
                 return false;
             }
+#if defined(_MSC_VER)
+# pragma warning(pop)
+#endif
 
             const Elements &elements;
             Iterator &first;
@@ -689,9 +696,8 @@ namespace boost { namespace spirit { namespace repository { namespace qi { names
             Skipper const& skipper;
             ParseDispatcher const& dispatcher;
 
-            private:
             // silence MSVC warning C4512: assignment operator could not be generated
-            complex_kwd_function& operator= (complex_kwd_function const&);
+            BOOST_DELETED_FUNCTION(complex_kwd_function& operator= (complex_kwd_function const&))
         };
 
 

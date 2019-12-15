@@ -1,15 +1,17 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
 
-// Copyright (c) 2014-2018 Oracle and/or its affiliates.
+// Copyright (c) 2014-2019 Oracle and/or its affiliates.
 
 // Contributed and/or modified by Vissarion Fysikopoulos, on behalf of Oracle
 // Contributed and/or modified by Menelaos Karavelas, on behalf of Oracle
+// Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
 
 // Licensed under the Boost Software License version 1.0.
 // http://www.boost.org/users/license.html
 
 #ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISTANCE_SEGMENT_TO_BOX_HPP
 #define BOOST_GEOMETRY_ALGORITHMS_DETAIL_DISTANCE_SEGMENT_TO_BOX_HPP
+
 #include <cstddef>
 
 #include <functional>
@@ -27,25 +29,26 @@
 #include <boost/geometry/core/point_type.hpp>
 #include <boost/geometry/core/tags.hpp>
 
-#include <boost/geometry/util/calculation_type.hpp>
-#include <boost/geometry/util/condition.hpp>
-#include <boost/geometry/util/math.hpp>
-
-#include <boost/geometry/strategies/distance.hpp>
-#include <boost/geometry/strategies/tags.hpp>
+#include <boost/geometry/algorithms/detail/assign_box_corners.hpp>
+#include <boost/geometry/algorithms/detail/assign_indexed_point.hpp>
+#include <boost/geometry/algorithms/detail/closest_feature/point_to_range.hpp>
+#include <boost/geometry/algorithms/detail/disjoint/segment_box.hpp>
+#include <boost/geometry/algorithms/detail/distance/default_strategies.hpp>
+#include <boost/geometry/algorithms/detail/distance/is_comparable.hpp>
+#include <boost/geometry/algorithms/detail/equals/point_point.hpp>
+#include <boost/geometry/algorithms/dispatch/distance.hpp>
+#include <boost/geometry/algorithms/not_implemented.hpp>
 
 #include <boost/geometry/policies/compare.hpp>
 
-#include <boost/geometry/algorithms/equals.hpp>
-#include <boost/geometry/algorithms/intersects.hpp>
-#include <boost/geometry/algorithms/not_implemented.hpp>
+#include <boost/geometry/util/calculation_type.hpp>
+#include <boost/geometry/util/condition.hpp>
+#include <boost/geometry/util/has_nan_coordinate.hpp>
+#include <boost/geometry/util/math.hpp>
 
-#include <boost/geometry/algorithms/detail/assign_box_corners.hpp>
-#include <boost/geometry/algorithms/detail/assign_indexed_point.hpp>
-#include <boost/geometry/algorithms/detail/distance/default_strategies.hpp>
-#include <boost/geometry/algorithms/detail/distance/is_comparable.hpp>
-
-#include <boost/geometry/algorithms/dispatch/distance.hpp>
+#include <boost/geometry/strategies/disjoint.hpp>
+#include <boost/geometry/strategies/distance.hpp>
+#include <boost/geometry/strategies/tags.hpp>
 
 
 namespace boost { namespace geometry
@@ -55,6 +58,20 @@ namespace boost { namespace geometry
 #ifndef DOXYGEN_NO_DETAIL
 namespace detail { namespace distance
 {
+
+
+// TODO: Take strategy
+template <typename Segment, typename Box>
+inline bool intersects_segment_box(Segment const& segment, Box const& box)
+{
+    typedef typename strategy::disjoint::services::default_strategy
+        <
+            Segment, Box
+        >::type strategy_type;
+
+    return ! detail::disjoint::disjoint_segment_box::apply(segment, box,
+                                                           strategy_type());
+}
 
 
 template
@@ -99,7 +116,7 @@ public:
                                     Strategy const& strategy,
                                     bool check_intersection = true)
     {
-        if (check_intersection && geometry::intersects(segment, box))
+        if (check_intersection && intersects_segment_box(segment, box))
         {
             return 0;
         }
@@ -214,7 +231,7 @@ public:
                                     Strategy const& strategy,
                                     bool check_intersection = true)
     {
-        if (check_intersection && geometry::intersects(segment, box))
+        if (check_intersection && intersects_segment_box(segment, box))
         {
             return 0;
         }
@@ -525,10 +542,8 @@ private:
                                  SBStrategy const& sb_strategy,
                                  ReturnType& result)
         {
-            typedef typename geometry::strategy::side::services::default_strategy
-                <
-                    typename geometry::cs_tag<SegmentPoint>::type
-                >::type side;
+            typename SBStrategy::side_strategy_type
+                side_strategy = sb_strategy.get_side_strategy();
 
             typedef cast_to_result<ReturnType> cast;
             ReturnType diff1 = cast::apply(geometry::get<1>(p1))
@@ -538,12 +553,12 @@ private:
                                 sb_strategy.get_distance_ps_strategy();
 
             int sign = diff1 < 0 ? -1 : 1;
-            if (side::apply(p0, p1, corner1) * sign < 0)
+            if (side_strategy.apply(p0, p1, corner1) * sign < 0)
             {
                 result = cast::apply(ps_strategy.apply(corner1, p0, p1));
                 return true;
             }
-            if (side::apply(p0, p1, corner2) * sign > 0)
+            if (side_strategy.apply(p0, p1, corner2) * sign > 0)
             {
                 result = cast::apply(ps_strategy.apply(corner2, p0, p1));
                 return true;
@@ -665,7 +680,7 @@ public:
                                    BoxPoint const& bottom_right,
                                    SBStrategy const& sb_strategy)
     {
-        BOOST_GEOMETRY_ASSERT( geometry::less<SegmentPoint>()(p0, p1)
+        BOOST_GEOMETRY_ASSERT( (geometry::less<SegmentPoint, -1, typename SBStrategy::cs_tag>()(p0, p1))
                             || geometry::has_nan_coordinate(p0)
                             || geometry::has_nan_coordinate(p1) );
 
@@ -753,7 +768,8 @@ public:
         detail::assign_point_from_index<0>(segment, p[0]);
         detail::assign_point_from_index<1>(segment, p[1]);
 
-        if (geometry::equals(p[0], p[1]))
+        if (detail::equals::equals_point_point(p[0], p[1],
+                sb_strategy.get_equals_point_point_strategy()))
         {
             typedef typename boost::mpl::if_
                 <
@@ -764,15 +780,9 @@ public:
                         >,
                     typename strategy::distance::services::comparable_type
                         <
-                            typename detail::distance::default_strategy
-                                <
-                                    segment_point, Box
-                                >::type
+                            typename SBStrategy::distance_pb_strategy::type
                         >::type,
-                    typename detail::distance::default_strategy
-                        <
-                            segment_point, Box
-                        >::type
+                    typename SBStrategy::distance_pb_strategy::type
                 >::type point_box_strategy_type;
 
             return dispatch::distance
@@ -791,7 +801,8 @@ public:
                            bottom_left, bottom_right,
                            top_left, top_right);
 
-        if (geometry::less<segment_point>()(p[0], p[1]))
+        typedef geometry::less<segment_point, -1, typename SBStrategy::cs_tag> less_type;
+        if (less_type()(p[0], p[1]))
         {
             return segment_to_box_2D
                 <

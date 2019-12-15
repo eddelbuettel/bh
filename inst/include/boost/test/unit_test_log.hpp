@@ -119,6 +119,7 @@ public:
     virtual void        test_unit_finish( test_unit const&, unsigned long elapsed );
     virtual void        test_unit_skipped( test_unit const&, const_string );
     virtual void        test_unit_aborted( test_unit const& );
+    virtual void        test_unit_timed_out( test_unit const& );
 
     virtual void        exception_caught( execution_exception const& ex );
 
@@ -244,7 +245,7 @@ BOOST_TEST_SINGLETON_INST( unit_test_log )
    (::boost::unit_test::unit_test_log                           \
         << ::boost::unit_test::log::begin(                      \
                 "boost.test framework",                         \
-                __LINE__ ))                                     \
+                0 ))                                     \
              ( ::boost::unit_test::log_messages )               \
     << BOOST_TEST_LAZY_MSG( M )                                 \
 /**/
