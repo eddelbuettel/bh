@@ -1,4 +1,10 @@
+2019-12-16  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (URL): Added a link to GH repo
+
 2019-12-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 1.72.0-1
 
 	* inst/include/boost/*: Upgraded to Boost 1.72
 
