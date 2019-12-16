@@ -1,5 +1,10 @@
 2019-12-16  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Release 1.72.0-2
+
+	* inst/include/boost/numeric/odeint/stepper/: Correct accidental
+	renaming in this directory, only rename in .../generation/
+
 	* DESCRIPTION (URL): Added a link to GH repo
 
 2019-12-15  Dirk Eddelbuettel  <edd@debian.org>
