@@ -42,10 +42,6 @@ diff --git a/inst/include/boost/numeric/odeint/stepper/generation/generation_run
 similarity index 100%
 rename from inst/include/boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp
 rename to inst/include/boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_cl.hpp
-diff --git a/inst/include/boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp b/inst/include/boost/numeric/odeint/stepper/runge_kutta_cash_karp54_cl.hpp
-similarity index 100%
-rename from inst/include/boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp
-rename to inst/include/boost/numeric/odeint/stepper/runge_kutta_cash_karp54_cl.hpp
 diff --git a/inst/include/boost/numeric/ublas/storage.hpp b/inst/include/boost/numeric/ublas/storage.hpp
 index e28ac7c1..c67b91aa 100644
 --- a/inst/include/boost/numeric/ublas/storage.hpp
