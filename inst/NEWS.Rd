@@ -7,6 +7,12 @@
 \newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
+\section{Changes in version 1.72.0-2 (2019-12-16)}{
+  \itemize{
+    \item Bugfix release correction numeric/odeint/stepper/... renaming
+  }
+}
+
 \section{Changes in version 1.72.0-1 (2019-12-15)}{
   \itemize{
     \item Upgraded to \boost 1.72.0 (plus the few local tweaks) (\ghpr{65})
