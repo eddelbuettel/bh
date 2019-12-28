@@ -37,7 +37,8 @@ boostsources="${localdir}/${boosttargz}"
 pkgincl="${pkgdir}/inst/include/"
 ## local files containing R package pieces
 localfiles="${pkgdir}/local/files"
-
+## local boost/ paths
+boostinstall="${pkgincl}/boost/"
 
 
 ## (4) Display current settings
@@ -51,6 +52,7 @@ LocalDir:      ${localdir}
 LocalFiles:    ${localfiles}
 BoostRoot:     ${boostroot}
 Boostsources:  ${boostsources}
+BoostInstall:  ${boostinstall}
 "
 #exit -1
 
@@ -73,7 +75,10 @@ if [ -d ${boostroot} ]; then
     rm -rf ${boostroot}
 fi
 
-
+if [ -d ${boostinstall} ]; then
+    echo "Removing old boost/ directory"
+    rm -rf ${boostinstall}
+fi
 
 ## (6) Unpack boost -- note that for tarballs straight from Debian we need a rename step
 echo "Unpacking ${boosttargz} into LocalDir (ie ${localdir})."
