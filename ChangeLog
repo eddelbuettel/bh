@@ -1,5 +1,7 @@
 2019-12-28  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Release 1.72.0-3
+
 	* local/scripts/CreateBoost.sh (boostinstall): Remove old boost
 	installation to always create a fresh installation
 
