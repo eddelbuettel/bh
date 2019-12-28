@@ -136,10 +136,11 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Minus filesystem (issue ticket #55: cannot used without linking)
 # Plus mp11 (issue ticket #62)
 # Plus polygon (issue ticket #63)
+# Plus accumulators (issue ticket #68)
 boostextras="spirit foreach algorithm iostreams \
             dynamic_bitset heap any circular_buffer geometry fusion graph \
             multiprecision phoenix bimap icl flyweight property_tree \
-            scope_exit atomic align sort compute mp11 polygon"
+            scope_exit atomic align sort compute mp11 polygon accumulators"
 
 echo "Copying (extra) Boost libraries into BH"
 

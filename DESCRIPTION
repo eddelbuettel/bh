@@ -1,8 +1,8 @@
 Package: BH
 Type: Package
 Title: Boost C++ Header Files
-Version: 1.72.0-2
-Date: 2019-12-16
+Version: 1.72.0-3
+Date: 2019-12-28
 Author: Dirk Eddelbuettel, John W. Emerson and Michael J. Kane
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
 Description: Boost provides free peer-reviewed portable C++ source 
@@ -12,9 +12,9 @@ Description: Boost provides free peer-reviewed portable C++ source
  for template use among CRAN packages. By placing these libraries in 
  this package, we offer a more efficient distribution system for CRAN 
  as replication of this code in the sources of other packages is 
- avoided. As of release 1.72.0-1, the following Boost libraries are
- included: 'algorithm' 'align' 'any' 'atomic' 'bimap' 'bind'
- 'circular_buffer' 'compute' 'concept' 'config' 'container'
+ avoided. As of release 1.72.0-3, the following Boost libraries are
+ included: 'accumulators' 'algorithm' 'align' 'any' 'atomic' 'bimap'
+ 'bind' 'circular_buffer' 'compute' 'concept' 'config' 'container'
  'date_time' 'detail' 'dynamic_bitset' 'exception' 'flyweight'
  'foreach' 'functional' 'fusion' 'geometry' 'graph' 'heap' 'icl'
  'integer' 'interprocess' 'intrusive' 'io' 'iostreams' 'iterator'
