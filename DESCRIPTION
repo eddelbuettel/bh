@@ -18,7 +18,7 @@ Description: Boost provides free peer-reviewed portable C++ source
  'date_time' 'detail' 'dynamic_bitset' 'exception' 'flyweight'
  'foreach' 'functional' 'fusion' 'geometry' 'graph' 'heap' 'icl'
  'integer' 'interprocess' 'intrusive' 'io' 'iostreams' 'iterator'
- 'math' 'move' 'mp11' 'mpl' 'multiprcecision' 'numeric' 'pending'
+ 'math' 'move' 'mp11' 'mpl' 'multiprecision' 'numeric' 'pending'
  'phoenix' 'polygon' 'preprocessor' 'propery_tree' 'random' 'range'
  'scope_exit' 'smart_ptr' 'sort' 'spirit' 'tuple' 'type_traits'
  'typeof' 'unordered' 'utility' 'uuid'.
