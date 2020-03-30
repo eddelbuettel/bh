@@ -1,8 +1,15 @@
-## bh [![Build Status](https://travis-ci.org/eddelbuettel/bh.svg)](https://travis-ci.org/eddelbuettel/bh) [![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](http://www.boost.org/users/license.html) [![CRAN](http://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH) [![Dependencies](https://tinyverse.netlify.com/badge/BH)](https://cran.r-project.org/package=BH) [![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](http://www.r-pkg.org/pkg/BH) 
+## bh: Boost Headers for R
 
-Boost Headers for R
+[![Build Status](https://travis-ci.org/eddelbuettel/bh.svg)](https://travis-ci.org/eddelbuettel/bh) 
+[![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](http://www.boost.org/users/license.html)
+[![CRAN](http://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH) 
+[![Dependencies](https://tinyverse.netlify.com/badge/BH)](https://cran.r-project.org/package=BH) 
+[![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](http://www.r-pkg.org/pkg/BH) 
+[![Last Commit](https://img.shields.io/github/last-commit/eddelbuettel/bh)](https://github.com/eddelbuettel/bh)  
+[![CRAN use](https://jangorecki.gitlab.io/rdeps/BH/CRAN_usage.svg?sanitize=true)](https://cran.r-project.org/package=BH)
+[![BioConductor use](https://jangorecki.gitlab.io/rdeps/BH/BioC_usage.svg?sanitize=true)](https://cran.r-project.org/package=BH)
 
-### About
+### Synopsis
 
 This package provides [R](https://www.r-project.org) with access to
 [Boost](http://www.boost.org/) header files.  [Boost](http://www.boost.org/)
@@ -32,7 +39,7 @@ As of release 1.72.0-3, the following Boost libraries are included:
 > concept config container date_time detail dynamic_bitset exception
 > flyweight foreach functional fusion geometry graph heap icl integer
 > interprocess intrusive io iostreams iterator math move mp11 mpl
-> multiprcecision numeric pending phoenix polygon preprocessor propery_tree
+> multiprecision numeric pending phoenix polygon preprocessor propery_tree
 > random range scope_exit smart_ptr sort spirit tuple type_traits typeof
 > unordered utility uuid
 

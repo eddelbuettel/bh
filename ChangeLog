@@ -1,3 +1,7 @@
+2020-03-30  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Added badges, edited, fixed typo
+
 2020-03-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Roll minor version
