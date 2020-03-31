@@ -4,8 +4,8 @@
 [![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](http://www.boost.org/users/license.html)
 [![CRAN](http://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH) 
 [![Dependencies](https://tinyverse.netlify.com/badge/BH)](https://cran.r-project.org/package=BH) 
-[![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](http://www.r-pkg.org/pkg/BH) 
 [![Last Commit](https://img.shields.io/github/last-commit/eddelbuettel/bh)](https://github.com/eddelbuettel/bh)  
+[![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](http://www.r-pkg.org/pkg/BH) 
 [![CRAN use](https://jangorecki.gitlab.io/rdeps/BH/CRAN_usage.svg?sanitize=true)](https://cran.r-project.org/package=BH)
 [![BioConductor use](https://jangorecki.gitlab.io/rdeps/BH/BioC_usage.svg?sanitize=true)](https://cran.r-project.org/package=BH)
 
@@ -43,9 +43,33 @@ As of release 1.72.0-3, the following Boost libraries are included:
 > random range scope_exit smart_ptr sort spirit tuple type_traits typeof
 > unordered utility uuid
 
-### See Also
+### Example
 
-See the [BH](http://dirk.eddelbuettel.com/code/bh.html) page for some more details.
+The [Rcpp Gallery](https://gallery.rcpp.org) contains [several
+examples](https://gallery.rcpp.org/tags/boost/) under its `boost` tag including the introductory
+[first](https://gallery.rcpp.org/articles/a-first-boost-example/) and
+[second](https://gallery.rcpp.org/articles/a-second-boost-example/).  From the
+[first](https://gallery.rcpp.org/articles/a-first-boost-example/), a simple example to compute the
+greatest common demoninator of two integers follows:
+
+```c++
+// [[Rcpp::depends(BH)]]
+
+#include <Rcpp.h>
+#include <boost/math/common_factor.hpp>
+
+// [[Rcpp::export]]
+int computeGCD(int a, int b) {
+    return boost::math::gcd(a, b);
+}
+```
+
+Saving it as `boostExample.cpp` and simple sourcing this `Rcpp::sourceCpp("boostExample.cpp")`
+produces the function `computeGCD()`.  See the [Rcpp Gallery](https://gallery.rcpp.org) for more
+examples. 
+
+
+### See Also
 
 The [mailing list](http://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/boostheaders-devel)
 at [R-Forge](http://www.r-forge.r-project.org) is a good place for questions,

@@ -1,3 +1,7 @@
+2020-03-31  Dirk Eddelbuettel  <edd@debian.org>
+
+	* README.md: Minor badge rearrangement, added example
+
 2020-03-30  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Added badges, edited, fixed typo
