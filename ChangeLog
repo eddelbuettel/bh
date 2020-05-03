@@ -1,3 +1,7 @@
+2020-05-03  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/LICENSE_1_0.txt: Included from upstream tar.gz
+
 2020-03-31  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Minor badge rearrangement, added example
