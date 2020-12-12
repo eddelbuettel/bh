@@ -204,7 +204,7 @@ template<class... T> using mp_similar = typename detail::mp_similar_impl<T...>::
 
 #if BOOST_MP11_GCC
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wsign-compare"
+  //# pragma GCC diagnostic ignored "-Wsign-compare"
 #endif
 
 // mp_less<T1, T2>
