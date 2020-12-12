@@ -1,24 +1,25 @@
 ## bh: Boost Headers for R
 
 [![Build Status](https://travis-ci.org/eddelbuettel/bh.svg)](https://travis-ci.org/eddelbuettel/bh) 
-[![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](http://www.boost.org/users/license.html)
+[![CI](https://github.com/eddelbuettel/bh/workflows/ci/badge.svg)](https://github.com/eddelbuettel/bh/actions?query=workflow%3Aci)
+[![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](https://www.boost.org/users/license.html)
 [![CRAN](http://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH) 
 [![Dependencies](https://tinyverse.netlify.com/badge/BH)](https://cran.r-project.org/package=BH) 
 [![Last Commit](https://img.shields.io/github/last-commit/eddelbuettel/bh)](https://github.com/eddelbuettel/bh)  
-[![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](http://www.r-pkg.org/pkg/BH) 
+[![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](https://www.r-pkg.org:443/pkg/BH) 
 [![CRAN use](https://jangorecki.gitlab.io/rdeps/BH/CRAN_usage.svg?sanitize=true)](https://cran.r-project.org/package=BH)
 [![BioConductor use](https://jangorecki.gitlab.io/rdeps/BH/BioC_usage.svg?sanitize=true)](https://cran.r-project.org/package=BH)
 
 ### Synopsis
 
 This package provides [R](https://www.r-project.org) with access to
-[Boost](http://www.boost.org/) header files.  [Boost](http://www.boost.org/)
+[Boost](https://www.boost.org/) header files.  [Boost](https://www.boost.org/)
 provides free peer-reviewed portable C++ source libraries.  A large part of
-[Boost](http://www.boost.org/) is provided as C++ template code which is
+[Boost](https://www.boost.org/) is provided as C++ template code which is
 resolved entirely at compile-time without linking.  
 
 This package aims to provide the most useful subset of
-[Boost](http://www.boost.org/) libraries for template use among CRAN
+[Boost](https://www.boost.org/) libraries for template use among CRAN
 packages. By placing these libraries in this package, we offer a more
 efficient distribution system for CRAN as replication of this code in the
 sources of other packages is avoided.
@@ -85,12 +86,12 @@ to ensure that we work with a version that is at the same time current yet
 mature.  But on occassion, and as needed, and more recently, we will also go
 directly to Boost releases. 
 
-In general, we plan to keep the package up-to-date with [Boost](http://www.boost.org/)
+In general, we plan to keep the package up-to-date with [Boost](https://www.boost.org/)
 upstream, but will not necessarily follow each and every new release as we
 also value the merits of relative release stability. 
 
 If needed, the script `local/script/CreateBoost.sh` can be used to update a forked
-version to a newer version of [Boost](http://www.boost.org/).
+version to a newer version of [Boost](https://www.boost.org/).
 
 ### But what about the size?
 

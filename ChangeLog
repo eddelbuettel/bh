@@ -2,7 +2,7 @@
 
 	* DESCRIPTION (Version, Date): Release 1.75.0-0
 
-	* inst/include/boost/*: Upgraded to Boost 1.72
+	* inst/include/boost/*: Upgraded to Boost 1.75
 
 	* README.md: Updated package list for 1.75
 	* DESCRIPTION (Description): Idem
@@ -10,6 +10,10 @@
 	* local/scripts/CreateBoost.sh: Update for 1.75.0, added beast
 
 	* .github/workflows/ci.yaml: Add CI runner using r-ci
+	* README.md: Add new badge
+
+	* README.md: Update several URLs to https
+	* inst/NEWS.Rd: Idem
 
 2020-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
