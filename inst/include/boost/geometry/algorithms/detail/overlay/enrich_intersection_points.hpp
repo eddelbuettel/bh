@@ -3,8 +3,8 @@
 // Copyright (c) 2007-2012 Barend Gehrels, Amsterdam, the Netherlands.
 // Copyright (c) 2017 Adam Wulkiewicz, Lodz, Poland.
 
-// This file was modified by Oracle on 2017, 2019.
-// Modifications copyright (c) 2017, 2019 Oracle and/or its affiliates.
+// This file was modified by Oracle on 2017-2020.
+// Modifications copyright (c) 2017-2020 Oracle and/or its affiliates.
 
 // Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
 
@@ -30,7 +30,9 @@
   #endif
 #endif
 
-#include <boost/range.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <boost/range/value_type.hpp>
 
 #include <boost/geometry/algorithms/detail/ring_identifier.hpp>
 #include <boost/geometry/algorithms/detail/overlay/handle_colocations.hpp>
@@ -277,8 +279,19 @@ inline void enrich_adapt(Operations& operations, Turns& turns)
         boost::end(operations), predicate), boost::end(operations));
 }
 
-template <typename Turns, typename MappedVector>
-inline void create_map(Turns const& turns, MappedVector& mapped_vector)
+struct enriched_map_default_include_policy
+{
+    template <typename Operation>
+    static inline bool include(Operation const& )
+    {
+        // By default include all operations
+        return true;
+    }
+};
+
+template <typename Turns, typename MappedVector, typename IncludePolicy>
+inline void create_map(Turns const& turns, MappedVector& mapped_vector,
+                       IncludePolicy const& include_policy)
 {
     typedef typename boost::range_value<Turns>::type turn_type;
     typedef typename turn_type::container_type container_type;
@@ -306,17 +319,20 @@ inline void create_map(Turns const& turns, MappedVector& mapped_vector)
             op_it != boost::end(turn.operations);
             ++op_it, ++op_index)
         {
-            ring_identifier const ring_id
-                (
-                    op_it->seg_id.source_index,
-                    op_it->seg_id.multi_index,
-                    op_it->seg_id.ring_index
-                );
-            mapped_vector[ring_id].push_back
-                (
-                    indexed_type(index, op_index, *op_it,
-                        it->operations[1 - op_index].seg_id)
-                );
+            if (include_policy.include(op_it->operation))
+            {
+                ring_identifier const ring_id
+                    (
+                        op_it->seg_id.source_index,
+                        op_it->seg_id.multi_index,
+                        op_it->seg_id.ring_index
+                    );
+                mapped_vector[ring_id].push_back
+                    (
+                        indexed_type(index, op_index, *op_it,
+                            it->operations[1 - op_index].seg_id)
+                    );
+            }
         }
     }
 }
@@ -475,8 +491,8 @@ inline void enrich_intersection_points(Turns& turns,
     {
         detail::overlay::discard_closed_turns
             <
-            OverlayType,
-            target_operation
+                OverlayType,
+                target_operation
             >::apply(turns, clusters, geometry1, geometry2,
                      strategy);
         detail::overlay::discard_open_turns
@@ -491,7 +507,8 @@ inline void enrich_intersection_points(Turns& turns,
     // to sort intersection points PER RING
     mapped_vector_type mapped_vector;
 
-    detail::overlay::create_map(turns, mapped_vector);
+    detail::overlay::create_map(turns, mapped_vector,
+                                detail::overlay::enriched_map_default_include_policy());
 
     // No const-iterator; contents of mapped copy is temporary,
     // and changed by enrich

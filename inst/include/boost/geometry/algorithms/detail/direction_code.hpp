@@ -1,9 +1,9 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
 
-// Copyright (c) 2015 Barend Gehrels, Amsterdam, the Netherlands.
+// Copyright (c) 2015-2020 Barend Gehrels, Amsterdam, the Netherlands.
 
-// This file was modified by Oracle on 2015, 2017, 2019.
-// Modifications copyright (c) 2015-2019 Oracle and/or its affiliates.
+// This file was modified by Oracle on 2015-2020.
+// Modifications copyright (c) 2015-2020 Oracle and/or its affiliates.
 
 // Contributed and/or modified by Menelaos Karavelas, on behalf of Oracle
 // Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
@@ -16,14 +16,15 @@
 #define BOOST_GEOMETRY_ALGORITHMS_DETAIL_DIRECTION_CODE_HPP
 
 
+#include <type_traits>
+
 #include <boost/geometry/core/access.hpp>
+#include <boost/geometry/core/static_assert.hpp>
 #include <boost/geometry/arithmetic/infinite_line_functions.hpp>
 #include <boost/geometry/algorithms/detail/make/make.hpp>
 #include <boost/geometry/util/math.hpp>
 #include <boost/geometry/util/select_coordinate_type.hpp>
 #include <boost/geometry/util/normalize_spheroidal_coordinates.hpp>
-
-#include <boost/mpl/assert.hpp>
 
 
 namespace boost { namespace geometry
@@ -37,7 +38,9 @@ namespace detail
 template <typename CSTag>
 struct direction_code_impl
 {
-    BOOST_MPL_ASSERT_MSG((false), NOT_IMPLEMENTED_FOR_THIS_CS, (CSTag));
+    BOOST_GEOMETRY_STATIC_ASSERT_FALSE(
+        "Not implemented for this coordinate system.",
+        CSTag);
 };
 
 template <>
@@ -54,21 +57,29 @@ struct direction_code_impl<cartesian_tag>
 
         typedef model::infinite_line<calc_t> line_type;
 
-        // point b is often equal to the specified point, check that first
-        line_type const q = detail::make::make_infinite_line<calc_t>(segment_b, point);
-        if (arithmetic::is_degenerate(q))
+        // Situation and construction of perpendicular line
+        //
+        //     P1     a--------------->b   P2
+        //                             |
+        //                             |
+        //                             v
+        //
+        // P1 is located right of the (directional) perpendicular line
+        // and therefore gets a negative side_value, and returns -1.
+        // P2 is to the left of the perpendicular line and returns 1.
+        // If the specified point is located on top of b, it returns 0.
+
+        line_type const line
+            = detail::make::make_perpendicular_line<calc_t>(segment_a,
+                segment_b, segment_b);
+
+        if (arithmetic::is_degenerate(line))
         {
             return 0;
         }
 
-        line_type const p = detail::make::make_infinite_line<calc_t>(segment_a, segment_b);
-        if (arithmetic::is_degenerate(p))
-        {
-            return 0;
-        }
-
-        // p extends a-b if direction is similar
-        return arithmetic::similar_direction(p, q) ? 1 : -1;
+        calc_t const sv = arithmetic::side_value(line, point);
+        return sv == 0 ? 0 : sv > 0 ? 1 : -1;
     }
 };
 
@@ -83,9 +94,10 @@ struct direction_code_impl<spherical_equatorial_tag>
         typedef typename coordinate_type<Point2>::type coord2_t;
         typedef typename cs_angular_units<Point1>::type units_t;
         typedef typename cs_angular_units<Point2>::type units2_t;
-        BOOST_MPL_ASSERT_MSG((boost::is_same<units_t, units2_t>::value),
-                             NOT_IMPLEMENTED_FOR_DIFFERENT_UNITS,
-                             (units_t, units2_t));
+        BOOST_GEOMETRY_STATIC_ASSERT(
+            (std::is_same<units_t, units2_t>::value),
+            "Not implemented for different units.",
+            units_t, units2_t);
 
         typedef typename geometry::select_coordinate_type <Point1, Point2>::type calc_t;
         typedef math::detail::constants_on_spheroid<coord1_t, units_t> constants1;
@@ -215,16 +227,16 @@ struct direction_code_impl<spherical_tag>
     {
         return direction_code_impl
             <
-                typename boost::mpl::if_c
+                std::conditional_t
                     <
-                        boost::is_same
+                        std::is_same
                             <
                                 typename geometry::cs_tag<Point1>::type,
                                 spherical_polar_tag
                             >::value,
                         spherical_polar_tag,
                         spherical_equatorial_tag
-                    >::type
+                    >
             >::apply(segment_a, segment_b, p);
     }
 };

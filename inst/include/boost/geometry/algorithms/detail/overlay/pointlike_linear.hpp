@@ -2,7 +2,7 @@
 
 // Copyright (c) 2017 Adam Wulkiewicz, Lodz, Poland.
 
-// Copyright (c) 2015-2019, Oracle and/or its affiliates.
+// Copyright (c) 2015-2020, Oracle and/or its affiliates.
 
 // Contributed and/or modified by Menelaos Karavelas, on behalf of Oracle
 // Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
@@ -17,13 +17,9 @@
 #include <iterator>
 #include <vector>
 
-#include <boost/range.hpp>
-
-#include <boost/geometry/core/tags.hpp>
-
-#include <boost/geometry/geometries/box.hpp>
-
-#include <boost/geometry/iterators/segment_iterator.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <boost/range/value_type.hpp>
 
 #include <boost/geometry/algorithms/disjoint.hpp>
 #include <boost/geometry/algorithms/envelope.hpp>
@@ -37,6 +33,17 @@
 #include <boost/geometry/algorithms/detail/overlay/overlay_type.hpp>
 #include <boost/geometry/algorithms/detail/overlay/pointlike_pointlike.hpp>
 
+#include <boost/geometry/core/tags.hpp>
+
+#include <boost/geometry/geometries/box.hpp>
+
+#include <boost/geometry/iterators/segment_iterator.hpp>
+
+// TEMP
+#include <boost/geometry/strategies/envelope/cartesian.hpp>
+#include <boost/geometry/strategies/envelope/geographic.hpp>
+#include <boost/geometry/strategies/envelope/spherical.hpp>
+
 
 namespace boost { namespace geometry
 {
@@ -47,36 +54,28 @@ namespace detail { namespace overlay
 {
 
 
-// action struct for pointlike-linear difference/intersection
-// it works the same as its pointlike-pointlike counterpart, hence the
-// derivation
-template <typename PointOut, overlay_type OverlayType>
-struct action_selector_pl_l
-    : action_selector_pl_pl<PointOut, OverlayType>
-{};
-
 // difference/intersection of point-linear
 template
 <
     typename Point,
-    typename Linear,
+    typename Geometry,
     typename PointOut,
     overlay_type OverlayType,
     typename Policy
 >
-struct point_linear_point
+struct point_single_point
 {
     template <typename RobustPolicy, typename OutputIterator, typename Strategy>
     static inline OutputIterator apply(Point const& point,
-                                       Linear const& linear,
+                                       Geometry const& geometry,
                                        RobustPolicy const&,
                                        OutputIterator oit,
                                        Strategy const& strategy)
     {
-        action_selector_pl_l
+        action_selector_pl
             <
                 PointOut, OverlayType
-            >::apply(point, Policy::apply(point, linear, strategy), oit);
+            >::apply(point, Policy::apply(point, geometry, strategy), oit);
         return oit;
     }
 };
@@ -85,16 +84,16 @@ struct point_linear_point
 template
 <
     typename MultiPoint,
-    typename Segment,
+    typename Geometry,
     typename PointOut,
     overlay_type OverlayType,
     typename Policy
 >
-struct multipoint_segment_point
+struct multipoint_single_point
 {
     template <typename RobustPolicy, typename OutputIterator, typename Strategy>
     static inline OutputIterator apply(MultiPoint const& multipoint,
-                                       Segment const& segment,
+                                       Geometry const& geometry,
                                        RobustPolicy const&,
                                        OutputIterator oit,
                                        Strategy const& strategy)
@@ -104,10 +103,10 @@ struct multipoint_segment_point
              it != boost::end(multipoint);
              ++it)
         {
-            action_selector_pl_l
+            action_selector_pl
                 <
                     PointOut, OverlayType
-                >::apply(*it, Policy::apply(*it, segment, strategy), oit);
+                >::apply(*it, Policy::apply(*it, geometry, strategy), oit);
         }
 
         return oit;
@@ -150,7 +149,12 @@ private:
         {
             geometry::expand(total,
                              geometry::return_envelope<Box>(segment, m_strategy),
-                             m_strategy.get_box_expand_strategy());
+                             // TEMP - envelope umbrella strategy also contains
+                             //        expand strategies
+                             strategies::envelope::services::strategy_converter
+                                <
+                                    EnvelopeStrategy
+                                >::get(m_strategy));
         }
 
         EnvelopeStrategy const& m_strategy;
@@ -194,7 +198,7 @@ private:
         template <typename Item1, typename Item2>
         inline bool apply(Item1 const& item1, Item2 const& item2)
         {
-            action_selector_pl_l
+            action_selector_pl
                 <
                     PointOut, overlay_intersection
                 >::apply(item1, Policy::apply(item1, item2, m_strategy), m_oit);
@@ -326,7 +330,7 @@ template
 struct pointlike_linear_point
     <
         Point, Linear, PointOut, OverlayType, point_tag, linear_tag
-    > : detail::overlay::point_linear_point
+    > : detail::overlay::point_single_point
         <
             Point, Linear, PointOut, OverlayType,
             detail::not_<detail::disjoint::reverse_covered_by>
@@ -344,7 +348,7 @@ template
 struct pointlike_linear_point
     <
         Point, Segment, PointOut, OverlayType, point_tag, segment_tag
-    > : detail::overlay::point_linear_point
+    > : detail::overlay::point_single_point
         <
             Point, Segment, PointOut, OverlayType,
             detail::not_<detail::disjoint::reverse_covered_by>
@@ -380,7 +384,7 @@ template
 struct pointlike_linear_point
     <
         MultiPoint, Segment, PointOut, OverlayType, multi_point_tag, segment_tag
-    > : detail::overlay::multipoint_segment_point
+    > : detail::overlay::multipoint_single_point
         <
             MultiPoint, Segment, PointOut, OverlayType,
             detail::not_<detail::disjoint::reverse_covered_by>

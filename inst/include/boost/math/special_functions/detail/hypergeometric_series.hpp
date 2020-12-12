@@ -185,7 +185,7 @@
   {
     BOOST_MATH_STD_USING
     boost::uintmax_t max_iter = policies::get_max_series_iterations<Policy>();
-#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x582))
+#if BOOST_WORKAROUND(BOOST_BORLANDC, BOOST_TESTED_AT(0x582))
     const T zero = 0;
     const T result = boost::math::tools::sum_series(term, boost::math::policies::get_epsilon<T, Policy>(), max_iter, zero);
 #else
@@ -263,7 +263,7 @@
      // converging, then at some unspecified time very gradually
      // starts to diverge, potentially resulting in some very large
      // values being missed.  As a result we need a check for small
-     // a in the convergence critera.  Note that this issue occurs
+     // a in the convergence criteria.  Note that this issue occurs
      // even when all the terms are positive.
      //
      bool small_a = fabs(a) < 0.25;

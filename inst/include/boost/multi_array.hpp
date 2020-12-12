@@ -13,8 +13,8 @@
 //           Andrew Lumsdaine
 //  See http://www.boost.org/libs/multi_array for documentation.
 
-#ifndef BOOST_MULTI_ARRAY_RG071801_HPP
-#define BOOST_MULTI_ARRAY_RG071801_HPP
+#ifndef BOOST_MULTI_ARRAY_HPP
+#define BOOST_MULTI_ARRAY_HPP
 
 //
 // multi_array.hpp - contains the multi_array class template
@@ -23,7 +23,7 @@
 
 #if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 406)
 #  pragma GCC diagnostic push
-//#  pragma GCC diagnostic ignored "-Wshadow"
+#  pragma GCC diagnostic ignored "-Wshadow"
 #endif
 
 #include "boost/multi_array/base.hpp"
@@ -569,4 +569,4 @@ private:
 #  pragma GCC diagnostic pop
 #endif
 
-#endif // BOOST_MULTI_ARRAY_RG071801_HPP
+#endif

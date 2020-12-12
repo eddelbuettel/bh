@@ -9,7 +9,7 @@
 
 #if !defined(BOOST_LOG_ENABLE_WARNINGS)
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(__clang__)
 
 #pragma warning(push, 3)
 // 'm_A' : class 'A' needs to have dll-interface to be used by clients of class 'B'
@@ -45,21 +45,28 @@
 // 'X': This function or variable may be unsafe. Consider using Y instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 #pragma warning(disable: 4996)
 
-#elif defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) \
-    && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
+#elif (defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) \
+    && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406) || defined(__clang__)
+
+// Note: clang-cl goes here as well, as it seems to support gcc-style warning control pragmas.
 
 #pragma GCC diagnostic push
 // 'var' defined but not used
-//#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-variable"
 // unused parameter 'arg'
-//#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 // missing initializer for member var
-//#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #if (__GNUC__ * 100 + __GNUC_MINOR__) >= 407
 // typedef 'foo' locally defined but not used
-//#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #endif
+
+#if defined(__clang__)
+// the argument to '__builtin_assume' has side effects that will be discarded
+#pragma clang diagnostic ignored "-Wassume"
+#endif // defined(__clang__)
 
 #endif
 

@@ -3,9 +3,8 @@
 // Copyright (c) 2007-2015 Barend Gehrels, Amsterdam, the Netherlands.
 // Copyright (c) 2013-2017 Adam Wulkiewicz, Lodz, Poland
 
-// This file was modified by Oracle on 2015, 2017, 2019.
-// Modifications copyright (c) 2015-2019, Oracle and/or its affiliates.
-
+// This file was modified by Oracle on 2015-2020.
+// Modifications copyright (c) 2015-2020, Oracle and/or its affiliates.
 // Contributed and/or modified by Menelaos Karavelas, on behalf of Oracle
 // Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
 
@@ -20,9 +19,9 @@
 #include <deque>
 #include <map>
 
-#include <boost/range.hpp>
-#include <boost/mpl/assert.hpp>
-
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <boost/range/value_type.hpp>
 
 #include <boost/geometry/algorithms/detail/overlay/cluster_info.hpp>
 #include <boost/geometry/algorithms/detail/overlay/enrich_intersection_points.hpp>
@@ -137,12 +136,7 @@ inline void get_ring_turn_info(TurnInfoMap& turn_info_map, Turns const& turns, C
             ++op_it)
         {
             turn_operation_type const& op = *op_it;
-            ring_identifier const ring_id
-                (
-                    op.seg_id.source_index,
-                    op.seg_id.multi_index,
-                    op.seg_id.ring_index
-                );
+            ring_identifier const ring_id = ring_id_by_seg_id(op.seg_id);
 
             if (! is_self_turn<OverlayType>(turn)
                 && (
@@ -312,7 +306,7 @@ std::cout << "get turns" << std::endl;
         geometry::get_turns
             <
                 Reverse1, Reverse2,
-                detail::overlay::assign_null_policy
+                assign_policy_only_start_turns
             >(geometry1, geometry2, strategy, robust_policy, turns, policy);
 
         visitor.visit_turns(1, turns);
@@ -324,12 +318,12 @@ std::cout << "get turns" << std::endl;
             // and if necessary (e.g.: multi-geometry, polygon with interior rings)
             if (needs_self_turns<Geometry1>::apply(geometry1))
             {
-                self_get_turn_points::self_turns<Reverse1, assign_null_policy>(geometry1,
+                self_get_turn_points::self_turns<Reverse1, assign_policy_only_start_turns>(geometry1,
                     strategy, robust_policy, turns, policy, 0);
             }
             if (needs_self_turns<Geometry2>::apply(geometry2))
             {
-                self_get_turn_points::self_turns<Reverse2, assign_null_policy>(geometry2,
+                self_get_turn_points::self_turns<Reverse2, assign_policy_only_start_turns>(geometry2,
                     strategy, robust_policy, turns, policy, 1);
             }
         }

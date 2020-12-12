@@ -5,8 +5,8 @@
 // Copyright (c) 2008 Federico J. Fernandez.
 // Copyright (c) 2011-2014 Adam Wulkiewicz, Lodz, Poland.
 //
-// This file was modified by Oracle on 2019.
-// Modifications copyright (c) 2019 Oracle and/or its affiliates.
+// This file was modified by Oracle on 2019-2020.
+// Modifications copyright (c) 2019-2020 Oracle and/or its affiliates.
 // Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
 //
 // Use, modification and distribution is subject to the Boost Software License,
@@ -16,8 +16,11 @@
 #ifndef BOOST_GEOMETRY_INDEX_DETAIL_RTREE_LINEAR_REDISTRIBUTE_ELEMENTS_HPP
 #define BOOST_GEOMETRY_INDEX_DETAIL_RTREE_LINEAR_REDISTRIBUTE_ELEMENTS_HPP
 
+#include <type_traits>
+
 #include <boost/core/ignore_unused.hpp>
-#include <boost/type_traits/is_unsigned.hpp>
+
+#include <boost/geometry/core/static_assert.hpp>
 
 #include <boost/geometry/index/detail/algorithms/bounds.hpp>
 #include <boost/geometry/index/detail/algorithms/content.hpp>
@@ -34,13 +37,13 @@ namespace detail { namespace rtree {
 namespace linear {
 
 template <typename R, typename T>
-inline R difference_dispatch(T const& from, T const& to, ::boost::mpl::bool_<false> const& /*is_unsigned*/)
+inline R difference_dispatch(T const& from, T const& to, std::false_type /*is_unsigned*/)
 {
     return to - from;
 }
 
 template <typename R, typename T>
-inline R difference_dispatch(T const& from, T const& to, ::boost::mpl::bool_<true> const& /*is_unsigned*/)
+inline R difference_dispatch(T const& from, T const& to, std::true_type /*is_unsigned*/)
 {
     return from <= to ? R(to - from) : -R(from - to);
 }
@@ -48,13 +51,11 @@ inline R difference_dispatch(T const& from, T const& to, ::boost::mpl::bool_<tru
 template <typename R, typename T>
 inline R difference(T const& from, T const& to)
 {
-    BOOST_MPL_ASSERT_MSG(!boost::is_unsigned<R>::value, RESULT_CANT_BE_UNSIGNED, (R));
+    BOOST_GEOMETRY_STATIC_ASSERT((! std::is_unsigned<R>::value),
+        "Result can not be an unsigned type.",
+        R);
 
-    typedef ::boost::mpl::bool_<
-        boost::is_unsigned<T>::value
-    > is_unsigned;
-
-    return difference_dispatch<R>(from, to, is_unsigned());
+    return difference_dispatch<R>(from, to, std::is_unsigned<T>());
 }
 
 // TODO: awulkiew
@@ -87,11 +88,12 @@ struct find_greatest_normalized_separation
     typedef typename rtree::element_indexable_type<element_type, Translator>::type indexable_type;
     typedef typename coordinate_type<indexable_type>::type coordinate_type;
 
-    typedef typename boost::mpl::if_c<
-        boost::is_integral<coordinate_type>::value,
-        double,
-        coordinate_type
-    >::type separation_type;
+    typedef std::conditional_t
+        <
+            std::is_integral<coordinate_type>::value,
+            double,
+            coordinate_type
+        > separation_type;
 
     typedef typename geometry::point_type<indexable_type>::type point_type;
     typedef geometry::model::box<point_type> bounds_type;
@@ -322,28 +324,31 @@ inline void pick_seeds(Elements const& elements,
 
 // from void split_node(node_pointer const& n, node_pointer& n1, node_pointer& n2) const
 
-template <typename Value, typename Options, typename Translator, typename Box, typename Allocators>
-struct redistribute_elements<Value, Options, Translator, Box, Allocators, linear_tag>
+template <typename MembersHolder>
+struct redistribute_elements<MembersHolder, linear_tag>
 {
-    typedef typename Options::parameters_type parameters_type;
+    typedef typename MembersHolder::box_type box_type;
+    typedef typename MembersHolder::parameters_type parameters_type;
+    typedef typename MembersHolder::translator_type translator_type;
+    typedef typename MembersHolder::allocators_type allocators_type;
 
-    typedef typename rtree::node<Value, parameters_type, Box, Allocators, typename Options::node_tag>::type node;
-    typedef typename rtree::internal_node<Value, parameters_type, Box, Allocators, typename Options::node_tag>::type internal_node;
-    typedef typename rtree::leaf<Value, parameters_type, Box, Allocators, typename Options::node_tag>::type leaf;
+    typedef typename MembersHolder::node node;
+    typedef typename MembersHolder::internal_node internal_node;
+    typedef typename MembersHolder::leaf leaf;
 
     template <typename Node>
     static inline void apply(Node & n,
                              Node & second_node,
-                             Box & box1,
-                             Box & box2,
+                             box_type & box1,
+                             box_type & box2,
                              parameters_type const& parameters,
-                             Translator const& translator,
-                             Allocators & allocators)
+                             translator_type const& translator,
+                             allocators_type & allocators)
     {
         typedef typename rtree::elements_type<Node>::type elements_type;
         typedef typename elements_type::value_type element_type;
-        typedef typename rtree::element_indexable_type<element_type, Translator>::type indexable_type;
-        typedef typename index::detail::default_content_result<Box>::type content_type;
+        typedef typename rtree::element_indexable_type<element_type, translator_type>::type indexable_type;
+        typedef typename index::detail::default_content_result<box_type>::type content_type;
 
         typename index::detail::strategy_type<parameters_type>::type const&
             strategy = index::detail::get_strategy(parameters);
@@ -414,8 +419,8 @@ struct redistribute_elements<Value, Options, Translator, Box, Allocators, linear
                     else
                     {
                         // calculate enlarged boxes and areas
-                        Box enlarged_box1(box1);
-                        Box enlarged_box2(box2);
+                        box_type enlarged_box1(box1);
+                        box_type enlarged_box2(box2);
                         index::detail::expand(enlarged_box1, indexable, strategy);
                         index::detail::expand(enlarged_box2, indexable, strategy);
                         content_type enlarged_content1 = index::detail::content(enlarged_box1);
@@ -452,7 +457,7 @@ struct redistribute_elements<Value, Options, Translator, Box, Allocators, linear
             elements1.clear();
             elements2.clear();
 
-            rtree::destroy_elements<Value, Options, Translator, Box, Allocators>::apply(elements_copy, allocators);
+            rtree::destroy_elements<MembersHolder>::apply(elements_copy, allocators);
             //elements_copy.clear();
 
             BOOST_RETHROW                                                                                     // RETHROW, BASIC

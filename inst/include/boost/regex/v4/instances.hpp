@@ -41,7 +41,7 @@ namespace boost{
 // what follows is compiler specific:
 //
 
-#if  defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+#if  defined(BOOST_BORLANDC) && (BOOST_BORLANDC < 0x600)
 
 #ifdef BOOST_HAS_ABI_HEADERS
 #  include BOOST_ABI_PREFIX
@@ -126,11 +126,11 @@ template class BOOST_REGEX_TEMPLATE_DECL ::boost::BOOST_REGEX_DETAIL_NS::perl_ma
 #  pragma clang diagnostic push
 #  if defined(__APPLE_CC__)
 #    if (__clang_major__ > 6)
-  //#      pragma clang diagnostic ignored "-Wkeyword-macro"
+#      pragma clang diagnostic ignored "-Wkeyword-macro"
 #    endif
 #  else
 #    if (__clang_major__ > 3) || ((__clang_major__ == 3) && (__clang_minor__ > 5))
-  //#      pragma clang diagnostic ignored "-Wkeyword-macro"
+#      pragma clang diagnostic ignored "-Wkeyword-macro"
 #    endif
 #  endif
 #endif

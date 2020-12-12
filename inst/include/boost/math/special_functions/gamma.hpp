@@ -1,4 +1,3 @@
-
 //  Copyright John Maddock 2006-7, 2013-14.
 //  Copyright Paul A. Bristow 2007, 2013-14.
 //  Copyright Nikhar Agrawal 2013-14
@@ -241,7 +240,7 @@ T lgamma_imp(T z, const Policy& pol, const Lanczos& l, int* sign = 0)
    {
       if (0 == z)
          return policies::raise_pole_error<T>(function, "Evaluation of lgamma at %1%.", z, pol);
-      if (fabs(z) < 1 / tools::max_value<T>())
+      if (4 * fabs(z) < tools::epsilon<T>())
          result = -log(fabs(z));
       else
          result = log(fabs(1 / z - constants::euler<T>()));
@@ -251,19 +250,12 @@ T lgamma_imp(T z, const Policy& pol, const Lanczos& l, int* sign = 0)
    else if(z < 15)
    {
       typedef typename policies::precision<T, Policy>::type precision_type;
-      typedef typename mpl::if_<
-         mpl::and_<
-            mpl::less_equal<precision_type, mpl::int_<64> >, 
-            mpl::greater<precision_type, mpl::int_<0> > 
-         >,
-         mpl::int_<64>,
-         typename mpl::if_<
-            mpl::and_<
-               mpl::less_equal<precision_type, mpl::int_<113> >,
-               mpl::greater<precision_type, mpl::int_<0> > 
-            >,
-            mpl::int_<113>, mpl::int_<0> >::type
-          >::type tag_type;
+      typedef boost::integral_constant<int,
+         precision_type::value <= 0 ? 0 :
+         precision_type::value <= 64 ? 64 :
+         precision_type::value <= 113 ? 113 : 0
+      > tag_type;
+
       result = lgamma_small_imp<T>(z, T(z - 1), T(z - 2), tag_type(), pol, l);
    }
    else if((z >= 3) && (z < 100) && (std::numeric_limits<T>::max_exponent >= 1024))
@@ -584,7 +576,7 @@ inline T log_gamma_near_1(const T& z, Policy const& pol)
 
    do
    {
-      term = power_term * boost::math::polygamma(n - 1, T(1));
+      term = power_term * boost::math::polygamma(n - 1, T(1), pol);
       result += term;
       ++n;
       power_term *= z / n;
@@ -714,20 +706,11 @@ T tgammap1m1_imp(T dz, Policy const& pol, const Lanczos& l)
 
    typedef typename policies::precision<T,Policy>::type precision_type;
 
-   typedef typename mpl::if_<
-      mpl::or_<
-         mpl::less_equal<precision_type, mpl::int_<0> >,
-         mpl::greater<precision_type, mpl::int_<113> >
-      >,
-      typename mpl::if_<
-         mpl::and_<is_same<Lanczos, lanczos::lanczos24m113>, mpl::greater<precision_type, mpl::int_<0> > >,
-         mpl::int_<113>,
-         mpl::int_<0>
-      >::type,
-      typename mpl::if_<
-         mpl::less_equal<precision_type, mpl::int_<64> >,
-         mpl::int_<64>, mpl::int_<113> >::type
-       >::type tag_type;
+   typedef boost::integral_constant<int,
+      precision_type::value <= 0 ? 0 :
+      precision_type::value <= 64 ? 64 :
+      precision_type::value <= 113 ? 113 : 0
+   > tag_type;
 
    T result;
    if(dz < 0)
@@ -742,7 +725,7 @@ T tgammap1m1_imp(T dz, Policy const& pol, const Lanczos& l)
       {
          // Use expm1 on lgamma:
          result = boost::math::expm1(-boost::math::log1p(dz, pol) 
-            + lgamma_small_imp<T>(dz+2, dz + 1, dz, tag_type(), pol, l));
+            + lgamma_small_imp<T>(dz+2, dz + 1, dz, tag_type(), pol, l), pol);
          BOOST_MATH_INSTRUMENT_CODE(result);
       }
    }
@@ -874,7 +857,7 @@ T regularised_gamma_prefix(T a, T z, const Policy& pol, const Lanczos& l)
       // We have to treat a < 1 as a special case because our Lanczos
       // approximations are optimised against the factorials with a > 1,
       // and for high precision types especially (128-bit reals for example)
-      // very small values of a can give rather eroneous results for gamma
+      // very small values of a can give rather erroneous results for gamma
       // unless we do this:
       //
       // TODO: is this still required?  Lanczos approx should be better now?
@@ -1161,7 +1144,7 @@ T gamma_incomplete_imp(T a, T x, bool normalised, bool invert,
       // way from a in value then we can reliably use methods 2 and 4
       // below in logarithmic form and go straight to the result.
       // Otherwise we let the regularized gamma take the strain
-      // (the result is unlikely to unerflow in the central region anyway)
+      // (the result is unlikely to underflow in the central region anyway)
       // and combine with lgamma in the hopes that we get a finite result.
       //
       if(invert && (a * 4 < x))
@@ -1216,7 +1199,7 @@ T gamma_incomplete_imp(T a, T x, bool normalised, bool invert,
       return exp(result);
    }
 
-   BOOST_ASSERT((p_derivative == 0) || (normalised == true));
+   BOOST_ASSERT((p_derivative == 0) || normalised);
 
    bool is_int, is_half_int;
    bool is_small_a = (a < 30) && (a <= x + 1) && (x < tools::log_max_value<T>());
@@ -1347,14 +1330,14 @@ T gamma_incomplete_imp(T a, T x, bool normalised, bool invert,
    case 0:
       {
          result = finite_gamma_q(a, x, pol, p_derivative);
-         if(normalised == false)
+         if(!normalised)
             result *= boost::math::tgamma(a, pol);
          break;
       }
    case 1:
       {
          result = finite_half_gamma_q(a, x, p_derivative, pol);
-         if(normalised == false)
+         if(!normalised)
             result *= boost::math::tgamma(a, pol);
          if(p_derivative && (*p_derivative == 0))
             *p_derivative = regularised_gamma_prefix(a, x, pol, lanczos_type());
@@ -1375,7 +1358,7 @@ T gamma_incomplete_imp(T a, T x, bool normalised, bool invert,
             // series sum based on what we'll end up subtracting it from
             // at the end.
             // Have to be careful though that this optimization doesn't 
-            // lead to spurious numberic overflow.  Note that the
+            // lead to spurious numeric overflow.  Note that the
             // scary/expensive overflow checks below are more often
             // than not bypassed in practice for "sensible" input
             // values:
@@ -1441,20 +1424,12 @@ T gamma_incomplete_imp(T a, T x, bool normalised, bool invert,
          //
          typedef typename policies::precision<T, Policy>::type precision_type;
 
-         typedef typename mpl::if_<
-            mpl::or_<mpl::equal_to<precision_type, mpl::int_<0> >,
-            mpl::greater<precision_type, mpl::int_<113> > >,
-            mpl::int_<0>,
-            typename mpl::if_<
-               mpl::less_equal<precision_type, mpl::int_<53> >,
-               mpl::int_<53>,
-               typename mpl::if_<
-                  mpl::less_equal<precision_type, mpl::int_<64> >,
-                  mpl::int_<64>,
-                  mpl::int_<113>
-               >::type
-            >::type
-         >::type tag_type;
+         typedef boost::integral_constant<int,
+            precision_type::value <= 0 ? 0 :
+            precision_type::value <= 53 ? 53 :
+            precision_type::value <= 64 ? 64 :
+            precision_type::value <= 113 ? 113 : 0
+         > tag_type;
 
          result = igamma_temme_large(a, x, pol, static_cast<tag_type const*>(0));
          if(x >= a)
@@ -1467,7 +1442,23 @@ T gamma_incomplete_imp(T a, T x, bool normalised, bool invert,
       {
          // x is so small that P is necessarily very small too,
          // use http://functions.wolfram.com/GammaBetaErf/GammaRegularized/06/01/05/01/01/
-         result = !normalised ? pow(x, a) / (a) : pow(x, a) / boost::math::tgamma(a + 1, pol);
+         if(!normalised)
+            result = pow(x, a) / (a);
+         else
+         {
+#ifndef BOOST_NO_EXCEPTIONS
+            try 
+            {
+               result = pow(x, a) / boost::math::tgamma(a + 1, pol);
+            }
+            catch (const std::overflow_error&)
+            {
+               result = 0;
+            }
+#else
+            result = pow(x, a) / boost::math::tgamma(a + 1, pol);
+#endif
+         }
          result *= 1 - a * x / (a + 1);
          if (p_derivative)
             *p_derivative = regularised_gamma_prefix(a, x, pol, lanczos_type());
@@ -1632,7 +1623,7 @@ T tgamma_delta_ratio_imp(T z, T delta, const Policy& pol)
 
    if((z <= 0) || (z + delta <= 0))
    {
-      // This isn't very sofisticated, or accurate, but it does work:
+      // This isn't very sophisticated, or accurate, but it does work:
       return boost::math::tgamma(z, pol) / boost::math::tgamma(z + delta, pol);
    }
 
@@ -1795,7 +1786,7 @@ T gamma_p_derivative_imp(T a, T x, const Policy& pol)
 
 template <class T, class Policy>
 inline typename tools::promote_args<T>::type 
-   tgamma(T z, const Policy& /* pol */, const mpl::true_)
+   tgamma(T z, const Policy& /* pol */, const boost::true_type)
 {
    BOOST_FPU_EXCEPTION_GUARD
    typedef typename tools::promote_args<T>::type result_type;
@@ -1819,28 +1810,20 @@ struct igamma_initializer
       {
          typedef typename policies::precision<T, Policy>::type precision_type;
 
-         typedef typename mpl::if_<
-            mpl::or_<mpl::equal_to<precision_type, mpl::int_<0> >,
-            mpl::greater<precision_type, mpl::int_<113> > >,
-            mpl::int_<0>,
-            typename mpl::if_<
-               mpl::less_equal<precision_type, mpl::int_<53> >,
-               mpl::int_<53>,
-               typename mpl::if_<
-                  mpl::less_equal<precision_type, mpl::int_<64> >,
-                  mpl::int_<64>,
-                  mpl::int_<113>
-               >::type
-            >::type
-         >::type tag_type;
+         typedef boost::integral_constant<int,
+            precision_type::value <= 0 ? 0 :
+            precision_type::value <= 53 ? 53 :
+            precision_type::value <= 64 ? 64 :
+            precision_type::value <= 113 ? 113 : 0
+         > tag_type;
 
          do_init(tag_type());
       }
       template <int N>
-      static void do_init(const mpl::int_<N>&)
+      static void do_init(const boost::integral_constant<int, N>&)
       {
          // If std::numeric_limits<T>::digits is zero, we must not call
-         // our inituialization code here as the precision presumably
+         // our initialization code here as the precision presumably
          // varies at runtime, and will not have been set yet.  Plus the
          // code requiring initialization isn't called when digits == 0.
          if(std::numeric_limits<T>::digits)
@@ -1848,7 +1831,7 @@ struct igamma_initializer
             boost::math::gamma_p(static_cast<T>(400), static_cast<T>(400), Policy());
          }
       }
-      static void do_init(const mpl::int_<53>&){}
+      static void do_init(const boost::integral_constant<int, 53>&){}
       void force_instantiate()const{}
    };
    static const init initializer;
@@ -1869,35 +1852,28 @@ struct lgamma_initializer
       init()
       {
          typedef typename policies::precision<T, Policy>::type precision_type;
-         typedef typename mpl::if_<
-            mpl::and_<
-               mpl::less_equal<precision_type, mpl::int_<64> >, 
-               mpl::greater<precision_type, mpl::int_<0> > 
-            >,
-            mpl::int_<64>,
-            typename mpl::if_<
-               mpl::and_<
-                  mpl::less_equal<precision_type, mpl::int_<113> >,
-                  mpl::greater<precision_type, mpl::int_<0> > 
-               >,
-               mpl::int_<113>, mpl::int_<0> >::type
-             >::type tag_type;
+         typedef boost::integral_constant<int,
+            precision_type::value <= 0 ? 0 :
+            precision_type::value <= 64 ? 64 :
+            precision_type::value <= 113 ? 113 : 0
+         > tag_type;
+
          do_init(tag_type());
       }
-      static void do_init(const mpl::int_<64>&)
+      static void do_init(const boost::integral_constant<int, 64>&)
       {
          boost::math::lgamma(static_cast<T>(2.5), Policy());
          boost::math::lgamma(static_cast<T>(1.25), Policy());
          boost::math::lgamma(static_cast<T>(1.75), Policy());
       }
-      static void do_init(const mpl::int_<113>&)
+      static void do_init(const boost::integral_constant<int, 113>&)
       {
          boost::math::lgamma(static_cast<T>(2.5), Policy());
          boost::math::lgamma(static_cast<T>(1.25), Policy());
          boost::math::lgamma(static_cast<T>(1.5), Policy());
          boost::math::lgamma(static_cast<T>(1.75), Policy());
       }
-      static void do_init(const mpl::int_<0>&)
+      static void do_init(const boost::integral_constant<int, 0>&)
       {
       }
       void force_instantiate()const{}
@@ -1914,7 +1890,7 @@ const typename lgamma_initializer<T, Policy>::init lgamma_initializer<T, Policy>
 
 template <class T1, class T2, class Policy>
 inline typename tools::promote_args<T1, T2>::type
-   tgamma(T1 a, T2 z, const Policy&, const mpl::false_)
+   tgamma(T1 a, T2 z, const Policy&, const boost::false_type)
 {
    BOOST_FPU_EXCEPTION_GUARD
    typedef typename tools::promote_args<T1, T2>::type result_type;
@@ -1937,7 +1913,7 @@ inline typename tools::promote_args<T1, T2>::type
 
 template <class T1, class T2>
 inline typename tools::promote_args<T1, T2>::type
-   tgamma(T1 a, T2 z, const mpl::false_ tag)
+   tgamma(T1 a, T2 z, const boost::false_type& tag)
 {
    return tgamma(a, z, policies::policy<>(), tag);
 }
@@ -2036,7 +2012,7 @@ template <class T1, class T2, class Policy>
 inline typename tools::promote_args<T1, T2>::type
    tgamma(T1 a, T2 z, const Policy& pol)
 {
-   return detail::tgamma(a, z, pol, mpl::false_());
+   return detail::tgamma(a, z, pol, boost::false_type());
 }
 //
 // Full lower incomplete gamma:
@@ -2212,7 +2188,3 @@ inline typename tools::promote_args<T1, T2>::type
 #include <boost/math/special_functions/erf.hpp>
 
 #endif // BOOST_MATH_SF_GAMMA_HPP
-
-
-
-

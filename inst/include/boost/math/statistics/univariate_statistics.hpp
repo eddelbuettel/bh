@@ -8,6 +8,9 @@
 
 #include <algorithm>
 #include <iterator>
+#include <tuple>
+#include <cmath>
+#include <vector>
 #include <boost/assert.hpp>
 
 namespace boost::math::statistics {
@@ -184,6 +187,7 @@ template<class ForwardIterator>
 auto skewness(ForwardIterator first, ForwardIterator last)
 {
     using Real = typename std::iterator_traits<ForwardIterator>::value_type;
+    using std::sqrt;
     BOOST_ASSERT_MSG(first != last, "At least one sample is required to compute skewness.");
     if constexpr (std::is_integral<Real>::value)
     {
@@ -460,6 +464,111 @@ template<class RandomAccessContainer>
 inline auto median_absolute_deviation(RandomAccessContainer & v, typename RandomAccessContainer::value_type center=std::numeric_limits<typename RandomAccessContainer::value_type>::quiet_NaN())
 {
     return median_absolute_deviation(v.begin(), v.end(), center);
+}
+
+template<class ForwardIterator>
+auto interquartile_range(ForwardIterator first, ForwardIterator last)
+{
+    using Real = typename std::iterator_traits<ForwardIterator>::value_type;
+    static_assert(!std::is_integral<Real>::value, "Integer values have not yet been implemented.");
+    auto m = std::distance(first,last);
+    BOOST_ASSERT_MSG(m >= 3, "At least 3 samples are required to compute the interquartile range.");
+    auto k = m/4;
+    auto j = m - (4*k);
+    // m = 4k+j.
+    // If j = 0 or j = 1, then there are an even number of samples below the median, and an even number above the median.
+    //    Then we must average adjacent elements to get the quartiles.
+    // If j = 2 or j = 3, there are an odd number of samples above and below the median, these elements may be directly extracted to get the quartiles.
+
+    if (j==2 || j==3)
+    {
+        auto q1 = first + k;
+        auto q3 = first + 3*k + j - 1;
+        std::nth_element(first, q1, last);
+        Real Q1 = *q1;
+        std::nth_element(q1, q3, last);
+        Real Q3 = *q3;
+        return Q3 - Q1;
+    } else {
+        // j == 0 or j==1:
+        auto q1 = first + k - 1;
+        auto q3 = first + 3*k - 1 + j;
+        std::nth_element(first, q1, last);
+        Real a = *q1;
+        std::nth_element(q1, q1 + 1, last);
+        Real b = *(q1 + 1);
+        Real Q1 = (a+b)/2;
+        std::nth_element(q1, q3, last);
+        a = *q3;
+        std::nth_element(q3, q3 + 1, last);
+        b = *(q3 + 1);
+        Real Q3 = (a+b)/2;
+        return Q3 - Q1;
+    }
+}
+
+template<class RandomAccessContainer>
+inline auto interquartile_range(RandomAccessContainer & v)
+{
+    return interquartile_range(v.begin(), v.end());
+}
+
+template<class ForwardIterator, class OutputIterator>
+auto sorted_mode(ForwardIterator first, ForwardIterator last, OutputIterator output) -> decltype(output)
+{
+    using Z = typename std::iterator_traits<ForwardIterator>::value_type;
+    static_assert(std::is_integral<Z>::value, "Floating point values have not yet been implemented.");
+    using Size = typename std::iterator_traits<ForwardIterator>::difference_type;
+
+    std::vector<Z> modes {};
+    modes.reserve(16);
+    Size max_counter {0};
+
+    while(first != last)
+    {
+        Size current_count {0};
+        auto end_it {first};
+        while(end_it != last && *end_it == *first)
+        {
+            ++current_count;
+            ++end_it;
+        }
+
+        if(current_count > max_counter)
+        {
+            modes.resize(1);
+            modes[0] = *first;
+            max_counter = current_count;
+        }
+
+        else if(current_count == max_counter)
+        {
+            modes.emplace_back(*first);
+        }
+
+        first = end_it;
+    }
+
+    return std::move(modes.begin(), modes.end(), output);
+}
+
+template<class Container, class OutputIterator>
+inline auto sorted_mode(Container & v, OutputIterator output) -> decltype(output)
+{
+    return sorted_mode(v.begin(), v.end(), output);
+}
+
+template<class RandomAccessIterator, class OutputIterator>
+auto mode(RandomAccessIterator first, RandomAccessIterator last, OutputIterator output) -> decltype(output)
+{
+    std::sort(first, last);
+    return sorted_mode(first, last, output);
+}
+
+template<class RandomAccessContainer, class OutputIterator>
+inline auto mode(RandomAccessContainer & v, OutputIterator output) -> decltype(output)
+{
+    return mode(v.begin(), v.end(), output);
 }
 
 }

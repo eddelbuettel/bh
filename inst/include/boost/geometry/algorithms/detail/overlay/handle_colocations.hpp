@@ -3,8 +3,8 @@
 // Copyright (c) 2015 Barend Gehrels, Amsterdam, the Netherlands.
 // Copyright (c) 2017 Adam Wulkiewicz, Lodz, Poland.
 
-// This file was modified by Oracle on 2017.
-// Modifications copyright (c) 2017 Oracle and/or its affiliates.
+// This file was modified by Oracle on 2017-2020.
+// Modifications copyright (c) 2017-2020 Oracle and/or its affiliates.
 
 // Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
 
@@ -21,7 +21,10 @@
 #include <vector>
 
 #include <boost/core/ignore_unused.hpp>
-#include <boost/range.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <boost/range/value_type.hpp>
+
 #include <boost/geometry/core/assert.hpp>
 #include <boost/geometry/core/point_order.hpp>
 #include <boost/geometry/algorithms/detail/overlay/cluster_info.hpp>
@@ -31,7 +34,6 @@
 #include <boost/geometry/algorithms/detail/overlay/overlay_type.hpp>
 #include <boost/geometry/algorithms/detail/overlay/sort_by_side.hpp>
 #include <boost/geometry/algorithms/detail/overlay/turn_info.hpp>
-#include <boost/geometry/algorithms/detail/ring_identifier.hpp>
 #include <boost/geometry/algorithms/detail/overlay/segment_identifier.hpp>
 #include <boost/geometry/util/condition.hpp>
 
@@ -505,6 +507,46 @@ inline void discard_interior_exterior_turns(Turns& turns, Clusters& clusters)
     }
 }
 
+template<typename Turns, typename Clusters>
+inline void discard_start_turns(Turns& turns, Clusters& clusters)
+{
+    for (auto& nv : clusters)
+    {
+        cluster_info& cinfo = nv.second;
+        auto& indices = cinfo.turn_indices;
+        std::size_t start_count{0};
+        for (signed_size_type index : indices)
+        {
+            auto const& turn = turns[index];
+            if (turn.method == method_start)
+            {
+               start_count++;
+            }
+        }
+        if (start_count == 0 && start_count == indices.size())
+        {
+            // There are no start turns, or all turns in the cluster are start turns.
+            continue;
+        }
+
+        // Discard the start turns and simultaneously erase them from the indices
+        for (auto it = indices.begin(); it != indices.end();)
+        {
+          auto& turn = turns[*it];
+          if (turn.method == method_start)
+          {
+              turn.discarded = true;
+              turn.cluster_id = -1;
+              it = indices.erase(it);
+          }
+          else
+          {
+              ++it;
+          }
+        }
+    }
+}
+
 template <typename Geometry0, typename Geometry1>
 inline segment_identifier get_preceding_segment_id(segment_identifier const& id,
         Geometry0 const& geometry0, Geometry1 const& geometry1)
@@ -698,6 +740,8 @@ inline bool handle_colocations(Turns& turns, Clusters& clusters,
     // on turns which are discarded afterwards
     set_colocation<OverlayType>(turns, clusters);
 
+    discard_start_turns(turns, clusters);
+
     if (BOOST_GEOMETRY_CONDITION(target_operation == operation_intersection))
     {
         discard_interior_exterior_turns
@@ -753,6 +797,46 @@ struct is_turn_index
     signed_size_type m_index;
 };
 
+template
+<
+    typename Sbs,
+    typename Point,
+    typename Turns,
+    typename Geometry1,
+    typename Geometry2
+>
+inline bool fill_sbs(Sbs& sbs, Point& turn_point,
+                     cluster_info const& cinfo,
+                     Turns const& turns,
+                     Geometry1 const& geometry1, Geometry2 const& geometry2)
+{
+    typedef typename boost::range_value<Turns>::type turn_type;
+
+    std::set<signed_size_type> const& ids = cinfo.turn_indices;
+
+    if (ids.empty())
+    {
+        return false;
+    }
+
+    bool first = true;
+    for (std::set<signed_size_type>::const_iterator sit = ids.begin();
+         sit != ids.end(); ++sit)
+    {
+        signed_size_type turn_index = *sit;
+        turn_type const& turn = turns[turn_index];
+        if (first)
+        {
+            turn_point = turn.point;
+        }
+        for (int i = 0; i < 2; i++)
+        {
+            sbs.add(turn.operations[i], turn_index, i, geometry1, geometry2, first);
+            first = false;
+        }
+    }
+    return true;
+}
 
 template
 <
@@ -784,32 +868,14 @@ inline void gather_cluster_properties(Clusters& clusters, Turns& turns,
          mit != clusters.end(); ++mit)
     {
         cluster_info& cinfo = mit->second;
-        std::set<signed_size_type> const& ids = cinfo.turn_indices;
-        if (ids.empty())
+
+        sbs_type sbs(strategy);
+        point_type turn_point; // should be all the same for all turns in cluster
+        if (! fill_sbs(sbs, turn_point, cinfo, turns, geometry1, geometry2))
         {
             continue;
         }
 
-        sbs_type sbs(strategy);
-        point_type turn_point; // should be all the same for all turns in cluster
-
-        bool first = true;
-        for (std::set<signed_size_type>::const_iterator sit = ids.begin();
-             sit != ids.end(); ++sit)
-        {
-            signed_size_type turn_index = *sit;
-            turn_type const& turn = turns[turn_index];
-            if (first)
-            {
-                turn_point = turn.point;
-            }
-            for (int i = 0; i < 2; i++)
-            {
-                turn_operation_type const& op = turn.operations[i];
-                sbs.add(op, turn_index, i, geometry1, geometry2, first);
-                first = false;
-            }
-        }
         sbs.apply(turn_point);
 
         sbs.find_open();
@@ -824,7 +890,7 @@ inline void gather_cluster_properties(Clusters& clusters, Turns& turns,
         // polygons
         for (std::size_t i = 0; i < sbs.m_ranked_points.size(); i++)
         {
-            const typename sbs_type::rp& ranked = sbs.m_ranked_points[i];
+            typename sbs_type::rp const& ranked = sbs.m_ranked_points[i];
             turn_type& turn = turns[ranked.turn_index];
             turn_operation_type& op = turn.operations[ranked.operation_index];
 
