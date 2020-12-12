@@ -145,6 +145,27 @@ struct results_collector_impl {
 
 results_collector_impl& s_rc_impl() { static results_collector_impl the_inst; return the_inst; }
 
+// deletes the entries of results_collector_impl
+class clear_subtree_result : public test_tree_visitor {
+public:
+    clear_subtree_result(results_collector_impl& store)
+    : m_store( store )
+    {}
+
+private:
+    bool visit( test_unit const& tu) BOOST_OVERRIDE
+    {
+      typedef std::map<test_unit_id,test_results>::iterator iterator;
+      iterator found = m_store.m_results_store.find(tu.p_id);
+      if(found != m_store.m_results_store.end()) {
+        m_store.m_results_store.erase( found );
+      }
+      return true;
+    }
+
+    results_collector_impl& m_store;
+};
+
 } // local namespace
 
 //____________________________________________________________________________//
@@ -154,9 +175,11 @@ BOOST_TEST_SINGLETON_CONS_IMPL( results_collector_t )
 //____________________________________________________________________________//
 
 void
-results_collector_t::test_start( counter_t )
+results_collector_t::test_start( counter_t, test_unit_id id )
 {
-    s_rc_impl().m_results_store.clear();
+    // deletes the results under id only
+    clear_subtree_result tree_clear(s_rc_impl());
+    traverse_test_tree( id, tree_clear );
 }
 
 //____________________________________________________________________________//
@@ -178,7 +201,7 @@ class results_collect_helper : public test_tree_visitor {
 public:
     explicit results_collect_helper( test_results& tr, test_unit const& ts ) : m_tr( tr ), m_ts( ts ) {}
 
-    void    visit( test_case const& tc )
+    void    visit( test_case const& tc ) BOOST_OVERRIDE
     {
         test_results const& tr = results_collector.results( tc.p_id );
         m_tr += tr;
@@ -202,7 +225,7 @@ public:
             m_tr.p_test_cases_failed.value++;
         }
     }
-    bool    test_suite_start( test_suite const& ts )
+    bool    test_suite_start( test_suite const& ts ) BOOST_OVERRIDE
     {
         if( m_ts.p_id == ts.p_id )
             return true;

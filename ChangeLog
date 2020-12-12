@@ -1,6 +1,19 @@
 2020-12-12  Dirk Eddelbuettel  <edd@debian.org>
 
+	* DESCRIPTION (Version, Date): Release 1.75.0-0
+
+	* inst/include/boost/*: Upgraded to Boost 1.75
+
+	* README.md: Updated package list for 1.75
+	* DESCRIPTION (Description): Idem
+
+	* local/scripts/CreateBoost.sh: Update for 1.75.0, added beast
+
 	* .github/workflows/ci.yaml: Add CI runner using r-ci
+	* README.md: Add new badge
+
+	* README.md: Update several URLs to https
+	* inst/NEWS.Rd: Idem
 
 2020-05-03  Dirk Eddelbuettel  <edd@debian.org>
 
@@ -44,7 +57,7 @@
 
 	* README.md: Updated package list for 1.72
 
-	* inst/include/boost/numeric/odeint/stepper/generation/: As before
+ 	* inst/include/boost/numeric/odeint/stepper/generation/: As before
 	rename karp54_classic.hpp to karp54_cl.hpp, adjust generation.hpp
 	* inst/include/boost/numeric/ublas/storage.hpp : Add missing include
 	for boost/serialization/array_wrapper.hpp

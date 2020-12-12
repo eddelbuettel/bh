@@ -514,7 +514,7 @@ T ibeta_power_terms(T a,
          if ((boost::math::isnormal)(bet))
             log_result -= log(bet);
          else
-            log_result += boost::math::lgamma(c, pol) - boost::math::lgamma(a) - boost::math::lgamma(c, pol);
+            log_result += boost::math::lgamma(c, pol) - boost::math::lgamma(a, pol) - boost::math::lgamma(b, pol);
          return exp(log_result);
       }
    }
@@ -782,7 +782,7 @@ inline T rising_factorial_ratio(T a, T b, int k)
 // Routine for a > 15, b < 1
 //
 // Begin by figuring out how large our table of Pn's should be,
-// quoted accuracies are "guestimates" based on empiracal observation.
+// quoted accuracies are "guesstimates" based on empirical observation.
 // Note that the table size should never exceed the size of our
 // tables of factorials.
 //
@@ -850,7 +850,7 @@ T beta_small_b_large_a_series(T a, T b, T x, T y, T s0, T mult, const Policy& po
    }
    prefix *= mult;
    //
-   // now we need the quantity Pn, unfortunatately this is computed
+   // now we need the quantity Pn, unfortunately this is computed
    // recursively, and requires a full history of all the previous values
    // so no choice but to declare a big table and hope it's big enough...
    //
@@ -928,8 +928,8 @@ T beta_small_b_large_a_series(T a, T b, T x, T y, T s0, T mult, const Policy& po
 // For integer arguments we can relate the incomplete beta to the
 // complement of the binomial distribution cdf and use this finite sum.
 //
-template <class T>
-T binomial_ccdf(T n, T k, T x, T y)
+template <class T, class Policy>
+T binomial_ccdf(T n, T k, T x, T y, const Policy& pol)
 {
    BOOST_MATH_STD_USING // ADL of std names
 
@@ -951,14 +951,14 @@ T binomial_ccdf(T n, T k, T x, T y)
       int start = itrunc(n * x);
       if(start <= k + 1)
          start = itrunc(k + 2);
-      result = pow(x, start) * pow(y, n - start) * boost::math::binomial_coefficient<T>(itrunc(n), itrunc(start));
+      result = pow(x, start) * pow(y, n - start) * boost::math::binomial_coefficient<T>(itrunc(n), itrunc(start), pol);
       if(result == 0)
       {
          // OK, starting slightly above the mode didn't work,
          // we'll have to sum the terms the old fashioned way:
          for(unsigned i = start - 1; i > k; --i)
          {
-            result += pow(x, (int)i) * pow(y, n - i) * boost::math::binomial_coefficient<T>(itrunc(n), itrunc(i));
+            result += pow(x, (int)i) * pow(y, n - i) * boost::math::binomial_coefficient<T>(itrunc(n), itrunc(i), pol);
          }
       }
       else
@@ -985,7 +985,7 @@ T binomial_ccdf(T n, T k, T x, T y)
 
 //
 // The incomplete beta function implementation:
-// This is just a big bunch of spagetti code to divide up the
+// This is just a big bunch of spaghetti code to divide up the
 // input range and select the right implementation method for
 // each domain:
 //
@@ -1288,7 +1288,7 @@ T ibeta_imp(T a, T b, T x, const Policy& pol, bool inv, bool normalised, T* p_de
             // relate to the binomial distribution and use a finite sum:
             T k = a - 1;
             T n = b + k;
-            fract = binomial_ccdf(n, k, x, y);
+            fract = binomial_ccdf(n, k, x, y, pol);
             if(!normalised)
                fract *= boost::math::beta(a, b, pol);
             BOOST_MATH_INSTRUMENT_VARIABLE(fract);
@@ -1377,7 +1377,7 @@ T ibeta_imp(T a, T b, T x, const Policy& pol, bool inv, bool normalised, T* p_de
       {
          if((tools::max_value<T>() * div < *p_derivative))
          {
-            // overflow, return an arbitarily large value:
+            // overflow, return an arbitrarily large value:
             *p_derivative = tools::max_value<T>() / 2;
          }
          else
@@ -1434,7 +1434,7 @@ T ibeta_derivative_imp(T a, T b, T x, const Policy& pol)
 //
 template <class RT1, class RT2, class Policy>
 inline typename tools::promote_args<RT1, RT2>::type
-   beta(RT1 a, RT2 b, const Policy&, const mpl::true_*)
+   beta(RT1 a, RT2 b, const Policy&, const boost::true_type*)
 {
    BOOST_FPU_EXCEPTION_GUARD
    typedef typename tools::promote_args<RT1, RT2>::type result_type;
@@ -1451,7 +1451,7 @@ inline typename tools::promote_args<RT1, RT2>::type
 }
 template <class RT1, class RT2, class RT3>
 inline typename tools::promote_args<RT1, RT2, RT3>::type
-   beta(RT1 a, RT2 b, RT3 x, const mpl::false_*)
+   beta(RT1 a, RT2 b, RT3 x, const boost::false_type*)
 {
    return boost::math::beta(a, b, x, policies::policy<>());
 }

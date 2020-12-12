@@ -2,7 +2,7 @@
 ##
 ## CreateBoost.sh -- derived from CreateBoost.R
 ##
-## Jay Emerson and Dirk Eddelbuettel,  2012 - 2019
+## Jay Emerson and Dirk Eddelbuettel,  2012 - 2020
 
 
 ## (1) Adjust these variables as needed
@@ -10,10 +10,10 @@
 ## -- on a standard git checkout, this repo it may be ~/git/bh
 pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
-boosttargz="boost_1_72_0.tar.gz"
+boosttargz="boost_1_75_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.72.0-1"
-date="2019-12-15"
+version="1.75.0-0"
+date="2020-12-12"
 
 
 
@@ -137,10 +137,12 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus mp11 (issue ticket #62)
 # Plus polygon (issue ticket #63)
 # Plus accumulators (issue ticket #68)
+# Plus beast (issue ticket #74)
 boostextras="spirit foreach algorithm iostreams \
             dynamic_bitset heap any circular_buffer geometry fusion graph \
             multiprecision phoenix bimap icl flyweight property_tree \
-            scope_exit atomic align sort compute mp11 polygon accumulators"
+            scope_exit atomic align sort compute mp11 polygon accumulators \
+            beast"
 
 echo "Copying (extra) Boost libraries into BH"
 

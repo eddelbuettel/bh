@@ -15,6 +15,7 @@
 
 
 #include <boost/core/ignore_unused.hpp>
+#include <boost/geometry/core/coordinate_type.hpp>
 
 #include <boost/geometry/algorithms/detail/buffer/buffer_policies.hpp>
 #include <boost/geometry/algorithms/expand.hpp>
@@ -35,16 +36,23 @@ struct original_get_box
     template <typename Box, typename Original>
     static inline void apply(Box& total, Original const& original)
     {
-        geometry::expand(total, original.m_box);
+        assert_coordinate_type_equal(total, original.m_box);
+        typedef typename strategy::expand::services::default_strategy
+            <
+                box_tag, typename cs_tag<Box>::type
+            >::type expand_strategy_type;
+
+        geometry::expand(total, original.m_box, expand_strategy_type());
     }
 };
 
 template <typename DisjointBoxBoxStrategy>
-struct original_ovelaps_box
+struct original_overlaps_box
 {
     template <typename Box, typename Original>
     static inline bool apply(Box const& box, Original const& original)
     {
+        assert_coordinate_type_equal(box, original.m_box);
         return ! detail::disjoint::disjoint_box_box(box, original.m_box,
                                                     DisjointBoxBoxStrategy());
     }
@@ -55,24 +63,24 @@ struct include_turn_policy
     template <typename Turn>
     static inline bool apply(Turn const& turn)
     {
-        return turn.location == location_ok;
+        return turn.is_turn_traversable;
     }
 };
 
 template <typename DisjointPointBoxStrategy>
-struct turn_in_original_ovelaps_box
+struct turn_in_original_overlaps_box
 {
     template <typename Box, typename Turn>
     static inline bool apply(Box const& box, Turn const& turn)
     {
-        if (turn.location != location_ok || turn.within_original)
+        if (! turn.is_turn_traversable || turn.within_original)
         {
             // Skip all points already processed
             return false;
         }
 
         return ! geometry::detail::disjoint::disjoint_point_box(
-                    turn.robust_point, box, DisjointPointBoxStrategy());
+                    turn.point, box, DisjointPointBoxStrategy());
     }
 };
 
@@ -212,23 +220,27 @@ public:
     {}
 
     template <typename Turn, typename Original>
-    inline bool apply(Turn const& turn, Original const& original, bool first = true)
+    inline bool apply(Turn const& turn, Original const& original)
     {
-        boost::ignore_unused(first);
+        if (boost::empty(original.m_ring))
+        {
+            // Skip empty rings
+            return true;
+        }
 
-        if (turn.location != location_ok || turn.within_original)
+        if (! turn.is_turn_traversable || turn.within_original)
         {
             // Skip all points already processed
             return true;
         }
 
-        if (geometry::disjoint(turn.robust_point, original.m_box))
+        if (geometry::disjoint(turn.point, original.m_box))
         {
             // Skip all disjoint
             return true;
         }
 
-        int const code = point_in_original(turn.robust_point, original, m_point_in_geometry_strategy);
+        int const code = point_in_original(turn.point, original, m_point_in_geometry_strategy);
 
         if (code == -1)
         {
@@ -240,7 +252,7 @@ public:
         if (code == 0)
         {
             // On border of original: always discard
-            mutable_turn.location = location_discard;
+            mutable_turn.is_turn_traversable = false;
         }
 
         // Point is inside an original ring

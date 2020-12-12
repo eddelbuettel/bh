@@ -14,6 +14,7 @@
 #include <boost/geometry/core/coordinate_type.hpp>
 #include <boost/geometry/arithmetic/infinite_line_functions.hpp>
 #include <boost/geometry/algorithms/detail/make/make.hpp>
+#include <boost/geometry/algorithms/not_implemented.hpp>
 #include <boost/geometry/util/select_coordinate_type.hpp>
 
 #include <cmath>
@@ -34,50 +35,26 @@ struct distance_measure
         : measure(T())
     {}
 
-    bool is_small() const { return false; }
-    bool is_zero() const { return false; }
-    bool is_positive() const { return false; }
-    bool is_negative() const { return false; }
-};
-
-template <typename T>
-struct distance_measure_floating
-{
-    T measure;
-
-    distance_measure_floating()
-        : measure(T())
-    {}
-
     // Returns true if the distance measure is small.
     // This is an arbitrary boundary, to enable some behaviour
     // (for example include or exclude turns), which are checked later
     // with other conditions.
-    bool is_small() const { return std::abs(measure) < 1.0e-3; }
+    bool is_small() const { return geometry::math::abs(measure) < 1.0e-3; }
 
     // Returns true if the distance measure is absolutely zero
-    bool is_zero() const { return measure == 0.0; }
+    bool is_zero() const
+    {
+      return ! is_positive() && ! is_negative();
+    }
 
     // Returns true if the distance measure is positive. Distance measure
     // algorithm returns positive value if it is located on the left side.
-    bool is_positive() const { return measure > 0.0; }
+    bool is_positive() const { return measure > T(0); }
 
     // Returns true if the distance measure is negative. Distance measure
     // algorithm returns negative value if it is located on the right side.
-    bool is_negative() const { return measure < 0.0; }
+    bool is_negative() const { return measure < T(0); }
 };
-
-template <>
-struct distance_measure<long double>
-    : public distance_measure_floating<long double> {};
-
-template <>
-struct distance_measure<double>
-    : public distance_measure_floating<double> {};
-
-template <>
-struct distance_measure<float>
-    : public distance_measure_floating<float> {};
 
 } // detail
 
@@ -144,10 +121,11 @@ namespace detail
 // a negative means that p is to the right of p1-p2. And a positive value
 // means that p is to the left of p1-p2.
 
-template <typename cs_tag, typename SegmentPoint, typename Point>
+template <typename SegmentPoint, typename Point>
 static distance_measure<typename select_coordinate_type<SegmentPoint, Point>::type>
 get_distance_measure(SegmentPoint const& p1, SegmentPoint const& p2, Point const& p)
 {
+    typedef typename geometry::cs_tag<Point>::type cs_tag;
     return detail_dispatch::get_distance_measure
             <
                 typename select_coordinate_type<SegmentPoint, Point>::type,

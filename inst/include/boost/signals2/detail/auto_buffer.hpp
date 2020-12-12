@@ -18,6 +18,8 @@
 #endif
 
 #include <boost/assert.hpp>
+#include <boost/config.hpp>
+#include <boost/core/allocator_access.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/mpl/if.hpp>
@@ -139,10 +141,10 @@ namespace detail
     public:
         typedef Allocator                                allocator_type;
         typedef T                                        value_type;
-        typedef typename Allocator::size_type            size_type;
-        typedef typename Allocator::difference_type      difference_type;
+        typedef typename boost::allocator_size_type<Allocator>::type size_type;
+        typedef typename boost::allocator_difference_type<Allocator>::type difference_type;
         typedef T*                                       pointer;
-        typedef typename Allocator::pointer              allocator_pointer;
+        typedef typename boost::allocator_pointer<Allocator>::type allocator_pointer;
         typedef const T*                                 const_pointer;
         typedef T&                                       reference;
         typedef const T&                                 const_reference;

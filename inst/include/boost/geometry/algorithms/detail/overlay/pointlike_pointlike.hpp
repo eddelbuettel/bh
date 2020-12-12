@@ -1,6 +1,6 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
 
-// Copyright (c) 2014-2019, Oracle and/or its affiliates.
+// Copyright (c) 2014-2020, Oracle and/or its affiliates.
 
 // Contributed and/or modified by Menelaos Karavelas, on behalf of Oracle
 // Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
@@ -15,18 +15,21 @@
 #include <algorithm>
 #include <vector>
 
-#include <boost/range.hpp>
-
-#include <boost/geometry/core/assert.hpp>
-#include <boost/geometry/core/point_type.hpp>
-#include <boost/geometry/core/tag.hpp>
-#include <boost/geometry/core/tags.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <boost/range/size.hpp>
+#include <boost/range/value_type.hpp>
 
 #include <boost/geometry/algorithms/convert.hpp>
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 #include <boost/geometry/algorithms/detail/equals/point_point.hpp>
 #include <boost/geometry/algorithms/detail/overlay/overlay_type.hpp>
+
+#include <boost/geometry/core/assert.hpp>
+#include <boost/geometry/core/point_type.hpp>
+#include <boost/geometry/core/tag.hpp>
+#include <boost/geometry/core/tags.hpp>
 
 #include <boost/geometry/policies/compare.hpp>
 
@@ -87,11 +90,11 @@ struct copy_points<PointOut, MultiPointIn, multi_point_tag>
 
 // action struct for difference/intersection
 template <typename PointOut, overlay_type OverlayType>
-struct action_selector_pl_pl
+struct action_selector_pl
 {};
 
 template <typename PointOut>
-struct action_selector_pl_pl<PointOut, overlay_intersection>
+struct action_selector_pl<PointOut, overlay_intersection>
 {
     template
     <
@@ -112,7 +115,7 @@ struct action_selector_pl_pl<PointOut, overlay_intersection>
 
 
 template <typename PointOut>
-struct action_selector_pl_pl<PointOut, overlay_difference>
+struct action_selector_pl<PointOut, overlay_difference>
 {
     template
     <
@@ -150,7 +153,7 @@ struct point_point_point
                                        OutputIterator oit,
                                        Strategy const& strategy)
     {
-        action_selector_pl_pl
+        action_selector_pl
             <
                 PointOut, OverlayType
             >::apply(point1,
@@ -190,7 +193,7 @@ struct multipoint_point_point
                  it = boost::begin(multipoint);
              it != boost::end(multipoint); ++it)
         {
-            action_selector_pl_pl
+            action_selector_pl
                 <
                     PointOut, OverlayType
                 >::apply(*it,
@@ -220,7 +223,7 @@ struct point_multipoint_point
                                        OutputIterator oit,
                                        Strategy const& strategy)
     {
-        typedef action_selector_pl_pl<PointOut, OverlayType> action;
+        typedef action_selector_pl<PointOut, OverlayType> action;
 
         for (typename boost::range_iterator<MultiPoint const>::type
                  it = boost::begin(multipoint);
@@ -283,7 +286,7 @@ struct multipoint_multipoint_point
             bool found = std::binary_search(points2.begin(), points2.end(),
                                             *it1, less);
 
-            action_selector_pl_pl
+            action_selector_pl
                 <
                     PointOut, OverlayType
                 >::apply(*it1, found, oit);
