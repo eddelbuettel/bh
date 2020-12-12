@@ -179,7 +179,7 @@
     adjusted accordingly
     \item Besides the implicitly expanded coverage by including the
     complete libraries, we also expanded from
-    \boostPkg{math/doc/html/dist.html} to all of \boostPkg{math}.
+    \code{math/doc/html/dist.html} to all of \boostPkg{math}.
   }
 }
 
