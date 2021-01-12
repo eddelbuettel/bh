@@ -9,11 +9,11 @@
 
 \section{Changes in version 1.75.0-0 (2020-12-12)}{
   \itemize{
-    \item Removed file \code{NAMESPACE} as the package neither R code,
+    \item Removed file \code{NAMESPACE} as the package has neither R code,
     nor a shared library to load
     \item The file LICENSE_1_0.txt is now included (as requested in \ghit{73})
+    \item Added new \boostPkg{beast} library (as requested in \ghit{74})
     \item Upgraded to \boost 1.75.0 (\ghpr{75})
-    \item Added new \boostPkg{beast} (as requested in \ghit{74})
   }
 }
 
