@@ -1,6 +1,5 @@
 ## bh: Boost Headers for R
 
-[![Build Status](https://travis-ci.org/eddelbuettel/bh.svg)](https://travis-ci.org/eddelbuettel/bh) 
 [![CI](https://github.com/eddelbuettel/bh/workflows/ci/badge.svg)](https://github.com/eddelbuettel/bh/actions?query=workflow%3Aci)
 [![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](https://www.boost.org/users/license.html)
 [![CRAN](http://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH) 
