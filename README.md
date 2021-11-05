@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](https://www.boost.org/users/license.html)
 [![CRAN](http://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH) 
 [![Dependencies](https://tinyverse.netlify.com/badge/BH)](https://cran.r-project.org/package=BH) 
-[![Last Commit](https://img.shields.io/github/last-commit/eddelbuettel/bh)](https://github.com/eddelbuettel/bh)  
+[![Last Commit](https://img.shields.io/github/last-commit/eddelbuettel/bh)](https://github.com/eddelbuettel/bh)
 [![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](https://www.r-pkg.org:443/pkg/BH) 
 [![CRAN use](https://jangorecki.gitlab.io/rdeps/BH/CRAN_usage.svg?sanitize=true)](https://cran.r-project.org/package=BH)
 [![BioConductor use](https://jangorecki.gitlab.io/rdeps/BH/BioC_usage.svg?sanitize=true)](https://cran.r-project.org/package=BH)
