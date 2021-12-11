@@ -2,10 +2,11 @@
 
 [![CI](https://github.com/eddelbuettel/bh/workflows/ci/badge.svg)](https://github.com/eddelbuettel/bh/actions?query=workflow%3Aci)
 [![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](https://www.boost.org/users/license.html)
-[![CRAN](http://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH) 
-[![Dependencies](https://tinyverse.netlify.com/badge/BH)](https://cran.r-project.org/package=BH) 
+[![CRAN](http://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH)
+[![Dependencies](https://tinyverse.netlify.com/badge/BH)](https://cran.r-project.org/package=BH)
 [![Last Commit](https://img.shields.io/github/last-commit/eddelbuettel/bh)](https://github.com/eddelbuettel/bh)
-[![Downloads](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](https://www.r-pkg.org:443/pkg/BH) 
+[![Downloads (monthly)](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](https://www.r-pkg.org:443/pkg/BH)
+[![Downloads (total)](https://cranlogs.r-pkg.org/badges/grand-total/BH?color=brightgreen)](https://www.r-pkg.org:443/pkg/BH)
 [![CRAN use](https://jangorecki.gitlab.io/rdeps/BH/CRAN_usage.svg?sanitize=true)](https://cran.r-project.org/package=BH)
 [![BioConductor use](https://jangorecki.gitlab.io/rdeps/BH/BioC_usage.svg?sanitize=true)](https://cran.r-project.org/package=BH)
 
@@ -29,7 +30,7 @@ include flags correctly on all architectures supported by R.
 
 Note that this can be used solely by headers-only Boost libraries. This
 covers most of Boost, but excludes some libraries which require linking for
-parts or all of their functionality. 
+parts or all of their functionality.
 
 ### Coverage
 
@@ -66,7 +67,7 @@ int computeGCD(int a, int b) {
 
 Saving it as `boostExample.cpp` and simple sourcing this `Rcpp::sourceCpp("boostExample.cpp")`
 produces the function `computeGCD()`.  See the [Rcpp Gallery](https://gallery.rcpp.org) for more
-examples. 
+examples.
 
 
 ### See Also
@@ -83,11 +84,11 @@ immediately jump the newest Boost releases.  Rather, we (used to) start from the
 [Debian sources for Boost](https://packages.debian.org/sid/libboost-all-dev)
 to ensure that we work with a version that is at the same time current yet
 mature.  But on occassion, and as needed, and more recently, we will also go
-directly to Boost releases. 
+directly to Boost releases.
 
 In general, we plan to keep the package up-to-date with [Boost](https://www.boost.org/)
 upstream, but will not necessarily follow each and every new release as we
-also value the merits of relative release stability. 
+also value the merits of relative release stability.
 
 If needed, the script `local/script/CreateBoost.sh` can be used to update a forked
 version to a newer version of [Boost](https://www.boost.org/).
@@ -96,14 +97,14 @@ version to a newer version of [Boost](https://www.boost.org/).
 
 That used to be a concern, and we wrote:
 
-> The repo has a large footprint. We know. We erroneously thought that committing 
-> the Boost tarballs would be a good idea. It wasn't. First attempts at pruning 
+> The repo has a large footprint. We know. We erroneously thought that committing
+> the Boost tarballs would be a good idea. It wasn't. First attempts at pruning
 > the history [using bfg](https://rtyley.github.io/bfg-repo-cleaner/) were not that
 > successful.  If someone has a script doing this well we would take another
 > look.
-> 
+>
 > Otherwise we recommend to just start from
-> [CreateBoost.sh](https://github.com/eddelbuettel/bh/blob/master/local/scripts/CreateBoost.sh). 
+> [CreateBoost.sh](https://github.com/eddelbuettel/bh/blob/master/local/scripts/CreateBoost.sh).
 
 and lo and behold, we got help via
 [this script](https://github.com/eddelbuettel/bh/blob/master/local/scripts/git-remove.sh) as
