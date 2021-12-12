@@ -56,7 +56,18 @@ class posix_named_mutex
    void unlock();
    void lock();
    bool try_lock();
-   bool timed_lock(const boost::posix_time::ptime &abs_time);
+
+   template<class TimePoint>
+   bool timed_lock(const TimePoint &abs_time);
+
+   template<class TimePoint>
+   bool try_lock_until(const TimePoint &abs_time)
+   {  return this->timed_lock(abs_time);  }
+
+   template<class Duration>
+   bool try_lock_for(const Duration &dur)
+   {  return this->timed_lock(duration_to_ustime(dur)); }
+
    static bool remove(const char *name);
 
    #if !defined(BOOST_INTERPROCESS_DOXYGEN_INVOKED)
@@ -97,7 +108,8 @@ inline void posix_named_mutex::unlock()
 inline bool posix_named_mutex::try_lock()
 {  return m_sem.try_wait();  }
 
-inline bool posix_named_mutex::timed_lock(const boost::posix_time::ptime &abs_time)
+template<class TimePoint>
+inline bool posix_named_mutex::timed_lock(const TimePoint &abs_time)
 {  return m_sem.timed_wait(abs_time);  }
 
 inline bool posix_named_mutex::remove(const char *name)

@@ -1,3 +1,9 @@
+2021-12-12  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/boost/*: Upgraded to Boost 1.78
+
+	* local/scripts/CreateBoost.sh: Update for 1.78.0, added lambda2
+
 2021-12-11  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Add total download badge, label other as monthly

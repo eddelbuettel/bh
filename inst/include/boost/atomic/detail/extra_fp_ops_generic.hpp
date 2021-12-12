@@ -31,7 +31,7 @@
 #if defined(BOOST_GCC) && BOOST_GCC >= 60000
 #pragma GCC diagnostic push
 // ignoring attributes on template argument X - this warning is because we need to pass storage_type as a template argument; no problem in this case
-//#pragma GCC diagnostic ignored "-Wignored-attributes"
+#pragma GCC diagnostic ignored "-Wignored-attributes"
 #endif
 
 namespace boost {
@@ -102,7 +102,7 @@ struct extra_fp_negate_generic< Base, Value, Size, true > :
     typedef Value value_type;
 
     //! The mask with only one sign bit set to 1
-    static BOOST_CONSTEXPR_OR_CONST storage_type sign_mask = static_cast< storage_type >(1u) << (atomics::detail::value_sizeof< value_type >::value * 8u - 1u);
+    static BOOST_CONSTEXPR_OR_CONST storage_type sign_mask = static_cast< storage_type >(1u) << (atomics::detail::value_size_of< value_type >::value * 8u - 1u);
 
     static BOOST_FORCEINLINE value_type fetch_negate(storage_type volatile& storage, memory_order order) BOOST_NOEXCEPT
     {
