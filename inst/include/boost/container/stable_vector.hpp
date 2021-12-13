@@ -160,7 +160,7 @@ struct node
 
    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600) && (BOOST_GCC < 80000)
       #pragma GCC diagnostic push
-      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+  //      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
       #define BOOST_CONTAINER_DISABLE_ALIASING_WARNING
    #  endif
 

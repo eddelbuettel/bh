@@ -166,7 +166,7 @@ typedef int pid_t;
 // Python.h header uses `register` keyword until Python 3.4
 #if BOOST_PYTHON_GCC_HAS_WREGISTER
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wregister"
+//# pragma GCC diagnostic ignored "-Wregister"
 #elif defined(_MSC_VER)
 # pragma warning(push)
 # pragma warning(disable : 5033)  // 'register' is no longer a supported storage class
