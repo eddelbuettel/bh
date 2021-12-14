@@ -1,3 +1,12 @@
+2021-12-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): See Version to 1.77.99-0 for interim
+	test release
+
+	* inst/include/boost: As before, adjusted to CRAN Policy requirements
+	of i) not path names under 104 chars and b) no diagnostic suppression
+	* local/patches/bh_1.78.0-0*patch: Document these
+
 2021-12-12  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/boost/*: Upgraded to Boost 1.78

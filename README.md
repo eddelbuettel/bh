@@ -34,7 +34,7 @@ parts or all of their functionality.
 
 ### Coverage
 
-As of release 1.75.0-0, the following Boost libraries are included:
+As of release 1.78.0-0, the following Boost libraries are included:
 
 > accumulators algorithm align any atomic beast bimap bind circular_buffer
 > compute concept config container date_time detail dynamic_bitset exception
