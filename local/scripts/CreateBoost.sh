@@ -139,11 +139,12 @@ bcp --boost=${boostroot}  ${boostlibs}  ${pkgincl}   > /dev/null  2>&1
 # Plus accumulators (issue ticket #68)
 # Plus beast (issue ticket #74)
 # Plus lambda2 (issue ticket #81)
+# Plus process (issue ticket #78)
 boostextras="spirit foreach algorithm iostreams \
             dynamic_bitset heap any circular_buffer geometry fusion graph \
             multiprecision phoenix bimap icl flyweight property_tree \
             scope_exit atomic align sort compute mp11 polygon accumulators \
-            beast lambda2"
+            beast lambda2 process"
 
 echo "Copying (extra) Boost libraries into BH"
 
