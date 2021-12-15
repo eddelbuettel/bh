@@ -34,15 +34,15 @@ parts or all of their functionality.
 
 ### Coverage
 
-As of release 1.75.0-0, the following Boost libraries are included:
+As of release 1.78.0-0, the following Boost libraries are included:
 
 > accumulators algorithm align any atomic beast bimap bind circular_buffer
 > compute concept config container date_time detail dynamic_bitset exception
 > flyweight foreach functional fusion geometry graph heap icl integer
-> interprocess intrusive io iostreams iterator math move mp11 mpl
-> multiprecision numeric pending phoenix polygon preprocessor propery_tree
-> random range scope_exit smart_ptr sort spirit tuple type_traits typeof
-> unordered utility uuid
+> interprocess intrusive io iostreams iterator lambda2 math move mp11 mpl
+> multiprecision numeric pending phoenix polygon preprocessor process 
+> propery_tree random range scope_exit smart_ptr sort spirit tuple 
+> type_traits typeof unordered utility uuid
 
 ### Example
 
@@ -72,8 +72,8 @@ examples.
 
 ### See Also
 
-The [mailing list](http://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/boostheaders-devel)
-at [R-Forge](http://www.r-forge.r-project.org) is a good place for questions,
+The [mailing list](https://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/boostheaders-devel)
+at [R-Forge](https://r-forge.r-project.org/) is a good place for questions,
 comments and general discussion. The [issue tracker](https://github.com/eddelbuettel/bh/issues)
 can be used for bugs.
 

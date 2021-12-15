@@ -35,7 +35,6 @@
 #include <boost/geometry/strategies/distance.hpp>
 #include <boost/geometry/strategies/intersection.hpp>
 #include <boost/geometry/strategies/intersection_strategies.hpp> // for backward compatibility
-#include <boost/geometry/strategies/relate.hpp>
 #include <boost/geometry/strategies/side.hpp>
 #include <boost/geometry/strategies/transform.hpp>
 #include <boost/geometry/strategies/within.hpp>
@@ -61,7 +60,6 @@
 #include <boost/geometry/strategies/cartesian/distance_projected_point.hpp>
 #include <boost/geometry/strategies/cartesian/distance_projected_point_ax.hpp>
 #include <boost/geometry/strategies/cartesian/distance_segment_box.hpp>
-#include <boost/geometry/strategies/cartesian/index.hpp>
 #include <boost/geometry/strategies/cartesian/intersection.hpp>
 #include <boost/geometry/strategies/cartesian/point_in_box.hpp>
 #include <boost/geometry/strategies/cartesian/point_in_point.hpp>
@@ -69,7 +67,6 @@
 #include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp>
 #include <boost/geometry/strategies/cartesian/point_in_poly_winding.hpp>
 #include <boost/geometry/strategies/cartesian/line_interpolate.hpp>
-#include <boost/geometry/strategies/cartesian/side_by_triangle.hpp>
 
 #include <boost/geometry/strategies/spherical/azimuth.hpp>
 #include <boost/geometry/strategies/spherical/densify.hpp>
@@ -80,7 +77,6 @@
 #include <boost/geometry/strategies/spherical/distance_cross_track_point_box.hpp>
 #include <boost/geometry/strategies/spherical/distance_segment_box.hpp>
 #include <boost/geometry/strategies/spherical/compare.hpp>
-#include <boost/geometry/strategies/spherical/index.hpp>
 #include <boost/geometry/strategies/spherical/intersection.hpp>
 #include <boost/geometry/strategies/spherical/point_in_point.hpp>
 #include <boost/geometry/strategies/spherical/point_in_poly_winding.hpp>
@@ -99,8 +95,7 @@
 #include <boost/geometry/strategies/geographic/distance_segment_box.hpp>
 #include <boost/geometry/strategies/geographic/distance_thomas.hpp>
 #include <boost/geometry/strategies/geographic/distance_vincenty.hpp>
-//#include <boost/geometry/strategies/geographic/distance_karney.hpp>
-#include <boost/geometry/strategies/geographic/index.hpp>
+#include <boost/geometry/strategies/geographic/distance_karney.hpp>
 #include <boost/geometry/strategies/geographic/intersection.hpp>
 //#include <boost/geometry/strategies/geographic/intersection_elliptic.hpp>
 #include <boost/geometry/strategies/geographic/point_in_poly_winding.hpp>
@@ -112,7 +107,6 @@
 
 #include <boost/geometry/strategies/agnostic/buffer_distance_symmetric.hpp>
 #include <boost/geometry/strategies/agnostic/buffer_distance_asymmetric.hpp>
-#include <boost/geometry/strategies/agnostic/hull_graham_andrew.hpp>
 #include <boost/geometry/strategies/agnostic/point_in_box_by_side.hpp>
 #include <boost/geometry/strategies/agnostic/point_in_point.hpp>
 #include <boost/geometry/strategies/agnostic/point_in_poly_winding.hpp>
@@ -129,6 +123,7 @@
 #include <boost/geometry/strategy/area.hpp>
 #include <boost/geometry/strategy/envelope.hpp>
 #include <boost/geometry/strategy/expand.hpp>
+#include <boost/geometry/strategy/relate.hpp>
 
 #include <boost/geometry/strategy/cartesian/area.hpp>
 #include <boost/geometry/strategy/cartesian/envelope.hpp>
@@ -139,6 +134,8 @@
 #include <boost/geometry/strategy/cartesian/expand_box.hpp>
 #include <boost/geometry/strategy/cartesian/expand_point.hpp>
 #include <boost/geometry/strategy/cartesian/expand_segment.hpp>
+#include <boost/geometry/strategy/cartesian/side_by_triangle.hpp>
+#include <boost/geometry/strategy/cartesian/side_robust.hpp>
 
 #include <boost/geometry/strategy/geographic/area.hpp>
 #include <boost/geometry/strategy/geographic/envelope.hpp>

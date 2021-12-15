@@ -372,7 +372,7 @@ index(
 namespace std {
 
 #if defined(BOOST_CLANG)
-  //#pragma clang diagnostic push
+#pragma clang diagnostic push
   //#pragma clang diagnostic ignored "-Wmismatched-tags"
 #endif
 

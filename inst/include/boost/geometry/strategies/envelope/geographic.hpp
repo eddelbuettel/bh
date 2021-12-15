@@ -1,6 +1,6 @@
 // Boost.Geometry
 
-// Copyright (c) 2020, Oracle and/or its affiliates.
+// Copyright (c) 2020-2021, Oracle and/or its affiliates.
 
 // Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
 
@@ -19,6 +19,7 @@
 #include <boost/geometry/strategy/geographic/expand_segment.hpp> // TEMP
 
 #include <boost/geometry/strategies/envelope/spherical.hpp>
+#include <boost/geometry/strategies/expand/geographic.hpp>
 
 
 namespace boost { namespace geometry
@@ -33,14 +34,13 @@ template
     typename Spheroid = srs::spheroid<double>,
     typename CalculationType = void
 >
-class geographic : strategies::detail::geographic_base<Spheroid>
+class geographic
+    : public strategies::expand::geographic<FormulaPolicy, Spheroid, CalculationType>
 {
-    using base_t = strategies::detail::geographic_base<Spheroid>;
+    using base_t = strategies::expand::geographic<FormulaPolicy, Spheroid, CalculationType>;
 
 public:
-    geographic()
-        : base_t()
-    {}
+    geographic() = default;
 
     explicit geographic(Spheroid const& spheroid)
         : base_t(spheroid)
@@ -87,26 +87,11 @@ public:
             >(base_t::m_spheroid);
     }
 
-    template <typename Box, typename Geometry>
-    static auto expand(Box const&, Geometry const&,
-                       typename util::enable_if_point_t<Geometry> * = nullptr)
+    template <typename Geometry, typename Box>
+    auto envelope(Geometry const&, Box const&,
+                  typename util::enable_if_geometry_collection_t<Geometry> * = nullptr) const
     {
-        return strategy::expand::spherical_point();
-    }
-
-    // TEMP
-    template <typename Box, typename Geometry>
-    static auto expand(Box const&, Geometry const&,
-                       typename util::enable_if_box_t<Geometry> * = nullptr)
-    {
-        return strategy::expand::spherical_box();
-    }
-
-    template <typename Box, typename Geometry>
-    auto expand(Box const&, Geometry const&,
-                typename util::enable_if_segment_t<Geometry> * = nullptr) const
-    {
-        return strategy::expand::geographic_segment
+        return strategy::envelope::geographic
             <
                 FormulaPolicy, Spheroid, CalculationType
             >(base_t::m_spheroid);

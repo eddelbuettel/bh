@@ -137,7 +137,7 @@ namespace boost { namespace proto
             // The warning cannot be fixed for aggregates
             // Sadly, GCC currently emits the warning at the use location:
             // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94492
-            //#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+      //            #pragma GCC diagnostic ignored "-Wdeprecated-copy"
         #endif
 
         // This is where the expr specialization are

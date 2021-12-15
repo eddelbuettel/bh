@@ -9,11 +9,15 @@
 
 #include <cmath>
 #include <vector>
-#include <boost/math/tools/atomic.hpp>
-#include <boost/detail/lightweight_mutex.hpp>
 #include <typeinfo>
+#include <boost/math/tools/atomic.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/special_functions/next.hpp>
+#include <boost/math/tools/config.hpp>
+
+#ifdef BOOST_HAS_THREADS
+#include <mutex>
+#endif
 
 namespace boost{ namespace math{ namespace quadrature { namespace detail{
 
@@ -40,7 +44,7 @@ class tanh_sinh_detail
 public:
     tanh_sinh_detail(size_t max_refinements, const Real& min_complement) : m_max_refinements(max_refinements)
     {
-       typedef boost::integral_constant<int, initializer_selector> tag_type;
+       typedef std::integral_constant<int, initializer_selector> tag_type;
        init(min_complement, tag_type());
     }
 
@@ -50,61 +54,61 @@ public:
 private:
    const std::vector<Real>& get_abscissa_row(std::size_t n)const
    {
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
       if (m_committed_refinements.load() < n)
          extend_refinements();
-      BOOST_ASSERT(m_committed_refinements.load() >= n);
+      BOOST_MATH_ASSERT(m_committed_refinements.load() >= n);
 #else
       if (m_committed_refinements < n)
          extend_refinements();
-      BOOST_ASSERT(m_committed_refinements >= n);
+      BOOST_MATH_ASSERT(m_committed_refinements >= n);
 #endif
       return m_abscissas[n];
    }
    const std::vector<Real>& get_weight_row(std::size_t n)const
    {
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
       if (m_committed_refinements.load() < n)
          extend_refinements();
-      BOOST_ASSERT(m_committed_refinements.load() >= n);
+      BOOST_MATH_ASSERT(m_committed_refinements.load() >= n);
 #else
       if (m_committed_refinements < n)
          extend_refinements();
-      BOOST_ASSERT(m_committed_refinements >= n);
+      BOOST_MATH_ASSERT(m_committed_refinements >= n);
 #endif
       return m_weights[n];
    }
    std::size_t get_first_complement_index(std::size_t n)const
    {
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
       if (m_committed_refinements.load() < n)
          extend_refinements();
-      BOOST_ASSERT(m_committed_refinements.load() >= n);
+      BOOST_MATH_ASSERT(m_committed_refinements.load() >= n);
 #else
       if (m_committed_refinements < n)
          extend_refinements();
-      BOOST_ASSERT(m_committed_refinements >= n);
+      BOOST_MATH_ASSERT(m_committed_refinements >= n);
 #endif
       return m_first_complements[n];
    }
 
-   void init(const Real& min_complement, const boost::integral_constant<int, 0>&);
-   void init(const Real& min_complement, const boost::integral_constant<int, 1>&);
-   void init(const Real& min_complement, const boost::integral_constant<int, 2>&);
-   void init(const Real& min_complement, const boost::integral_constant<int, 3>&);
+   void init(const Real& min_complement, const std::integral_constant<int, 0>&);
+   void init(const Real& min_complement, const std::integral_constant<int, 1>&);
+   void init(const Real& min_complement, const std::integral_constant<int, 2>&);
+   void init(const Real& min_complement, const std::integral_constant<int, 3>&);
 #ifdef BOOST_HAS_FLOAT128
-   void init(const Real& min_complement, const boost::integral_constant<int, 4>&);
+   void init(const Real& min_complement, const std::integral_constant<int, 4>&);
 #endif
    void prune_to_min_complement(const Real& m);
    void extend_refinements()const
    {
-#ifndef BOOST_MATH_NO_ATOMIC_INT
-      boost::detail::lightweight_mutex::scoped_lock guard(m_mutex);
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
+      std::lock_guard<std::mutex> guard(m_mutex);
 #endif
       //
       // Check some other thread hasn't got here after we read the atomic variable, but before we got here:
       //
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
       if (m_committed_refinements.load() >= m_max_refinements)
          return;
 #else
@@ -115,7 +119,7 @@ private:
       using std::ldexp;
       using std::ceil;
       ++m_committed_refinements;
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
       std::size_t row = m_committed_refinements.load();
 #else
       std::size_t row = m_committed_refinements;
@@ -161,8 +165,8 @@ private:
    {
       using std::log;
       using std::sqrt;
-      Real l = (log(2-x) - log(x))/2;
-      return log((sqrt(4 * l * l + constants::pi<Real>() * constants::pi<Real>()) + 2 * l) / constants::pi<Real>());
+      Real l = log(2-x) - log(x);
+      return log((sqrt(l * l + constants::pi<Real>() * constants::pi<Real>()) + l) / constants::pi<Real>());
    };
 
 
@@ -170,9 +174,9 @@ private:
    mutable std::vector<std::vector<Real>> m_weights;
    mutable std::vector<std::size_t>       m_first_complements;
    std::size_t                       m_max_refinements, m_inital_row_length;
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
    mutable boost::math::detail::atomic_unsigned_type      m_committed_refinements;
-   mutable boost::detail::lightweight_mutex m_mutex;
+   mutable std::mutex m_mutex;
 #else
    mutable unsigned                  m_committed_refinements;
 #endif
@@ -191,6 +195,14 @@ decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) tanh_sin
     using std::sqrt;
     using boost::math::constants::half;
     using boost::math::constants::half_pi;
+
+    //
+    // The type of the result:
+    typedef decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) result_type;
+
+    Real h = m_t_max / m_inital_row_length;
+    result_type I0 = half_pi<Real>() * f(0, 1);
+    Real L1_I0 = abs(I0);
     //
     // We maintain 4 integer values:
     // max_left_position is the logical index of the abscissa value closest to the
@@ -218,22 +230,42 @@ decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) tanh_sin
     while (max_right_position && fabs(m_abscissas[0][max_right_position]) < right_min_complement)
        --max_right_position;
     //
+    // Check for non-finite values at the end points:
+    // 
+    result_type yp, ym;
+    do
+    {
+       yp = f(-1 - m_abscissas[0][max_left_position], m_abscissas[0][max_left_position]);
+       if ((boost::math::isfinite)(yp))
+          break;
+       --max_left_position;
+    } while (m_abscissas[0][max_left_position] < 0);
+    do
+    {
+       ym = f(1 + m_abscissas[0][max_right_position], -m_abscissas[0][max_right_position]);
+       if ((boost::math::isfinite)(ym))
+          break;
+       --max_right_position;
+    } while (m_abscissas[0][max_right_position] < 0);
+
+    if ((max_left_position == 0) && (max_right_position == 0))
+    {
+       return policies::raise_evaluation_error(function, "The tanh_sinh quadrature found your function to be non-finite everywhere! Please check your function for singularities.", ym, Policy());
+    }
+
+    I0 += yp * m_weights[0][max_left_position] + ym * m_weights[0][max_right_position];
+    L1_I0 += abs(yp * m_weights[0][max_left_position]) + abs(ym * m_weights[0][max_right_position]);
+    //
     // Assumption: left_min_complement/right_min_complement are sufficiently small that we only
     // ever decrement through the stored values that are complements (the negative ones), and
     // never ever hit the true abscissa values (positive stored values).
     //
-    BOOST_ASSERT(m_abscissas[0][max_left_position] < 0);
-    BOOST_ASSERT(m_abscissas[0][max_right_position] < 0);
-    //
-    // The type of the result:
-    typedef decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) result_type;
+    BOOST_MATH_ASSERT(m_abscissas[0][max_left_position] < 0);
+    BOOST_MATH_ASSERT(m_abscissas[0][max_right_position] < 0);
 
-    Real h = m_t_max / m_inital_row_length;
-    result_type I0 = half_pi<Real>()*f(0, 1);
-    Real L1_I0 = abs(I0);
     for(size_t i = 1; i < m_abscissas[0].size(); ++i)
     {
-        if ((i > max_right_position) && (i > max_left_position))
+        if ((i >= max_right_position) && (i >= max_left_position))
             break;
         Real x = m_abscissas[0][i];
         Real xc = x;
@@ -245,9 +277,8 @@ decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) tanh_sin
         }
         else
            xc = x - 1;
-        result_type yp, ym;
-        yp = i <= max_right_position ? f(x, -xc) : 0;
-        ym = i <= max_left_position ? f(-x, xc) : 0;
+        yp = i < max_right_position ? f(x, -xc) : 0;
+        ym = i < max_left_position ? f(-x, xc) : 0;
         I0 += (yp + ym)*w;
         L1_I0 += (abs(yp) + abs(ym))*w;
     }
@@ -278,6 +309,7 @@ decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) tanh_sin
         h *= half<Real>();
         result_type sum = 0;
         Real absum = 0;
+        Real endpoint_error = 0;
         auto const& abscissa_row = this->get_abscissa_row(k);
         auto const& weight_row = this->get_weight_row(k);
         std::size_t first_complement_index = this->get_first_complement_index(k);
@@ -307,12 +339,45 @@ decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) tanh_sin
            ++max_right_position;
            ++max_right_index;
         }
+        //
+        // We also check that our endpoints don't hit singularities:
+        //
+        do
+        {
+           yp = f(-1 - abscissa_row[max_left_index], abscissa_row[max_left_index]);
+           if ((boost::math::isfinite)(yp))
+              break;
+           max_left_position -= 2;
+           --max_left_index;
+        } while (abscissa_row[max_left_index] < 0);
+        do
+        {
+           ym = f(1 + abscissa_row[max_right_index], -abscissa_row[max_right_index]);
+           if ((boost::math::isfinite)(ym))
+              break;
+           --max_right_index;
+           max_right_position -= 2;
+        } while (abscissa_row[max_right_index] < 0);
+
+        sum += yp * weight_row[max_left_index] + ym * weight_row[max_right_index];
+        absum += abs(yp * weight_row[max_left_index]) + abs(ym * weight_row[max_right_index]);
+        //
+        // We estimate the error due to truncation as the value contributed by the two most extreme points.
+        // In most cases this is tiny and can be ignored, if it is significant then either the area of the
+        // integral is so far our in the tails that our exponent range can't reach it (example x^-p at double
+        // precision and p ~ 1), or our function is truncated near epsilon, and we have had to narrow our endpoints.
+        // In this latter case we may over-estimate the error, but this is the best we can do.
+        // In any event, we do not add endpoint_error to the error estimate until we terminate the main loop,
+        // otherwise it can make things appear to be non-converged, when in reality, they are as converged as they
+        // will ever be.
+        //
+        endpoint_error = absum;
 
         for(size_t j = 0; j < weight_row.size(); ++j)
         {
             // If both left and right abscissa values are out of bounds at this step
             // we can just stop this loop right now:
-            if ((j > max_left_index) && (j > max_right_index))
+            if ((j >= max_left_index) && (j >= max_right_index))
                 break;
             Real x = abscissa_row[j];
             Real xc = x;
@@ -320,17 +385,17 @@ decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) tanh_sin
             if (j >= first_complement_index)
             {
                // We have stored x - 1:
-               BOOST_ASSERT(x < 0);
+               BOOST_MATH_ASSERT(x < 0);
                x = 1 + xc;
             }
             else
             {
-               BOOST_ASSERT(x >= 0);
+               BOOST_MATH_ASSERT(x >= 0);
                xc = x - 1;
             }
 
-            result_type yp = j > max_right_index ? 0 : f(x, -xc);
-            result_type ym = j > max_left_index ? 0 : f(-x, xc);
+            yp = j >= max_right_index ? 0 : f(x, -xc);
+            ym = j >= max_left_index ? 0 : f(-x, xc);
             result_type term = (yp + ym)*w;
             sum += term;
 
@@ -355,15 +420,38 @@ decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) tanh_sin
         //
         // If the error is increasing, and we're past level 4, something bad is very likely happening:
         //
-        if ((err > last_err) && (k > 4) && (++thrash_count > 1))
+        if ((err * 1.5 > last_err) && (k > 4))
         {
-           // We could raise an evaluation_error, but since we likely have some sort of result, just return the last one
-           // (ie before the error started going up)
-           I1 = I0;
-           L1_I1 = L1_I0;
-           --k;
-           err = last_err;
-           break;
+           bool terminate = false;
+           if ((++thrash_count > 1) && (last_err < 1e-3))
+              // Probably just thrashing, abort:
+              terminate = true;
+           else if(thrash_count > 2)
+              // OK, terrible error, but giving up anyway!
+              terminate = true;
+           else if (last_err < boost::math::tools::root_epsilon<Real>())
+              // Trying to squeeze precision that probably isn't there, abort:
+              terminate = true;
+           else
+           {
+              // Take a look at the end points, if there's significant new area being
+              // discovered, then we're not able to get close enough to the endpoints
+              // to ever find the integral:
+              if (abs(endpoint_error / sum) > err)
+                 terminate = true;
+           }
+
+           if (terminate)
+           {
+              // We could raise an evaluation_error, but since we likely have some sort of result, just return the last one
+              // (ie before the error started going up)
+              I1 = I0;
+              L1_I1 = L1_I0;
+              --k;
+              err = last_err + endpoint_error;
+              break;
+           }
+           // Fall through and keep going, assume we've discovered a new feature of f(x)....
         }
         //
         // Termination condition:
@@ -376,6 +464,31 @@ decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) tanh_sin
         //
         if (err <= abs(tolerance*L1_I1))
         {
+            //
+            // A quick sanity check: have we at some point narrowed our boundaries as a result
+            // of non-finite values?  If so let's check that the area isn't on an increasing
+            // trajectory at our new end point, and increase our error estimate by the last
+            // good value as an estimate for what we may have discarded.
+            //
+            if ((max_left_index < abscissa_row.size() - 1) && (abs(abscissa_row[max_left_index + 1]) > left_min_complement))
+            {
+               yp = f(-1 - abscissa_row[max_left_index], abscissa_row[max_left_index]) * weight_row[max_left_index];
+               ym = f(-1 - abscissa_row[max_left_index - 1], abscissa_row[max_left_index - 1]) * weight_row[max_left_index - 1];
+               if (abs(yp) > abs(ym))
+               {
+                  return policies::raise_evaluation_error(function, "The tanh_sinh quadrature evaluated your function at a singular point and got %1%. Inetgration bounds were automatically narrowed, but the integral was found to be increasing at the new endpoint.  Please check your function, and consider providing a 2-argument functor.", I1, Policy());
+               }
+            }
+            if ((max_right_index < abscissa_row.size() - 1) && (abs(abscissa_row[max_right_index + 1]) > right_min_complement))
+            {
+               yp = f(-1 - abscissa_row[max_right_index], abscissa_row[max_right_index]) * weight_row[max_right_index];
+               ym = f(-1 - abscissa_row[max_right_index - 1], abscissa_row[max_right_index - 1]) * weight_row[max_right_index - 1];
+               if (abs(yp) > abs(ym))
+               {
+                  return policies::raise_evaluation_error(function, "The tanh_sinh quadrature evaluated your function at a singular point and got %1%. Inetgration bounds were automatically narrowed, but the integral was found to be increasing at the new endpoint.  Please check your function, and consider providing a 2-argument functor.", I1, Policy());
+               }
+            }
+            err += endpoint_error;
             break;
         }
 
@@ -399,7 +512,7 @@ decltype(std::declval<F>()(std::declval<Real>(), std::declval<Real>())) tanh_sin
 }
 
 template<class Real, class Policy>
-void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boost::integral_constant<int, 0>&)
+void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const std::integral_constant<int, 0>&)
 {
    using std::tanh;
    using std::sinh;
@@ -448,7 +561,7 @@ void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boos
    temp[m_inital_row_length] = weight_at_t(m_t_max);
    m_weights[0].swap(temp);
 
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
    for (std::size_t row = 1; row <= m_committed_refinements.load(); ++row)
 #else
    for (std::size_t row = 1; row <= m_committed_refinements; ++row)
@@ -480,7 +593,7 @@ void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boos
 #endif
 
 template<class Real, class Policy>
-void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boost::integral_constant<int, 1>&)
+void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const std::integral_constant<int, 1>&)
 {
    m_inital_row_length = 4;
    m_abscissas.reserve(m_max_refinements + 1);
@@ -509,7 +622,7 @@ void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boos
    m_first_complements = {
       1, 0, 1, 1, 3, 5, 11, 22,
    };
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
    m_committed_refinements = static_cast<boost::math::detail::atomic_unsigned_integer_type>(m_abscissas.size() - 1);
 #else
    m_committed_refinements = m_abscissas.size() - 1;
@@ -533,9 +646,9 @@ void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boos
 }
 
 template<class Real, class Policy>
-void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boost::integral_constant<int, 2>&)
+void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const std::integral_constant<int, 2>&)
 {
-   m_inital_row_length = 5;
+   m_inital_row_length = 6;
    m_abscissas.reserve(m_max_refinements + 1);
    m_weights.reserve(m_max_refinements + 1);
    m_first_complements.reserve(m_max_refinements + 1);
@@ -562,7 +675,7 @@ void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boos
    m_first_complements = {
       1, 0, 1, 1, 3, 5, 11, 22,
    };
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
    m_committed_refinements = static_cast<boost::math::detail::atomic_unsigned_integer_type>(m_abscissas.size() - 1);
 #else
    m_committed_refinements = m_abscissas.size() - 1;
@@ -585,7 +698,7 @@ void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boos
 }
 
 template<class Real, class Policy>
-void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boost::integral_constant<int, 3>&)
+void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const std::integral_constant<int, 3>&)
 {
    m_inital_row_length = 9;
    m_abscissas.reserve(m_max_refinements + 1);
@@ -614,7 +727,7 @@ void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boos
    m_first_complements = {
       1, 0, 1, 1, 3, 5, 11, 22,
    };
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
    m_committed_refinements = static_cast<boost::math::detail::atomic_unsigned_integer_type>(m_abscissas.size() - 1);
 #else
    m_committed_refinements = m_abscissas.size() - 1;
@@ -639,7 +752,7 @@ void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boos
 #ifdef BOOST_HAS_FLOAT128
 
 template<class Real, class Policy>
-void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boost::integral_constant<int, 4>&)
+void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const std::integral_constant<int, 4>&)
 {
    m_inital_row_length = 9;
    m_abscissas.reserve(m_max_refinements + 1);
@@ -668,7 +781,7 @@ void tanh_sinh_detail<Real, Policy>::init(const Real& min_complement, const boos
    m_first_complements = {
       1, 0, 1, 1, 3, 5, 11, 22,
    };
-#ifndef BOOST_MATH_NO_ATOMIC_INT
+#if !defined(BOOST_MATH_NO_ATOMIC_INT) && defined(BOOST_HAS_THREADS)
    m_committed_refinements = static_cast<boost::math::detail::atomic_unsigned_integer_type>(m_abscissas.size() - 1);
 #else
    m_committed_refinements = m_abscissas.size() - 1;
