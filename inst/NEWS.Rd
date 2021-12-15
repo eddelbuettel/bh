@@ -7,6 +7,15 @@
 \newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
+\section{Changes in version 1.78.0-0 (2020-12-14)}{
+  \itemize{
+    \item Incremental updates to README.md and CI setup
+    \item Upgraded to \boost 1.78.0 (\ghpr{82} closing \ghit{80})
+    \item Added \boostPkg{process} (closing \ghit{78})
+    \item Added \boostPkg{lambda2} (closing \ghit{81})
+  }
+}
+
 \section{Changes in version 1.75.0-0 (2020-12-12)}{
   \itemize{
     \item Removed file \code{NAMESPACE} as the package has neither R code,

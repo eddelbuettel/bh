@@ -72,8 +72,8 @@ examples.
 
 ### See Also
 
-The [mailing list](http://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/boostheaders-devel)
-at [R-Forge](http://www.r-forge.r-project.org) is a good place for questions,
+The [mailing list](https://lists.r-forge.r-project.org/cgi-bin/mailman/listinfo/boostheaders-devel)
+at [R-Forge](https://r-forge.r-project.org/) is a good place for questions,
 comments and general discussion. The [issue tracker](https://github.com/eddelbuettel/bh/issues)
 can be used for bugs.
 

@@ -1,7 +1,7 @@
 Package: BH
 Type: Package
 Title: Boost C++ Header Files
-Version: 1.77.99-3
+Version: 1.78.0-0
 Date: 2021-12-14
 Author: Dirk Eddelbuettel, John W. Emerson and Michael J. Kane
 Maintainer: Dirk Eddelbuettel <edd@debian.org>
