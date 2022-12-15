@@ -1,13 +1,14 @@
 #ifndef BOOST_QVM_DEDUCE_SCALAR_HPP_INCLUDED
 #define BOOST_QVM_DEDUCE_SCALAR_HPP_INCLUDED
 
-/// Copyright (c) 2008-2021 Emil Dotchevski and Reverge Studios, Inc.
+// Copyright 2008-2022 Emil Dotchevski and Reverge Studios, Inc.
 
-/// Distributed under the Boost Software License, Version 1.0. (See accompanying
-/// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/qvm/scalar_traits.hpp>
 #include <boost/qvm/static_assert.hpp>
+#include <boost/qvm/detail/remove_const.hpp>
 
 namespace boost { namespace qvm {
 
@@ -125,7 +126,7 @@ template <class A,class B>
 struct
 deduce_scalar
     {
-    typedef typename deduce_scalar_detail::deduce_scalar_impl<A,B>::type type;
+    typedef typename deduce_scalar_detail::deduce_scalar_impl<typename qvm_detail::remove_const<A>::type,typename qvm_detail::remove_const<B>::type>::type type;
     };
 
 } }

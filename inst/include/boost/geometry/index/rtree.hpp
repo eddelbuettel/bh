@@ -3,7 +3,7 @@
 // R-tree implementation
 //
 // Copyright (c) 2008 Federico J. Fernandez.
-// Copyright (c) 2011-2019 Adam Wulkiewicz, Lodz, Poland.
+// Copyright (c) 2011-2022 Adam Wulkiewicz, Lodz, Poland.
 // Copyright (c) 2020 Caian Benedicto, Campinas, Brazil.
 //
 // This file was modified by Oracle on 2019-2021.
@@ -90,7 +90,15 @@
 #include <boost/geometry/index/detail/rtree/query_iterators.hpp>
 
 #ifdef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL
-// serialization
+#ifndef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL_SERIALIZATION
+#define BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL_SERIALIZATION
+#endif
+#ifndef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL_ITERATORS
+#define BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL_ITERATORS
+#endif
+#endif
+
+#ifdef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL_SERIALIZATION
 #include <boost/geometry/index/detail/serialization.hpp>
 #endif
 
@@ -129,10 +137,9 @@ Predefined algorithms with run-time parameters are:
  \li \c boost::geometry::index::dynamic_rstar.
 
 \par IndexableGetter
-The object of IndexableGetter type translates from Value to Indexable each time
-r-tree requires it. This means that this operation is done for each Value
-access. Therefore the IndexableGetter should return the Indexable by
-a reference type. The Indexable should not be calculated since it could harm
+An object of IndexableGetter type translates from Value to Indexable each time
+r-tree requires it. This operation is done for each Value access.
+The Indexable should not be calculated each time since it could harm
 the performance. The default IndexableGetter can translate all types adapted
 to Point, Box or Segment concepts (called Indexables). Furthermore, it can
 handle <tt>std::pair<Indexable, T></tt>, <tt>std::tuple<Indexable, ...></tt>
@@ -312,7 +319,7 @@ private:
     typedef typename members_holder::allocator_traits_type allocator_traits_type;
 
     friend class detail::rtree::utilities::view<rtree>;
-#ifdef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL
+#ifdef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL_SERIALIZATION
     friend class detail::rtree::private_view<rtree>;
     friend class detail::rtree::const_private_view<rtree>;
 #endif
@@ -598,7 +605,7 @@ public:
     /*!
     \brief  The copy constructor.
 
-    It uses parameters, translator and allocator from the source tree.
+    It uses parameters, observers and allocator from the source tree.
 
     \param src          The rtree which content will be copied.
 
@@ -619,7 +626,7 @@ public:
     /*!
     \brief The copy constructor.
 
-    It uses Parameters and translator from the source tree.
+    It uses parameters and observers from the source tree.
 
     \param src          The rtree which content will be copied.
     \param allocator    The allocator which will be used.
@@ -640,7 +647,7 @@ public:
     /*!
     \brief The moving constructor.
 
-    It uses parameters, translator and allocator from the source tree.
+    It uses parameters, observers and allocator from the source tree.
 
     \param src          The rtree which content will be moved.
 
@@ -661,7 +668,7 @@ public:
     /*!
     \brief The moving constructor.
 
-    It uses parameters and translator from the source tree.
+    It uses parameters and observers from the source tree.
 
     \param src          The rtree which content will be moved.
     \param allocator    The allocator.
@@ -692,7 +699,7 @@ public:
     /*!
     \brief The assignment operator.
 
-    It uses parameters and translator from the source tree.
+    It uses parameters and observers from the source tree.
 
     \param src          The rtree which content will be copied.
 
@@ -730,7 +737,7 @@ public:
     /*!
     \brief The moving assignment.
 
-    It uses parameters and translator from the source tree.
+    It uses parameters and observers from the source tree.
 
     \param src          The rtree which content will be moved.
 
@@ -782,7 +789,7 @@ public:
     /*!
     \brief Swaps contents of two rtrees.
 
-    Parameters, translator and allocators are swapped as well.
+    Parameters, observers and allocators are swapped as well.
 
     \param other    The rtree which content will be swapped with this rtree content.
 
@@ -1184,7 +1191,9 @@ private:
             detail::rtree::iterators::distance_query_iterator<members_holder, Predicates>
         >;
 
-#ifndef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL
+#ifdef BOOST_GEOMETRY_INDEX_DETAIL_EXPERIMENTAL_ITERATORS
+public:
+#else
 private:
 #endif
     /*!

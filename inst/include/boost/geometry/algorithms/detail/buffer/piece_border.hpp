@@ -1,9 +1,9 @@
 // Boost.Geometry (aka GGL, Generic Geometry Library)
 
-// Copyright (c) 2020 Barend Gehrels, Amsterdam, the Netherlands.
+// Copyright (c) 2020-2021 Barend Gehrels, Amsterdam, the Netherlands.
 
-// This file was modified by Oracle on 2020.
-// Modifications copyright (c) 2020, Oracle and/or its affiliates.
+// This file was modified by Oracle on 2020-2022.
+// Modifications copyright (c) 2020-2022, Oracle and/or its affiliates.
 // Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
 
 // Use, modification and distribution is subject to the Boost Software License,
@@ -261,16 +261,21 @@ struct piece_border
         if (m_original_size == 1)
         {
             // One point. Walk from last offsetted to point, and from point to first offsetted
-            continue_processing = step(point, offsetted_back, m_originals[0], tir, por_from_offsetted, state)
-                && step(point, m_originals[0], offsetted_front, tir, por_to_offsetted, state);
+            continue_processing = step(point, offsetted_back, m_originals[0],
+                                       tir, por_from_offsetted, state)
+                               && step(point, m_originals[0], offsetted_front,
+                                       tir, por_to_offsetted, state);
         }
         else if (m_original_size == 2)
         {
             // Two original points. Walk from last offsetted point to first original point,
             // then along original, then from second oginal to first offsetted point
-            continue_processing = step(point, offsetted_back, m_originals[0], tir, por_from_offsetted, state)
-                    && step(point, m_originals[0], m_originals[1], tir, por_original, state)
-                    && step(point, m_originals[1], offsetted_front, tir, por_to_offsetted, state);
+            continue_processing = step(point, offsetted_back, m_originals[0],
+                                       tir, por_from_offsetted, state)
+                               && step(point, m_originals[0], m_originals[1],
+                                       tir, por_original, state)
+                               && step(point, m_originals[1], offsetted_front,
+                                       tir, por_to_offsetted, state);
         }
 
         if (continue_processing)
@@ -301,8 +306,15 @@ private :
                : target;
     }
 
-    template <typename TurnPoint, typename Iterator, typename Strategy, typename State>
-    bool walk_offsetted(TurnPoint const& point, Iterator begin, Iterator end, Strategy const & strategy, State& state) const
+    template
+    <
+        typename TurnPoint, typename Iterator,
+        typename TiRStrategy,
+        typename State
+    >
+    bool walk_offsetted(TurnPoint const& point, Iterator begin, Iterator end,
+                        TiRStrategy const & strategy,
+                        State& state) const
     {
         Iterator it = begin;
         Iterator beyond = end;
@@ -326,7 +338,7 @@ private :
         for (Iterator previous = it++ ; it != beyond ; ++previous, ++it )
         {
             if (! step(point, *previous, *it, strategy,
-                 geometry::strategy::buffer::place_on_ring_offsetted, state))
+                       geometry::strategy::buffer::place_on_ring_offsetted, state))
             {
                 return false;
             }
@@ -335,27 +347,11 @@ private :
     }
 
     template <typename TurnPoint, typename TiRStrategy, typename State>
-    bool step(TurnPoint const& point, Point const& p1, Point const& p2, TiRStrategy const & strategy,
+    bool step(TurnPoint const& point, Point const& p1, Point const& p2,
+              TiRStrategy const& strategy,
               geometry::strategy::buffer::place_on_ring_type place_on_ring, State& state) const
     {
-        // A step between original/offsetted ring is always convex
-        // (unless the join strategy generates points left of it -
-        //  future: convexity might be added to the buffer-join-strategy)
-        // Therefore, if the state count > 0, it means the point is left of it,
-        // and because it is convex, we can stop
-
-        typedef typename geometry::coordinate_type<Point>::type coordinate_type;
-        typedef geometry::detail::distance_measure<coordinate_type> dm_type;
-        dm_type const dm = geometry::detail::get_distance_measure(point, p1, p2);
-        if (m_is_convex && dm.measure > 0)
-        {
-            // The point is left of this segment of a convex piece
-            state.m_count = 0;
-            return false;
-        }
-        // Call strategy, and if it is on the border, return false
-        // to stop further processing.
-        return strategy.apply(point, p1, p2, dm, place_on_ring, state);
+        return strategy.apply(point, p1, p2, place_on_ring, m_is_convex, state, get_full_ring());
     }
 
     template <typename It, typename Box, typename Strategy>

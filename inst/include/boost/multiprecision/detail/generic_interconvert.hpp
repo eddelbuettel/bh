@@ -6,7 +6,13 @@
 #ifndef BOOST_MP_GENERIC_INTERCONVERT_HPP
 #define BOOST_MP_GENERIC_INTERCONVERT_HPP
 
+#include <cmath>
+#include <limits>
+#include <boost/multiprecision/detail/standalone_config.hpp>
 #include <boost/multiprecision/detail/default_ops.hpp>
+#include <boost/multiprecision/detail/no_exceptions_support.hpp>
+#include <boost/multiprecision/detail/assert.hpp>
+#include <boost/multiprecision/detail/functions/trunc.hpp>
 
 #ifdef BOOST_MSVC
 #pragma warning(push)
@@ -155,17 +161,17 @@ void generic_interconvert(To& to, const From& from, const std::integral_constant
       //
       int c = eval_fpclassify(from);
 
-      if (c == (int)FP_ZERO)
+      if (c == static_cast<int>(FP_ZERO))
       {
          to = ui_type(0);
          return;
       }
-      else if (c == (int)FP_NAN)
+      else if (c == static_cast<int>(FP_NAN))
       {
          to = static_cast<const char*>("nan");
          return;
       }
-      else if (c == (int)FP_INFINITE)
+      else if (c == static_cast<int>(FP_INFINITE))
       {
          to = static_cast<const char*>("inf");
          if (eval_get_sign(from) < 0)
@@ -179,7 +185,7 @@ void generic_interconvert(To& to, const From& from, const std::integral_constant
 
       eval_frexp(f, from, &e);
 
-      constexpr const int shift = std::numeric_limits<std::intmax_t>::digits - 1;
+      constexpr int shift = std::numeric_limits<std::intmax_t>::digits - 1;
 
       while (!eval_is_zero(f))
       {
@@ -249,18 +255,19 @@ inline typename std::enable_if<!is_signed_number<LargeInteger>::value>::type mak
 template <class R, class LargeInteger>
 R safe_convert_to_float(const LargeInteger& i)
 {
-   using std::ldexp;
    if (!i)
       return R(0);
    BOOST_IF_CONSTEXPR(std::numeric_limits<R>::is_specialized && std::numeric_limits<R>::max_exponent)
    {
+      using std::ldexp;
+
       LargeInteger val(i);
       make_positive(val);
-      unsigned mb = msb(val);
+      std::size_t mb = msb(val);
       if (mb >= std::numeric_limits<R>::max_exponent)
       {
-         int scale_factor = (int)mb + 1 - std::numeric_limits<R>::max_exponent;
-         BOOST_ASSERT(scale_factor >= 1);
+         int scale_factor = static_cast<int>(mb) + 1 - std::numeric_limits<R>::max_exponent;
+         BOOST_MP_ASSERT(scale_factor >= 1);
          val >>= scale_factor;
          R result = val.template convert_to<R>();
          BOOST_IF_CONSTEXPR(std::numeric_limits<R>::digits == 0 || std::numeric_limits<R>::digits >= std::numeric_limits<R>::max_exponent)
@@ -328,15 +335,15 @@ generic_convert_rational_to_float_imp(To& result, Integer& num, Integer& denom, 
       s   = true;
       num = -num;
    }
-   int denom_bits = msb(denom);
-   int shift      = std::numeric_limits<To>::digits + denom_bits - msb(num);
+   std::ptrdiff_t denom_bits = msb(denom);
+   std::ptrdiff_t shift      = std::numeric_limits<To>::digits + denom_bits - msb(num);
    if (shift > 0)
       num <<= shift;
    else if (shift < 0)
       denom <<= boost::multiprecision::detail::unsigned_abs(shift);
    Integer q, r;
    divide_qr(num, denom, q, r);
-   int q_bits = msb(q);
+   std::ptrdiff_t q_bits = msb(q);
    if (q_bits == std::numeric_limits<To>::digits - 1)
    {
       //
@@ -353,7 +360,7 @@ generic_convert_rational_to_float_imp(To& result, Integer& num, Integer& denom, 
    }
    else
    {
-      BOOST_ASSERT(q_bits == std::numeric_limits<To>::digits);
+      BOOST_MP_ASSERT(q_bits == std::numeric_limits<To>::digits);
       //
       // We basically already have the rounding info:
       //
@@ -365,7 +372,7 @@ generic_convert_rational_to_float_imp(To& result, Integer& num, Integer& denom, 
    }
    using std::ldexp;
    result = do_cast<To>(q);
-   result = ldexp(result, -shift);
+   result = ldexp(result, static_cast<int>(-shift));
    if (s)
       result = -result;
 }
@@ -406,17 +413,19 @@ inline void generic_interconvert(To& to, const From& from, const std::integral_c
 template <class To, class From>
 void generic_interconvert_float2rational(To& to, const From& from, const std::integral_constant<int, 2>& /*radix*/)
 {
+   using std::ldexp;
+   using std::frexp;
    using ui_type = typename std::tuple_element<0, typename To::unsigned_types>::type;
-   constexpr const int                                                       shift = std::numeric_limits<boost::long_long_type>::digits;
-   typename From::exponent_type                                   e;
-   typename component_type<number<To> >::type                     num, denom;
-   number<From>                                                   val(from);
+   constexpr int shift = std::numeric_limits<long long>::digits;
+   typename From::exponent_type e;
+   typename component_type<number<To>>::type num, denom;
+   number<From> val(from);
    val = frexp(val, &e);
    while (val)
    {
       val = ldexp(val, shift);
       e -= shift;
-      boost::long_long_type ll = boost::math::lltrunc(val);
+      long long ll = boost::multiprecision::detail::lltrunc(val);
       val -= ll;
       num <<= shift;
       num += ll;
@@ -432,15 +441,19 @@ void generic_interconvert_float2rational(To& to, const From& from, const std::in
 template <class To, class From, int Radix>
 void generic_interconvert_float2rational(To& to, const From& from, const std::integral_constant<int, Radix>& /*radix*/)
 {
+   using std::ilogb;
+   using std::scalbn;
+   using std::pow;
+   using std::abs;
    //
    // This is almost the same as the binary case above, but we have to use
    // scalbn and ilogb rather than ldexp and frexp, we also only extract
    // one Radix digit at a time which is terribly inefficient!
    //
    using ui_type = typename std::tuple_element<0, typename To::unsigned_types>::type;
-   typename From::exponent_type                                   e;
-   typename component_type<number<To> >::type                     num, denom;
-   number<From>                                                   val(from);
+   typename From::exponent_type e;
+   typename component_type<number<To>>::type num, denom;
+   number<From> val(from);
 
    if (!val)
    {
@@ -452,7 +465,7 @@ void generic_interconvert_float2rational(To& to, const From& from, const std::in
    val = scalbn(val, -e);
    while (val)
    {
-      boost::long_long_type ll = boost::math::lltrunc(val);
+      long long ll = boost::multiprecision::detail::lltrunc(val);
       val -= ll;
       val = scalbn(val, 1);
       num *= Radix;
@@ -487,8 +500,11 @@ void generic_interconvert(To& to, const From& from, const std::integral_constant
 template <class To, class From>
 void generic_interconvert_float2int(To& to, const From& from, const std::integral_constant<int, 2>& /*radix*/)
 {
+   using std::frexp;
+   using std::ldexp;
+   
    using exponent_type = typename From::exponent_type;
-   constexpr const exponent_type        shift = std::numeric_limits<boost::long_long_type>::digits;
+   constexpr exponent_type              shift = std::numeric_limits<long long>::digits;
    exponent_type                        e;
    number<To>                           num(0u);
    number<From>                         val(from);
@@ -504,7 +520,7 @@ void generic_interconvert_float2int(To& to, const From& from, const std::integra
       exponent_type s = (std::min)(e, shift);
       val             = ldexp(val, s);
       e -= s;
-      boost::long_long_type ll = boost::math::lltrunc(val);
+      long long ll = boost::multiprecision::detail::lltrunc(val);
       val -= ll;
       num <<= s;
       num += ll;
@@ -517,6 +533,8 @@ void generic_interconvert_float2int(To& to, const From& from, const std::integra
 template <class To, class From, int Radix>
 void generic_interconvert_float2int(To& to, const From& from, const std::integral_constant<int, Radix>& /*radix*/)
 {
+   using std::ilogb;
+   using std::scalbn;
    //
    // This is almost the same as the binary case above, but we have to use
    // scalbn and ilogb rather than ldexp and frexp, we also only extract
@@ -529,7 +547,7 @@ void generic_interconvert_float2int(To& to, const From& from, const std::integra
    val = scalbn(val, -e);
    while (e >= 0)
    {
-      boost::long_long_type ll = boost::math::lltrunc(val);
+      long long ll = boost::multiprecision::detail::lltrunc(val);
       val -= ll;
       val = scalbn(val, 1);
       num *= Radix;
@@ -554,7 +572,7 @@ void generic_interconvert_complex_to_scalar(To& to, const From& from, const std:
    To im;
    eval_imag(im, from);
    if (!eval_is_zero(im))
-      BOOST_THROW_EXCEPTION(std::runtime_error("Could not convert imaginary number to scalar."));
+      BOOST_MP_THROW_EXCEPTION(std::runtime_error("Could not convert imaginary number to scalar."));
 }
 template <class To, class From>
 void generic_interconvert_complex_to_scalar(To& to, const From& from, const std::integral_constant<bool, false>&, const std::integral_constant<bool, true>&)

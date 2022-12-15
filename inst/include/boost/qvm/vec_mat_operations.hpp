@@ -1,10 +1,10 @@
 #ifndef BOOST_QVM_VEC_MAT_OPERATIONS_HPP_INCLUDED
 #define BOOST_QVM_VEC_MAT_OPERATIONS_HPP_INCLUDED
 
-/// Copyright (c) 2008-2021 Emil Dotchevski and Reverge Studios, Inc.
+// Copyright 2008-2022 Emil Dotchevski and Reverge Studios, Inc.
 
-/// Distributed under the Boost Software License, Version 1.0. (See accompanying
-/// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/qvm/vec_mat_operations2.hpp>
 #include <boost/qvm/vec_mat_operations3.hpp>
@@ -24,7 +24,7 @@ qvm_detail
     }
 
 template <class A,class B>
-BOOST_QVM_INLINE_OPERATIONS
+BOOST_QVM_CONSTEXPR BOOST_QVM_INLINE_OPERATIONS
 typename lazy_enable_if_c<
     is_mat<A>::value && is_vec<B>::value &&
     mat_traits<A>::cols==vec_traits<B>::dim &&
@@ -40,7 +40,7 @@ operator*( A const & a, B const & b )
         Tr x(scalar_traits<Tr>::value(0));
         for( int j=0; j<mat_traits<A>::cols; ++j )
             x += mat_traits<A>::read_element_idx(i,j,a)*vec_traits<B>::read_element_idx(j,b);
-        vec_traits<R>::write_element_idx(i,r) = x;
+        write_vec_element_idx(i,r,x);
         }
     return r;
     }
@@ -57,7 +57,7 @@ qvm_detail
     }
 
 template <class A,class B>
-BOOST_QVM_INLINE_OPERATIONS
+BOOST_QVM_CONSTEXPR BOOST_QVM_INLINE_OPERATIONS
 typename lazy_enable_if_c<
     is_vec<A>::value && is_mat<B>::value &&
     vec_traits<A>::dim==mat_traits<B>::rows &&
@@ -73,7 +73,7 @@ operator*( A const & a, B const & b )
         Tr x(scalar_traits<Tr>::value(0));
         for( int j=0; j<mat_traits<B>::rows; ++j )
             x += vec_traits<A>::read_element_idx(j,a)*mat_traits<B>::read_element_idx(j,i,b);
-        vec_traits<R>::write_element_idx(i,r) = x;
+        write_vec_element_idx(i,r,x);
         }
     return r;
     }
@@ -81,7 +81,7 @@ operator*( A const & a, B const & b )
 ////////////////////////////////////////////////
 
 template <class A,class B>
-BOOST_QVM_INLINE_OPERATIONS
+BOOST_QVM_CONSTEXPR BOOST_QVM_INLINE_OPERATIONS
 typename lazy_enable_if_c<
     mat_traits<A>::rows==4 && mat_traits<A>::cols==4 &&
     vec_traits<B>::dim==3,
@@ -108,14 +108,14 @@ transform_point( A const & a, B const & b )
     typedef typename deduce_vec2<A,B,3>::type R;
     BOOST_QVM_STATIC_ASSERT(vec_traits<R>::dim==3);
     R r;
-    vec_traits<R>::template write_element<0>(r)=a00*b0+a01*b1+a02*b2+a03;
-    vec_traits<R>::template write_element<1>(r)=a10*b0+a11*b1+a12*b2+a13;
-    vec_traits<R>::template write_element<2>(r)=a20*b0+a21*b1+a22*b2+a23;
+    write_vec_element<0>(r, a00*b0+a01*b1+a02*b2+a03);
+    write_vec_element<1>(r, a10*b0+a11*b1+a12*b2+a13);
+    write_vec_element<2>(r, a20*b0+a21*b1+a22*b2+a23);
     return r;
     }
 
 template <class A,class B>
-BOOST_QVM_INLINE_OPERATIONS
+BOOST_QVM_CONSTEXPR BOOST_QVM_INLINE_OPERATIONS
 typename lazy_enable_if_c<
     mat_traits<A>::rows==4 && mat_traits<A>::cols==4 &&
     vec_traits<B>::dim==3,
@@ -139,9 +139,9 @@ transform_vector( A const & a, B const & b )
     typedef typename deduce_vec2<A,B,3>::type R;
     BOOST_QVM_STATIC_ASSERT(vec_traits<R>::dim==3);
     R r;
-    vec_traits<R>::template write_element<0>(r)=a00*b0+a01*b1+a02*b2;
-    vec_traits<R>::template write_element<1>(r)=a10*b0+a11*b1+a12*b2;
-    vec_traits<R>::template write_element<2>(r)=a20*b0+a21*b1+a22*b2;
+    write_vec_element<0>(r, a00*b0+a01*b1+a02*b2);
+    write_vec_element<1>(r, a10*b0+a11*b1+a12*b2);
+    write_vec_element<2>(r, a20*b0+a21*b1+a22*b2);
     return r;
     }
 

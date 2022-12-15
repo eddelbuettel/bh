@@ -5,11 +5,12 @@
 // Copyright (c) 2009-2014 Mateusz Loskot, London, UK.
 // Copyright (c) 2013-2014 Adam Wulkiewicz, Lodz, Poland.
 
-// This file was modified by Oracle on 2013-2021.
-// Modifications copyright (c) 2013-2021, Oracle and/or its affiliates.
+// This file was modified by Oracle on 2013-2022.
+// Modifications copyright (c) 2013-2022, Oracle and/or its affiliates.
 
-// Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
+// Contributed and/or modified by Vissarion Fysikopoulos, on behalf of Oracle
 // Contributed and/or modified by Menelaos Karavelas, on behalf of Oracle
+// Contributed and/or modified by Adam Wulkiewicz, on behalf of Oracle
 
 // Parts of Boost.Geometry are redesigned from Geodan's Geographic Library
 // (geolib/GGL), copyright (c) 1995-2010 Geodan, Amsterdam, the Netherlands.
@@ -36,11 +37,10 @@
 #include <boost/geometry/core/tag_cast.hpp>
 #include <boost/geometry/core/tags.hpp>
 
-#include <boost/geometry/algorithms/covered_by.hpp>
+#include <boost/geometry/algorithms/detail/covered_by/implementation.hpp>
 #include <boost/geometry/algorithms/not_implemented.hpp>
 
 #include <boost/geometry/algorithms/detail/assign_indexed_point.hpp>
-#include <boost/geometry/algorithms/detail/check_iterator_range.hpp>
 #include <boost/geometry/algorithms/detail/point_on_border.hpp>
 
 #include <boost/geometry/algorithms/detail/disjoint/linear_linear.hpp>
@@ -51,6 +51,7 @@
 
 #include <boost/geometry/algorithms/dispatch/disjoint.hpp>
 
+#include <boost/geometry/geometries/helper_geometry.hpp>
 
 namespace boost { namespace geometry
 {
@@ -70,8 +71,8 @@ struct disjoint_no_intersections_policy
     template <typename Strategy>
     static inline bool apply(Geometry1 const& g1, Geometry2 const& g2, Strategy const& strategy)
     {
-        typedef typename point_type<Geometry1>::type point1_type;
-        point1_type p;
+        using point_type = typename point_type<Geometry1>::type;
+        typename helper_geometry<point_type>::type p;
         geometry::point_on_border(p, g1);
 
         return ! geometry::covered_by(p, g2, strategy);
@@ -141,28 +142,25 @@ struct disjoint_segment_areal
 template <typename Segment, typename Polygon>
 class disjoint_segment_areal<Segment, Polygon, polygon_tag>
 {
-private:
+    
     template <typename InteriorRings, typename Strategy>
     static inline
     bool check_interior_rings(InteriorRings const& interior_rings,
                               Segment const& segment,
                               Strategy const& strategy)
     {
-        typedef typename boost::range_value<InteriorRings>::type ring_type;
+        using ring_type = typename boost::range_value<InteriorRings>::type;
 
-        typedef unary_disjoint_geometry_to_query_geometry
+        using unary_predicate_type = unary_disjoint_geometry_to_query_geometry
             <
                 Segment,
                 Strategy,
                 disjoint_range_segment_or_box<ring_type, Segment>
-            > unary_predicate_type;
-                
-        return check_iterator_range
-            <
-                unary_predicate_type
-            >::apply(boost::begin(interior_rings),
-                     boost::end(interior_rings),
-                     unary_predicate_type(segment, strategy));
+            >;
+
+        return std::all_of(boost::begin(interior_rings),
+                           boost::end(interior_rings),
+                           unary_predicate_type(segment, strategy));
     }
 
 

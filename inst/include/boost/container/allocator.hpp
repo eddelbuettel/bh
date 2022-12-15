@@ -27,6 +27,9 @@
 #include <boost/container/detail/dlmalloc.hpp>
 #include <boost/container/detail/multiallocation_chain.hpp>
 #include <boost/static_assert.hpp>
+
+#include <boost/move/detail/force_ptr.hpp>
+
 #include <cstddef>
 #include <cassert>
 
@@ -298,7 +301,8 @@ class allocator
                              ,(T*)BOOST_CONTAINER_MEMCHAIN_LASTMEM(&ch)
                              ,BOOST_CONTAINER_MEMCHAIN_SIZE(&ch) );
 /*
-      if(!dlmalloc_multialloc_nodes(n_elements, elem_size*sizeof(T), BOOST_CONTAINER_DL_MULTIALLOC_DEFAULT_CONTIGUOUS, reinterpret_cast<dlmalloc_memchain *>(&chain))){
+      if(!dlmalloc_multialloc_nodes( n_elements, elem_size*sizeof(T), BOOST_CONTAINER_DL_MULTIALLOC_DEFAULT_CONTIGUOUS
+                                   , move_detail::force_ptr<dlmalloc_memchain *>(&chain))){
          boost::container::throw_bad_alloc();
       }*/
    }
@@ -319,7 +323,8 @@ class allocator
                              ,(T*)BOOST_CONTAINER_MEMCHAIN_LASTMEM(&ch)
                              ,BOOST_CONTAINER_MEMCHAIN_SIZE(&ch) );
       /*
-      if(!dlmalloc_multialloc_arrays(n_elements, elem_sizes, sizeof(T), BOOST_CONTAINER_DL_MULTIALLOC_DEFAULT_CONTIGUOUS, reinterpret_cast<dlmalloc_memchain *>(&chain))){
+      if(!dlmalloc_multialloc_arrays( n_elements, elem_sizes, sizeof(T), BOOST_CONTAINER_DL_MULTIALLOC_DEFAULT_CONTIGUOUS
+                                    , move_detail::force_ptr<dlmalloc_memchain *>(&chain))){
          boost::container::throw_bad_alloc();
       }*/
    }
@@ -335,7 +340,7 @@ class allocator
       size_t size(chain.size());
       BOOST_CONTAINER_MEMCHAIN_INIT_FROM(&ch, beg, last, size);
       dlmalloc_multidealloc(&ch);
-      //dlmalloc_multidealloc(reinterpret_cast<dlmalloc_memchain *>(&chain));
+      //dlmalloc_multidealloc(move_detail::force_ptr<dlmalloc_memchain *>(&chain));
    }
 
    private:
@@ -347,7 +352,7 @@ class allocator
    {
       std::size_t const preferred_size = prefer_in_recvd_out_size;
       dlmalloc_command_ret_t ret = {0 , 0};
-      if((limit_size > this->max_size()) | (preferred_size > this->max_size())){
+      if((limit_size > this->max_size()) || (preferred_size > this->max_size())){
          return pointer();
       }
       std::size_t l_size = limit_size*sizeof(T);

@@ -55,7 +55,7 @@
 #if defined(BOOST_GCC) && BOOST_GCC >= 80000
 #pragma GCC diagnostic push
 // copying an object of non-trivial type X from an array of Y. This is benign because we use memcpy to copy trivially copyable objects.
-//#pragma GCC diagnostic ignored "-Wclass-memaccess"
+#pragma GCC diagnostic ignored "-Wclass-memaccess"
 #endif
 
 namespace boost {

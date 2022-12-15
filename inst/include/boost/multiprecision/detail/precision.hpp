@@ -3,12 +3,13 @@
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MP_PRECISION_HPP
-#define BOOST_MP_PRECISION_HPP
+#ifndef BOOST_MP_DETAIL_PRECISION_HPP
+#define BOOST_MP_DETAIL_PRECISION_HPP
 
 #include <boost/multiprecision/traits/is_variable_precision.hpp>
 #include <boost/multiprecision/detail/number_base.hpp>
 #include <boost/multiprecision/detail/digits.hpp>
+#include <boost/multiprecision/detail/assert.hpp>
 
 namespace boost { namespace multiprecision { namespace detail {
 
@@ -26,7 +27,7 @@ inline BOOST_MP_CXX14_CONSTEXPR unsigned current_precision_of_last_chance_imp(co
    // least-significant-bit, ie the number of bits required to represent the
    // the value assuming we will have an exponent to shift things by:
    //
-   return val.is_zero() ? 1 : 1 + digits2_2_10(msb(abs(val)) - lsb(abs(val)) + 1);
+   return static_cast<unsigned>(val.is_zero() ? 1 : 1 + digits2_2_10(msb(abs(val)) - lsb(abs(val)) + 1));
 }
 template <class B, boost::multiprecision::expression_template_option ET>
 inline BOOST_MP_CXX14_CONSTEXPR unsigned current_precision_of_last_chance_imp(const boost::multiprecision::number<B, ET>& val, const std::integral_constant<int, 2>&)
@@ -149,7 +150,7 @@ struct scoped_default_precision
    //
    unsigned precision() const
    {
-      BOOST_ASSERT("This function should never be called!!" == 0);
+      BOOST_MP_ASSERT("This function should never be called!!" == nullptr);
       return 0;
    }
 };
@@ -309,4 +310,4 @@ struct scoped_precision_options<T, false>
 }
 } // namespace boost::multiprecision::detail
 
-#endif // BOOST_MP_IS_BACKEND_HPP
+#endif // BOOST_MP_DETAIL_PRECISION_HPP

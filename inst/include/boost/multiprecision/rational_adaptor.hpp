@@ -3,11 +3,13 @@
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt
 
-#ifndef BOOST_MULTIPRECISION_RATIONAL_ADAPTOR_HPP
-#define BOOST_MULTIPRECISION_RATIONAL_ADAPTOR_HPP
+#ifndef BOOST_MP_RATIONAL_ADAPTOR_HPP
+#define BOOST_MP_RATIONAL_ADAPTOR_HPP
 
 #include <boost/multiprecision/number.hpp>
 #include <boost/multiprecision/detail/hash.hpp>
+#include <boost/multiprecision/detail/float128_functions.hpp>
+#include <boost/multiprecision/detail/no_exceptions_support.hpp>
 
 namespace boost {
 namespace multiprecision {
@@ -59,6 +61,19 @@ struct rational_adaptor
       using default_ops::eval_gcd;
       using default_ops::eval_eq;
       using default_ops::eval_divide;
+      using default_ops::eval_get_sign;
+
+      int s = eval_get_sign(m_denom);
+
+      if(s == 0)
+      {
+         BOOST_MP_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
+      }
+      else if (s < 0)
+      {
+         m_num.negate();
+         m_denom.negate();
+      }
 
       Backend g, t;
       eval_gcd(g, m_num, m_denom);
@@ -163,7 +178,7 @@ struct rational_adaptor
          v2 = 1;
       if (*s)
       {
-         BOOST_THROW_EXCEPTION(std::runtime_error(std::string("Could not parse the string \"") + p + std::string("\" as a valid rational number.")));
+         BOOST_MP_THROW_EXCEPTION(std::runtime_error(std::string("Could not parse the string \"") + p + std::string("\" as a valid rational number.")));
       }
       multiprecision::number<Backend> gcd;
       eval_gcd(gcd.backend(), v1.backend(), v2.backend());
@@ -180,11 +195,17 @@ struct rational_adaptor
    typename std::enable_if<std::is_floating_point<Float>::value, rational_adaptor&>::type operator=(Float i)
    {
       using default_ops::eval_eq;
+      BOOST_MP_FLOAT128_USING using std::floor; using std::frexp; using std::ldexp;
 
       int   e;
-      Float f = std::frexp(i, &e);
-      f = std::ldexp(f, std::numeric_limits<Float>::digits);
+      Float f = frexp(i, &e);
+#ifdef BOOST_HAS_FLOAT128
+      f = ldexp(f, std::is_same<float128_type, Float>::value ? 113 : std::numeric_limits<Float>::digits);
+      e -= std::is_same<float128_type, Float>::value ? 113 : std::numeric_limits<Float>::digits;
+#else
+      f = ldexp(f, std::numeric_limits<Float>::digits);
       e -= std::numeric_limits<Float>::digits;
+#endif
       number<Backend> num(f);
       number<Backend> denom(1u);
       if (e > 0)
@@ -206,7 +227,6 @@ struct rational_adaptor
       this->denom() = std::move(std::move(denom).backend());
       return *this;
    }
-
 
    void swap(rational_adaptor& o)
    {
@@ -233,8 +253,8 @@ struct rational_adaptor
    }
    int compare(const rational_adaptor& o) const
    {
-      int s1 = eval_get_sign(*this);
-      int s2 = eval_get_sign(o);
+      std::ptrdiff_t s1 = eval_get_sign(*this);
+      std::ptrdiff_t s2 = eval_get_sign(o);
       if (s1 != s2)
       {
          return s1 < s2 ? -1 : 1;
@@ -285,6 +305,7 @@ struct rational_adaptor
    Backend& denom() { return m_denom; }
    const Backend& denom()const { return m_denom; }
 
+   #ifndef BOOST_MP_STANDALONE
    template <class Archive>
    void serialize(Archive& ar, const std::integral_constant<bool, true>&)
    {
@@ -310,6 +331,8 @@ struct rational_adaptor
       using saving_tag = std::integral_constant<bool, tag::value>;
       serialize(ar, saving_tag());
    }
+   #endif // BOOST_MP_STANDALONE
+   
  private:
    Backend m_num, m_denom;
 };
@@ -410,7 +433,13 @@ void assign_components(rational_adaptor<Backend>& result, Backend const& a, Back
    using default_ops::eval_gcd;
    using default_ops::eval_divide;
    using default_ops::eval_eq;
+   using default_ops::eval_is_zero;
+   using default_ops::eval_get_sign;
 
+   if (eval_is_zero(b))
+   {
+      BOOST_MP_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
+   }
    Backend g;
    eval_gcd(g, a, b);
    if (eval_eq(g, rational_adaptor<Backend>::one()))
@@ -423,16 +452,26 @@ void assign_components(rational_adaptor<Backend>& result, Backend const& a, Back
       eval_divide(result.num(), a, g);
       eval_divide(result.denom(), b, g);
    }
+   if (eval_get_sign(result.denom()) < 0)
+   {
+      result.num().negate();
+      result.denom().negate();
+   }
 }
 //
 // Again for arithmetic types, overload for whatever arithmetic types are directly supported:
 //
 template <class Backend, class Arithmetic1, class Arithmetic2>
-inline void assign_components(rational_adaptor<Backend>& result, const Arithmetic1& a, const Arithmetic2& b)
+inline void assign_components(rational_adaptor<Backend>& result, const Arithmetic1& a, typename std::enable_if<std::is_arithmetic<Arithmetic1>::value && std::is_arithmetic<Arithmetic2>::value, const Arithmetic2&>::type b)
 {
    using default_ops::eval_gcd;
    using default_ops::eval_divide;
    using default_ops::eval_eq;
+
+   if (b == 0)
+   {
+      BOOST_MP_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
+   }
 
    Backend g;
    result.num()   = a;
@@ -445,6 +484,39 @@ inline void assign_components(rational_adaptor<Backend>& result, const Arithmeti
    {
       eval_divide(result.num(), g);
       eval_divide(result.denom(), b, g);
+   }
+   if (eval_get_sign(result.denom()) < 0)
+   {
+      result.num().negate();
+      result.denom().negate();
+   }
+}
+template <class Backend, class Arithmetic1, class Arithmetic2>
+inline void assign_components(rational_adaptor<Backend>& result, const Arithmetic1& a, typename std::enable_if<!std::is_arithmetic<Arithmetic1>::value || !std::is_arithmetic<Arithmetic2>::value, const Arithmetic2&>::type b)
+{
+   using default_ops::eval_gcd;
+   using default_ops::eval_divide;
+   using default_ops::eval_eq;
+
+   Backend g;
+   result.num()   = a;
+   result.denom() = b;
+
+   if (eval_get_sign(result.denom()) == 0)
+   {
+      BOOST_MP_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
+   }
+
+   eval_gcd(g, result.num(), result.denom());
+   if (!eval_eq(g, rational_adaptor<Backend>::one()))
+   {
+      eval_divide(result.num(), g);
+      eval_divide(result.denom(), g);
+   }
+   if (eval_get_sign(result.denom()) < 0)
+   {
+      result.num().negate();
+      result.denom().negate();
    }
 }
 //
@@ -919,7 +991,7 @@ inline void eval_divide(rational_adaptor<Backend>& result, const rational_adapto
 
    if (eval_get_sign(b.num()) == 0)
    {
-      BOOST_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
+      BOOST_MP_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
       return;
    }
    if (&a == &b)
@@ -944,7 +1016,7 @@ inline typename std::enable_if<std::is_convertible<Arithmetic, Backend>::value &
 
    if (eval_get_sign(a.num()) == 0)
    {
-      BOOST_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
+      BOOST_MP_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
       return;
    }
    if (&a == &result)
@@ -968,7 +1040,7 @@ eval_divide(rational_adaptor<Backend>& result, Arithmetic arg)
 {
    if (arg == 0)
    {
-      BOOST_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
+      BOOST_MP_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
       return;
    }
    else if (arg == 1)
@@ -1020,7 +1092,7 @@ void eval_divide(rational_adaptor<Backend>& result, const rational_adaptor<Backe
 
    if (eval_is_zero(arg))
    {
-      BOOST_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
+      BOOST_MP_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
       return;
    }
    else if (eval_eq(a, rational_adaptor<Backend>::one()) || (eval_get_sign(a) == 0))
@@ -1073,7 +1145,7 @@ typename std::enable_if<std::is_convertible<Arithmetic, Backend>::value && std::
       return eval_divide(result, arg);
    if (arg == 0)
    {
-      BOOST_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
+      BOOST_MP_THROW_EXCEPTION(std::overflow_error("Integer division by zero"));
       return;
    }
    else if (arg == 1)

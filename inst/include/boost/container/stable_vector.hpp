@@ -54,8 +54,10 @@
 #include <boost/move/utility_core.hpp>
 #include <boost/move/iterator.hpp>
 #include <boost/move/adl_move_swap.hpp>
+#include <boost/move/detail/force_ptr.hpp>
 // move/detail
 #include <boost/move/detail/move_helpers.hpp>
+#include <boost/move/detail/iterator_to_raw_pointer.hpp>
 // other
 #include <boost/assert.hpp>
 #include <boost/core/no_exceptions_support.hpp>
@@ -160,24 +162,24 @@ struct node
 
    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600) && (BOOST_GCC < 80000)
       #pragma GCC diagnostic push
-  //      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
       #define BOOST_CONTAINER_DISABLE_ALIASING_WARNING
    #  endif
 
    BOOST_CONTAINER_FORCEINLINE T &get_data()
-   {  return *reinterpret_cast<T*>(this->m_storage.data);   }
+   {  return *boost::move_detail::force_ptr<T*>(this->m_storage.data);   }
 
    BOOST_CONTAINER_FORCEINLINE const T &get_data() const
-   {  return *reinterpret_cast<const T*>(this->m_storage.data);  }
+   {  return *boost::move_detail::force_ptr<const T*>(this->m_storage.data);  }
 
    BOOST_CONTAINER_FORCEINLINE T *get_data_ptr()
-   {  return reinterpret_cast<T*>(this->m_storage.data);  }
+   {  return boost::move_detail::force_ptr<T*>(this->m_storage.data);  }
 
    BOOST_CONTAINER_FORCEINLINE const T *get_data_ptr() const
-   {  return reinterpret_cast<T*>(this->m_storage.data);  }
+   {  return boost::move_detail::force_ptr<const T*>(this->m_storage.data);  }
 
    BOOST_CONTAINER_FORCEINLINE ~node()
-   {  reinterpret_cast<T*>(this->m_storage.data)->~T();  }
+   {  boost::move_detail::force_ptr<T*>(this->m_storage.data)->~T();   }
 
    #if defined(BOOST_CONTAINER_DISABLE_ALIASING_WARNING)
       #pragma GCC diagnostic pop

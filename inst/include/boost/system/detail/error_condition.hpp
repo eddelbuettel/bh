@@ -223,7 +223,7 @@ public:
     operator std::error_condition () const
     {
 // This condition must be the same as the one in error_category_impl.hpp
-#if defined(BOOST_GCC) && BOOST_GCC < 50000
+#if defined(BOOST_SYSTEM_AVOID_STD_GENERIC_CATEGORY)
 
         return std::error_condition( value(), category() );
 
@@ -257,6 +257,58 @@ public:
     }
 
     inline friend bool operator!=( error_condition const & lhs, std::error_code const & rhs ) BOOST_NOEXCEPT
+    {
+        return !( lhs == rhs );
+    }
+
+    //
+
+    template<class E, class N = typename detail::enable_if<std::is_error_condition_enum<E>::value>::type>
+    BOOST_SYSTEM_CONSTEXPR inline friend bool operator==( error_condition const & lhs, E rhs ) BOOST_NOEXCEPT
+    {
+        return lhs == make_error_condition( rhs );
+    }
+
+    template<class E, class N = typename detail::enable_if<std::is_error_condition_enum<E>::value>::type>
+    BOOST_SYSTEM_CONSTEXPR inline friend bool operator==( E lhs, error_condition const & rhs ) BOOST_NOEXCEPT
+    {
+        return make_error_condition( lhs ) == rhs;
+    }
+
+    template<class E, class N = typename detail::enable_if<std::is_error_condition_enum<E>::value>::type>
+    BOOST_SYSTEM_CONSTEXPR inline friend bool operator!=( error_condition const & lhs, E rhs ) BOOST_NOEXCEPT
+    {
+        return !( lhs == rhs );
+    }
+
+    template<class E, class N = typename detail::enable_if<std::is_error_condition_enum<E>::value>::type>
+    BOOST_SYSTEM_CONSTEXPR inline friend bool operator!=( E lhs, error_condition const & rhs ) BOOST_NOEXCEPT
+    {
+        return !( lhs == rhs );
+    }
+
+    //
+
+    template<class E, class N1 = void, class N2 = typename detail::enable_if<std::is_error_code_enum<E>::value>::type>
+    inline friend bool operator==( error_condition const & lhs, E rhs ) BOOST_NOEXCEPT
+    {
+        return lhs == make_error_code( rhs );
+    }
+
+    template<class E, class N1 = void, class N2 = typename detail::enable_if<std::is_error_code_enum<E>::value>::type>
+    inline friend bool operator==( E lhs, error_condition const & rhs ) BOOST_NOEXCEPT
+    {
+        return make_error_code( lhs ) == rhs;
+    }
+
+    template<class E, class N1 = void, class N2 = typename detail::enable_if<std::is_error_code_enum<E>::value>::type>
+    inline friend bool operator!=( error_condition const & lhs, E rhs ) BOOST_NOEXCEPT
+    {
+        return !( lhs == rhs );
+    }
+
+    template<class E, class N1 = void, class N2 = typename detail::enable_if<std::is_error_code_enum<E>::value>::type>
+    inline friend bool operator!=( E lhs, error_condition const & rhs ) BOOST_NOEXCEPT
     {
         return !( lhs == rhs );
     }

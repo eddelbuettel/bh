@@ -25,7 +25,6 @@
 #include <boost/interprocess/permissions.hpp>
 
 #include <climits>
-#include <limits>
 #include <string>
 #include <boost/move/detail/type_traits.hpp> //make_unsigned
 
@@ -132,7 +131,7 @@ inline bool get_temporary_path(char *buffer, std::size_t buf_len, std::size_t &r
       return false;
    }
    required_len = winapi::get_temp_path(buf_len, buffer);
-   const bool ret = !(buf_len < required_len);
+   const bool ret = required_len && (buf_len > required_len);
    if(ret && buffer[required_len-1] == '\\'){
       buffer[required_len-1] = '\0';
    }
@@ -198,8 +197,8 @@ inline bool truncate_file (file_handle_t hnd, std::size_t size)
       return false;
 
    typedef ::boost::move_detail::make_unsigned<offset_t>::type uoffset_t;
-   const uoffset_t max_filesize = uoffset_t((std::numeric_limits<offset_t>::max)());
-   const uoffset_t uoff_size = uoffset_t(size);
+   const uoffset_t max_filesize = uoffset_t(-1)/2u;
+   const uoffset_t uoff_size    = uoffset_t(size);
    //Avoid unused variable warnings in 32 bit systems
    if(uoff_size > max_filesize){
       winapi::set_last_error(winapi::error_file_too_large);
@@ -521,9 +520,13 @@ inline bool open_or_create_directory(const char *path)
 
 inline bool open_or_create_shared_directory(const char *path)
 {
-   ::mode_t m = ::mode_t(01777);
-   const bool created_or_exists = (::mkdir(path, m) == 0) || (errno == EEXIST);
-   return created_or_exists && (::chmod(path, m) == 0);
+   const ::mode_t m = ::mode_t(01777);
+   const bool created = ::mkdir(path, m) == 0;
+   const bool created_or_exists = created || (errno == EEXIST);
+   //Try to maximize the chance that the sticky bit is set in shared dirs
+   //created with old versions that did not set it (for security reasons)
+   const bool chmoded = ::chmod(path, m) == 0;
+   return created ? chmoded : created_or_exists;
 }
 
 inline bool remove_directory(const char *path)
@@ -589,7 +592,8 @@ inline bool delete_file(const char *name)
 inline bool truncate_file (file_handle_t hnd, std::size_t size)
 {
    typedef boost::move_detail::make_unsigned<off_t>::type uoff_t;
-   if(uoff_t((std::numeric_limits<off_t>::max)()) < size){
+   BOOST_STATIC_ASSERT(( sizeof(uoff_t) >= sizeof(std::size_t) ));
+   if( uoff_t(-1)/2u < uoff_t(size) ){
       errno = EINVAL;
       return false;
    }
