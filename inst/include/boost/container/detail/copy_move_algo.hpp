@@ -42,14 +42,14 @@
 #pragma GCC diagnostic push
 //pair memcpy optimizations rightfully detected by GCC
 #  if defined(BOOST_GCC) && (BOOST_GCC >= 80000)
-#     pragma GCC diagnostic ignored "-Wclass-memaccess"
+//#     pragma GCC diagnostic ignored "-Wclass-memaccess"
 #  endif
 //GCC 8 seems a bit confused about array access error with static_vector
 //when out of bound exceptions are being thrown.
 #  if defined(BOOST_GCC) && (BOOST_GCC >= 80000) && (BOOST_GCC < 80200)
-#     pragma GCC diagnostic ignored "-Wstringop-overflow"
+//#     pragma GCC diagnostic ignored "-Wstringop-overflow"
 #  endif
-#  pragma GCC diagnostic ignored "-Warray-bounds"
+//#  pragma GCC diagnostic ignored "-Warray-bounds"
 #endif
 
 namespace boost {

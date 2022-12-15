@@ -58,7 +58,7 @@ inline std::string generic_error_category_message( int ev )
 # elif defined(__clang__) && defined(__has_warning)
 #  pragma clang diagnostic push
 #  if __has_warning("-Wdeprecated-declarations")
-#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  //#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #  endif
 # endif
 

@@ -45,7 +45,7 @@ namespace backends {
 // see https://github.com/boostorg/multiprecision/issues/413
 // and https://github.com/boostorg/multiprecision/issues/431
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+  //#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
 
 template <std::size_t MinBits = 0, std::size_t MaxBits = 0, boost::multiprecision::cpp_integer_type SignType = signed_magnitude, cpp_int_check_type Checked = unchecked, class Allocator = typename std::conditional<MinBits && (MinBits == MaxBits), void, std::allocator<limb_type> >::type>

@@ -132,7 +132,7 @@ class basic_string_base
 
    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)
    #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+  //   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
    #endif
 
    //This is the structure controlling a long string
@@ -409,7 +409,7 @@ class basic_string_base
    //GCC seems a bit confused about uninitialized accesses
    #if defined(BOOST_GCC) && (BOOST_GCC >= 40700)
    #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+  //   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
    #endif
 
    BOOST_CONTAINER_FORCEINLINE pointer priv_long_addr() const

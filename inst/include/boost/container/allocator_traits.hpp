@@ -51,7 +51,7 @@
 
 #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-result"
+//#pragma GCC diagnostic ignored "-Wunused-result"
 #endif
 
 #define BOOST_INTRUSIVE_HAS_MEMBER_FUNCTION_CALLABLE_WITH_FUNCNAME allocate

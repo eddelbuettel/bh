@@ -705,7 +705,7 @@ public: // should be protected, but GCC 2.95.3 will fail to allow access
 
 #if defined(BOOST_CLANG)
 #   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wweak-vtables"
+  //#   pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 /**
  * The bad_function_call exception class is thrown when a boost::function

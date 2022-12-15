@@ -45,7 +45,7 @@ class std_category;
 
 #if ( defined( BOOST_GCC ) && BOOST_GCC >= 40600 ) || defined( BOOST_CLANG )
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+  //#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #endif
 
 #if defined(BOOST_MSVC) && BOOST_MSVC < 1900

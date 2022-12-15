@@ -66,7 +66,7 @@ inline char const * error_category::message( int ev, char * buffer, std::size_t 
 # elif defined(__clang__) && defined(__has_warning)
 #  pragma clang diagnostic push
 #  if __has_warning("-Wdeprecated-declarations")
-#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        //#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #  endif
 # endif
 
@@ -150,7 +150,7 @@ inline void error_category::init_stdcat() const
 
 #if defined( BOOST_GCC ) && BOOST_GCC >= 40800 && BOOST_GCC < 70000
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+  //#pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif
 
 inline BOOST_NOINLINE error_category::operator std::error_category const & () const

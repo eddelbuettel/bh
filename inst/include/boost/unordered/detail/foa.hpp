@@ -1041,7 +1041,7 @@ inline void prefetch(const void* p)
  */
 
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshadow"
+//#pragma GCC diagnostic ignored "-Wshadow"
 #endif
 
 #if defined(BOOST_MSVC)

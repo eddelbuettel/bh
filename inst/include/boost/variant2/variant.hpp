@@ -690,7 +690,7 @@ template<class T1, class... T> union variant_storage_impl<mp11::mp_true, T1, T..
 #if defined(BOOST_GCC) && (__GNUC__ >= 7)
 # pragma GCC diagnostic push
 // False positive in at least GCC 7 and GCC 10 ASAN triggered by monostate (via result<void>)
-# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
 
         *this = variant_storage_impl( mp11::mp_size_t<I>(), std::forward<A>(a)... );
