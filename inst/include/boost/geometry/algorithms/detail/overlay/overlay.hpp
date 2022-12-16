@@ -369,12 +369,9 @@ std::cout << "traverse" << std::endl;
         // Add rings created during traversal
         {
             ring_identifier id(2, 0, -1);
-            for (typename boost::range_iterator<ring_container_type>::type
-                    it = boost::begin(rings);
-                 it != boost::end(rings);
-                 ++it)
+            for (auto const& ring : rings)
             {
-                selected_ring_properties[id] = properties(*it, strategy);
+                selected_ring_properties[id] = properties(ring, strategy);
                 selected_ring_properties[id].reversed = ReverseOut;
                 id.multi_index++;
             }
@@ -392,15 +389,18 @@ std::cout << "traverse" << std::endl;
         // it can be returned or an exception can be thrown.
         return add_rings<GeometryOut>(selected_ring_properties, geometry1, geometry2, rings, out,
                                       strategy,
-                                      OverlayType == overlay_union ? 
 #if defined(BOOST_GEOMETRY_UNION_THROW_INVALID_OUTPUT_EXCEPTION)
+                                      OverlayType == overlay_union ?
                                       add_rings_throw_if_reversed
+                                      : add_rings_ignore_unordered
 #elif defined(BOOST_GEOMETRY_UNION_RETURN_INVALID)
+                                      OverlayType == overlay_union ?
                                       add_rings_add_unordered
+                                      : add_rings_ignore_unordered
 #else
                                       add_rings_ignore_unordered
 #endif
-                                      : add_rings_ignore_unordered);
+                                      );
     }
 
     template <typename RobustPolicy, typename OutputIterator, typename Strategy>

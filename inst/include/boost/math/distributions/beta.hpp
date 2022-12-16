@@ -272,6 +272,13 @@ namespace boost
       RealType m_beta;
     }; // template <class RealType, class Policy> class beta_distribution
 
+    #ifdef __cpp_deduction_guides
+    template <class RealType>
+    beta_distribution(RealType)->beta_distribution<typename boost::math::tools::promote_args<RealType>::type>;
+    template <class RealType>
+    beta_distribution(RealType, RealType)->beta_distribution<typename boost::math::tools::promote_args<RealType>::type>;
+    #endif
+
     template <class RealType, class Policy>
     inline const std::pair<RealType, RealType> range(const beta_distribution<RealType, Policy>& /* dist */)
     { // Range of permissible values for random variable x.
@@ -491,7 +498,7 @@ namespace boost
       {
         return 1;
       }
-      return ibeta_inv(a, b, p, static_cast<RealType*>(0), Policy());
+      return ibeta_inv(a, b, p, static_cast<RealType*>(nullptr), Policy());
     } // quantile
 
     template <class RealType, class Policy>
@@ -528,7 +535,7 @@ namespace boost
         return 1;
       }
 
-      return ibetac_inv(a, b, q, static_cast<RealType*>(0), Policy());
+      return ibetac_inv(a, b, q, static_cast<RealType*>(nullptr), Policy());
     } // Quantile Complement
 
   } // namespace math

@@ -86,7 +86,12 @@ namespace boost
                }
                pois *= i / l2;
                beta += xterm;
-               xterm *= (a + i - 1) / (x * (a + b + i - 2));
+
+               if (a + b + i != 2)
+               {
+                  xterm *= (a + i - 1) / (x * (a + b + i - 2));
+               }
+               
                last_term = term;
             }
             for(int i = k + 1; ; ++i)
@@ -555,7 +560,11 @@ namespace boost
                   break;
                }
                pois *= i / l2;
-               beta *= (a + i - 1) / (x * (a + i + b - 1));
+
+               if (a + b + i != 1)
+               {
+                  beta *= (a + i - 1) / (x * (a + i + b - 1));
+               }
             }
             for(int i = k + 1; ; ++i)
             {
@@ -706,6 +715,11 @@ namespace boost
       }; // template <class RealType, class Policy> class non_central_beta_distribution
 
       typedef non_central_beta_distribution<double> non_central_beta; // Reserved name of type double.
+
+      #ifdef __cpp_deduction_guides
+      template <class RealType>
+      non_central_beta_distribution(RealType,RealType,RealType)->non_central_beta_distribution<typename boost::math::tools::promote_args<RealType>::type>;
+      #endif
 
       // Non-member functions to give properties of the distribution.
 

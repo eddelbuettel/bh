@@ -1,0 +1,44 @@
+diff --git a/inst/include/boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_ratio.hpp b/inst/include/boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_r.hpp
+similarity index 100%
+rename from inst/include/boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_ratio.hpp
+rename to inst/include/boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_r.hpp
+diff --git a/inst/include/boost/math/special_functions/hypergeometric_1F1.hpp b/inst/include/boost/math/special_functions/hypergeometric_1F1.hpp
+index 459c8794..696374ee 100644
+--- a/inst/include/boost/math/special_functions/hypergeometric_1F1.hpp
++++ b/inst/include/boost/math/special_functions/hypergeometric_1F1.hpp
+@@ -24,7 +24,7 @@
+ #include <boost/math/special_functions/detail/hypergeometric_pFq_checked_series.hpp>
+ #include <boost/math/special_functions/detail/hypergeometric_1F1_addition_theorems_on_z.hpp>
+ #include <boost/math/special_functions/detail/hypergeometric_1F1_large_abz.hpp>
+-#include <boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_ratio.hpp>
++#include <boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_r.hpp>
+ #include <boost/math/special_functions/detail/hypergeometric_1F1_negative_b_regions.hpp>
+ 
+ namespace boost { namespace math { namespace detail {
+diff --git a/inst/include/boost/numeric/odeint/stepper/generation.hpp b/inst/include/boost/numeric/odeint/stepper/generation.hpp
+index a051d13b..ed7a320d 100644
+--- a/inst/include/boost/numeric/odeint/stepper/generation.hpp
++++ b/inst/include/boost/numeric/odeint/stepper/generation.hpp
+@@ -24,12 +24,12 @@
+ #include <boost/numeric/odeint/stepper/generation/generation_controlled_runge_kutta.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_dense_output_runge_kutta.hpp>
+ 
+-#include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp>
++#include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_cl.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_dopri5.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_fehlberg78.hpp>
+ 
+-#include <boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_moulton.hpp>
++#include <boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_m.hpp>
+ 
+ #include <boost/numeric/odeint/stepper/generation/generation_rosenbrock4.hpp>
+ 
+diff --git a/inst/include/boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_moulton.hpp b/inst/include/boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_m.hpp
+similarity index 100%
+rename from inst/include/boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_moulton.hpp
+rename to inst/include/boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_m.hpp
+diff --git a/inst/include/boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp b/inst/include/boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_cl.hpp
+similarity index 100%
+rename from inst/include/boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp
+rename to inst/include/boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_cl.hpp

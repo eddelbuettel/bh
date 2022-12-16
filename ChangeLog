@@ -1,3 +1,15 @@
+2022-12-15  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date): Release 1.81.0-0
+
+	* inst/include/boost/*: Upgraded to Boost 1.81, as usual with two
+	patch sets from CRAN demands on file path length and diagnostics
+
+	* README.md: Updated package list for 1.81
+	* DESCRIPTION (Description): Idem
+
+	* local/scripts/CreateBoost.sh: Update for 1.81.0, added url
+
 2022-10-31  Dirk Eddelbuettel  <edd@debian.org>
 
 	* .github/workflows/ci.yaml (jobs): Update to actions/checkout@v3

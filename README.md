@@ -34,7 +34,7 @@ parts or all of their functionality.
 
 ### Coverage
 
-As of release 1.78.0-0, the following Boost libraries are included:
+As of release 1.81.0-0, the following Boost libraries are included:
 
 > accumulators algorithm align any atomic beast bimap bind circular_buffer
 > compute concept config container date_time detail dynamic_bitset exception
@@ -42,7 +42,7 @@ As of release 1.78.0-0, the following Boost libraries are included:
 > interprocess intrusive io iostreams iterator lambda2 math move mp11 mpl
 > multiprecision numeric pending phoenix polygon preprocessor process 
 > propery_tree random range scope_exit smart_ptr sort spirit tuple 
-> type_traits typeof unordered utility uuid
+> type_traits typeof unordered url utility uuid
 
 ### Example
 

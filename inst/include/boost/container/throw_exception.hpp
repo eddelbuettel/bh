@@ -59,7 +59,7 @@ class BOOST_SYMBOL_VISIBLE exception
       : std_exception_t(), m_msg(msg)
    {}
 
-   virtual const char *what() const BOOST_NOEXCEPT_OR_NOTHROW
+   virtual const char *what() const BOOST_NOEXCEPT_OR_NOTHROW BOOST_OVERRIDE
    {  return m_msg ? m_msg : "unknown boost::container exception"; }
 
    private:
@@ -97,7 +97,7 @@ class BOOST_SYMBOL_VISIBLE length_error
    {}
 };
 
-typedef out_of_range length_error_t;
+typedef length_error length_error_t;
 
 class BOOST_SYMBOL_VISIBLE logic_error
    : public exception

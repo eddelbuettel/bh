@@ -176,7 +176,7 @@ namespace boost
         // Discrete Distributions" Yong CAI and K. KRISHNAMOORTHY
         // http://www.ucs.louisiana.edu/~kxk4695/Discrete_new.pdf
         //
-        return ibeta_inv(successes, failures + 1, alpha, static_cast<RealType*>(0), Policy());
+        return ibeta_inv(successes, failures + 1, alpha, static_cast<RealType*>(nullptr), Policy());
       } // find_lower_bound_on_p
 
       static RealType find_upper_bound_on_p(
@@ -204,7 +204,7 @@ namespace boost
         // Discrete Distributions" Yong CAI and K. KRISHNAMOORTHY
         // http://www.ucs.louisiana.edu/~kxk4695/Discrete_new.pdf
         //
-        return ibetac_inv(successes, failures, alpha, static_cast<RealType*>(0), Policy());
+        return ibetac_inv(successes, failures, alpha, static_cast<RealType*>(nullptr), Policy());
       } // find_upper_bound_on_p
 
       // Estimate number of trials :
@@ -250,6 +250,11 @@ namespace boost
     }; // template <class RealType, class Policy> class negative_binomial_distribution
 
     typedef negative_binomial_distribution<double> negative_binomial; // Reserved name of type double.
+
+    #ifdef __cpp_deduction_guides
+    template <class RealType>
+    negative_binomial_distribution(RealType,RealType)->negative_binomial_distribution<typename boost::math::tools::promote_args<RealType>::type>;
+    #endif
 
     template <class RealType, class Policy>
     inline const std::pair<RealType, RealType> range(const negative_binomial_distribution<RealType, Policy>& /* dist */)

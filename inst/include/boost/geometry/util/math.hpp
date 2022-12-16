@@ -4,8 +4,8 @@
 // Copyright (c) 2008-2015 Bruno Lalande, Paris, France.
 // Copyright (c) 2009-2015 Mateusz Loskot, London, UK.
 
-// This file was modified by Oracle on 2014-2021.
-// Modifications copyright (c) 2014-2021, Oracle and/or its affiliates.
+// This file was modified by Oracle on 2014-2022.
+// Modifications copyright (c) 2014-2022, Oracle and/or its affiliates.
 
 // Contributed and/or modified by Adeel Ahmad, as part of Google Summer of Code 2018 program
 // Contributed and/or modified by Vissarion Fysikopoulos, on behalf of Oracle
@@ -229,7 +229,7 @@ struct smaller<Type, true>
         {
             return false;
         }
-        
+
         return ! equals<Type, true>::apply(b, a, equals_default_policy());
     }
 };
@@ -525,6 +525,30 @@ struct rounding_cast<Result, Source, true, false>
     }
 };
 
+template <typename T, bool IsIntegral = std::is_integral<T>::value>
+struct divide
+{
+    static inline T apply(T const& n, T const& d)
+    {
+        return n / d;
+    }
+};
+
+template <typename T>
+struct divide<T, true>
+{
+    static inline T apply(T const& n, T const& d)
+    {
+        return n == 0 ? 0
+          : n < 0
+          ? (d < 0 ? (n + (-d + 1) / 2) / d + 1
+                   : (n + ( d + 1) / 2) / d - 1  )
+          : (d < 0 ? (n - (-d + 1) / 2) / d - 1
+                   : (n - ( d + 1) / 2) / d + 1  )
+        ;
+    }
+};
+
 } // namespace detail
 #endif
 
@@ -796,6 +820,17 @@ inline Result rounding_cast(T const& v)
     return detail::rounding_cast<Result, T>::apply(v);
 }
 
+/*
+\brief Short utility to divide. If the division is integer, it rounds the division
+       to the nearest value, without using floating point calculations
+\ingroup utility
+*/
+template <typename T>
+inline T divide(T const& n, T const& d)
+{
+    return detail::divide<T>::apply(n, d);
+}
+
 /*!
 \brief Evaluate the sine and cosine function with the argument in degrees
 \note The results obey exactly the elementary properties of the trigonometric
@@ -810,16 +845,16 @@ inline void sin_cos_degrees(T const& x,
 {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
-    T remainder; int quotient;
 
-    remainder = math::mod(x, T(360));
-    quotient = floor(remainder / 90 + T(0.5));
-    remainder -= 90 * quotient;
+    T remainder = math::mod(x, T(360));
+    T const quotient = std::floor(remainder / T(90) + T(0.5));
+    remainder -= T(90) * quotient;
 
     // Convert to radians.
     remainder *= d2r<T>();
 
-    T s = sin(remainder), c = cos(remainder);
+    T const s = sin(remainder);
+    T const c = cos(remainder);
 
     switch (unsigned(quotient) & 3U)
     {
@@ -832,7 +867,8 @@ inline void sin_cos_degrees(T const& x,
     // Set sign of 0 results. -0 only produced for sin(-0).
     if (x != 0)
     {
-        sinx += T(0); cosx += T(0);
+        sinx += T(0);
+        cosx += T(0);
     }
 }
 

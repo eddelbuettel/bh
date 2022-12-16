@@ -1,10 +1,10 @@
 #ifndef BOOST_QVM_DETAIL_MAT_ASSIGN_HPP_INCLUDED
 #define BOOST_QVM_DETAIL_MAT_ASSIGN_HPP_INCLUDED
 
-/// Copyright (c) 2008-2021 Emil Dotchevski and Reverge Studios, Inc.
+// Copyright 2008-2022 Emil Dotchevski and Reverge Studios, Inc.
 
-/// Distributed under the Boost Software License, Version 1.0. (See accompanying
-/// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/qvm/gen/mat_assign2.hpp>
 #include <boost/qvm/gen/mat_assign3.hpp>
@@ -28,12 +28,27 @@ qvm_detail
         {
         template <class A,class B>
         static
-        BOOST_QVM_INLINE_CRITICAL
-        void
+        BOOST_QVM_CONSTEXPR BOOST_QVM_INLINE_CRITICAL
+        typename enable_if_c<
+            mat_write_element_ref<A>::value,
+            void>::type
         f( A & a, B const & b )
             {
             mat_traits<A>::template write_element<I/mat_traits<A>::cols,I%mat_traits<A>::cols>(a) =
                 mat_traits<B>::template read_element<I/mat_traits<B>::cols,I%mat_traits<B>::cols>(b);
+            copy_matrix_elements<I+1,N>::f(a,b);
+            }
+
+        template <class A,class B>
+        static
+        BOOST_QVM_CONSTEXPR BOOST_QVM_INLINE_CRITICAL
+        typename enable_if_c<
+            !mat_write_element_ref<A>::value,
+            void>::type
+        f( A & a, B const & b )
+            {
+            mat_traits<A>::template write_element<I/mat_traits<A>::cols,I%mat_traits<A>::cols>(a,
+                mat_traits<B>::template read_element<I/mat_traits<B>::cols,I%mat_traits<B>::cols>(b));
             copy_matrix_elements<I+1,N>::f(a,b);
             }
         };
@@ -44,7 +59,7 @@ qvm_detail
         {
         template <class A,class B>
         static
-        BOOST_QVM_INLINE_CRITICAL
+        BOOST_QVM_CONSTEXPR BOOST_QVM_INLINE_CRITICAL
         void
         f( A &, B const & )
             {
@@ -53,7 +68,7 @@ qvm_detail
     }
 
 template <class A,class B>
-BOOST_QVM_INLINE_TRIVIAL
+BOOST_QVM_CONSTEXPR BOOST_QVM_INLINE_TRIVIAL
 typename enable_if_c<
     is_mat<A>::value && is_mat<B>::value &&
     mat_traits<A>::rows==mat_traits<B>::rows &&
