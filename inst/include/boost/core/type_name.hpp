@@ -188,7 +188,7 @@ template<class T> std::string array_template_name()
 inline std::string tn_to_string( std::size_t n )
 {
     char buffer[ 32 ];
-    std::sprintf( buffer, "%lu", static_cast< unsigned long >( n ) );
+    std::snprintf( buffer, sizeof(buffer), "%lu", static_cast< unsigned long >( n ) );
 
     return buffer;
 }
