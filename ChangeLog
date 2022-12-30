@@ -1,6 +1,19 @@
-2022-12-15  Dirk Eddelbuettel  <edd@debian.org>
+2022-12-30  Dirk Eddelbuettel  <edd@debian.org>
 
-	* DESCRIPTION (Version, Date): Release 1.81.0-0
+	* DESCRIPTION (Version, Date): Release 1.81.0-1
+
+2022-12-29  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/boost/core/snprintf.hpp: Added
+	* .../lexical_cast/detail/converter_lexical_streams.hpp: Used here
+	* .../core/lightweight_test.hpp: Use snprintf
+	* .../core/type_name.hpp: Idem
+	* .../interprocess/detail/win32_api.hpp: Idem
+	* .../numeric/odeint/integrate/max_step_checker.hpp: Idem
+	* .../test/imp/debug.ipp: Idem
+	* .../utils/setcolor.hpp: Idem
+
+2022-12-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/boost/*: Upgraded to Boost 1.81, as usual with two
 	patch sets from CRAN demands on file path length and diagnostics

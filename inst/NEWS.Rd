@@ -7,10 +7,12 @@
 \newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
-\section{Changes in version 1.81.0-0 (2022-12-15)}{
+\section{Changes in version 1.81.0-1 (2022-12-15)}{
   \itemize{
     \item Upgrade to \boost 1.81.0 (\ghpr{87})
     \item Added \boostPkg{url} (new in 1.81.0)
+    \item Converted remaining \code{sprintf} to \code{snprintf}
+    (\ghpr{90} fixing \ghit{89))
   }
 }
     
