@@ -880,7 +880,7 @@ attach_debugger( bool break_or_continue )
     // Debugger command line
 
     char cmd_line[MAX_CMD_LINE];
-    std::sprintf( cmd_line, format, ::GetCurrentProcessId(), dbg_init_done_ev );
+    std::snprintf( cmd_line, sizeof(cmd_line), format, ::GetCurrentProcessId(), dbg_init_done_ev );
 
     // *************************************************** //
     // Debugger window parameters

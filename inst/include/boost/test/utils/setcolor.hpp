@@ -89,7 +89,7 @@ public:
                           state* /* unused */= NULL)
     : m_is_color_output(is_color_output)
     {
-        m_command_size = std::sprintf( m_control_command, "%c[%c;3%c;4%cm",
+        m_command_size = std::snprintf( m_control_command, sizeof(m_control_command), "%c[%c;3%c;4%cm",
           0x1B,
           static_cast<char>(attr + '0'),
           static_cast<char>(fg + '0'),
@@ -100,7 +100,7 @@ public:
                          state* /* unused */)
     : m_is_color_output(is_color_output)
     {
-        m_command_size = std::sprintf(m_control_command, "%c[%c;3%c;4%cm",
+        m_command_size = std::snprintf(m_control_command, sizeof(m_control_command), "%c[%c;3%c;4%cm",
           0x1B,
           static_cast<char>(term_attr::NORMAL + '0'),
           static_cast<char>(term_color::ORIGINAL + '0'),
