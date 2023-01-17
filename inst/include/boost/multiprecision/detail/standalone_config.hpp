@@ -33,7 +33,7 @@
  #  endif
  #else
  #  if __cplusplus < 201402L
- #    warning "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)"
+#    //warning "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)"
  #  endif
  #endif
 
