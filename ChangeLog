@@ -1,6 +1,11 @@
-2022-12-30  Dirk Eddelbuettel  <edd@debian.org>
+2023-01-17  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date): Release 1.81.0-1
+
+	* inst/include/boost/math/tools/config.hpp: Comment-out 'warning'
+	message as CRAN Policy would prefer not to see these
+	* inst/include/boost/multiprecision/detail/standalone_config.hpp: Idem
+	* inst/include/boost/spirit/home/x3.hpp: Idem (for four lines)
 
 2022-12-29  Dirk Eddelbuettel  <edd@debian.org>
 
