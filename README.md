@@ -109,7 +109,7 @@ That used to be a concern, and we wrote:
 and lo and behold, we got help via
 [this script](https://github.com/eddelbuettel/bh/blob/master/local/scripts/git-remove.sh) as
 [discussed here](https://github.com/eddelbuettel/bh/issues/34).  The old tarballs are now removed;
-six commits were filtered and the repo has a much saner nice so it can be forked more easily.
+six commits were filtered and the repo has a much saner size so it can be forked more easily.
 
 ### Authors
 
