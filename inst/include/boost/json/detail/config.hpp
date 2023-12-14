@@ -134,24 +134,14 @@
 #define BOOST_SYMBOL_VISIBLE
 #endif
 
-#if ! defined(BOOST_JSON_DOCS)
-# define BOOST_JSON_NS_BEGIN \
-    namespace boost { \
-    namespace json {
-# define BOOST_JSON_NS_END } }
-#endif
-
 #if defined(BOOST_JSON_DOCS)
 # define BOOST_JSON_DECL
 #else
 # if (defined(BOOST_JSON_DYN_LINK) || defined(BOOST_ALL_DYN_LINK)) && !defined(BOOST_JSON_STATIC_LINK)
 #  if defined(BOOST_JSON_SOURCE)
 #   define BOOST_JSON_DECL        BOOST_SYMBOL_EXPORT
-#   define BOOST_JSON_CLASS_DECL  BOOST_SYMBOL_EXPORT
-#   define BOOST_JSON_BUILD_DLL
 #  else
 #   define BOOST_JSON_DECL        BOOST_SYMBOL_IMPORT
-#   define BOOST_JSON_CLASS_DECL  BOOST_SYMBOL_IMPORT
 #  endif
 # endif // shared lib
 # ifndef  BOOST_JSON_DECL
@@ -164,13 +154,6 @@
 #  endif
 #  include <boost/config/auto_link.hpp>
 # endif
-#endif
-
-#ifndef BOOST_JSON_DECL
-#define BOOST_JSON_DECL
-#endif
-#ifndef BOOST_JSON_CLASS_DECL
-#define BOOST_JSON_CLASS_DECL
 #endif
 
 #ifndef BOOST_JSON_LIKELY
@@ -269,7 +252,21 @@
 # endif
 #endif
 
-BOOST_JSON_NS_BEGIN
+#if defined(__cpp_constinit) && __cpp_constinit >= 201907L
+# define BOOST_JSON_CONSTINIT constinit
+#elif defined(__has_cpp_attribute) && defined(__clang__)
+# if __has_cpp_attribute(clang::require_constant_initialization)
+#  define BOOST_JSON_CONSTINIT [[clang::require_constant_initialization]]
+# endif
+#elif defined(__GNUC__) && (__GNUC__ >= 10)
+# define BOOST_JSON_CONSTINIT __constinit
+#endif
+#ifndef BOOST_JSON_CONSTINIT
+# define BOOST_JSON_CONSTINIT
+#endif
+
+namespace boost {
+namespace json {
 namespace detail {
 
 template<class...>
@@ -320,6 +317,7 @@ constexpr T static_const<T>::value;
     } struct _unused_ ## name ## _semicolon_bait_
 
 } // detail
-BOOST_JSON_NS_END
+} // namespace json
+} // namespace boost
 
 #endif

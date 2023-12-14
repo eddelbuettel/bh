@@ -61,17 +61,17 @@
 #  if (BOOST_GCC >= 40600)
 #     pragma GCC diagnostic push
 #     if (BOOST_GCC >= 40800)
-//#        pragma GCC diagnostic ignored "-Wpedantic"
+#        pragma GCC diagnostic ignored "-Wpedantic"
 #     else
-//#        pragma GCC diagnostic ignored "-pedantic"
+#        pragma GCC diagnostic ignored "-pedantic"
 #     endif
-//#     pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#     pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #  else
 #     pragma GCC system_header
 #  endif
 //When loading DLLs we have no option but reinterpret casting function types  
 #  if (BOOST_GCC >= 80000)
-//#        pragma GCC diagnostic ignored "-Wcast-function-type"
+#        pragma GCC diagnostic ignored "-Wcast-function-type"
 #  endif
 #endif
 
@@ -1798,7 +1798,7 @@ inline bool get_last_bootup_time(std::string &stamp)
                // Print the contents of each record in the buffer.
                if(find_record_in_buffer(heap_deleter.get(), dwBytesRead, provider_name, event_id, pTypedRecord)){
                   char stamp_str[sizeof(unsigned long)*3+1];
-                  std::snprintf(&stamp_str[0], sizeof(stamp_str), "%u", ((unsigned int)pTypedRecord->TimeGenerated));
+                  std::sprintf(&stamp_str[0], "%u", ((unsigned int)pTypedRecord->TimeGenerated));
                   stamp = stamp_str;
                   break;
                }

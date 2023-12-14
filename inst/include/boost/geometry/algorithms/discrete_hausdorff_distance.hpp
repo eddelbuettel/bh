@@ -26,6 +26,8 @@
 #include <vector>
 #include <limits>
 
+#include <boost/range/size.hpp>
+
 #include <boost/geometry/algorithms/detail/dummy_geometries.hpp>
 #include <boost/geometry/algorithms/detail/throw_on_empty_input.hpp>
 #include <boost/geometry/algorithms/not_implemented.hpp>
@@ -187,7 +189,7 @@ struct multi_range_multi_range
 
         boost::geometry::detail::throw_on_empty_input(mrng1);
         boost::geometry::detail::throw_on_empty_input(mrng2);
-        
+
         size_type n = boost::size(mrng1);
         result_type haus_dis = 0;
 

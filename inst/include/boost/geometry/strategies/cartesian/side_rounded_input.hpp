@@ -2,6 +2,10 @@
 
 // Copyright (c) 2021 Tinko Bartels, Berlin, Germany.
 
+// This file was modified by Oracle on 2023.
+// Modifications copyright (c) 2023 Oracle and/or its affiliates.
+// Contributed and/or modified by Vissarion Fysikopoulos, on behalf of Oracle
+
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -9,8 +13,12 @@
 #ifndef BOOST_GEOMETRY_STRATEGY_CARTESIAN_SIDE_ROUNDED_INPUT_HPP
 #define BOOST_GEOMETRY_STRATEGY_CARTESIAN_SIDE_ROUNDED_INPUT_HPP
 
+#include <limits>
 
+#include <boost/geometry/core/access.hpp>
 #include <boost/geometry/core/config.hpp>
+
+#include <boost/geometry/util/math.hpp>
 
 #include <boost/geometry/strategies/side.hpp>
 
@@ -39,7 +47,7 @@ struct side_rounded_input
         coor_t const p_x = geometry::get<0>(p);
         coor_t const p_y = geometry::get<1>(p);
 
-        constexpr coor_t eps = std::numeric_limits<coor_t>::epsilon() / 2;
+        static coor_t const eps = std::numeric_limits<coor_t>::epsilon() / 2;
         coor_t const det = (p1_x - p_x) * (p2_y - p_y) - (p1_y - p_y) * (p2_x - p_x);
         coor_t const err_bound = (Coeff1 * eps + Coeff2 * eps * eps) *
             (  (geometry::math::abs(p1_x) + geometry::math::abs(p_x))

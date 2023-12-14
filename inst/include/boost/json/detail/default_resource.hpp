@@ -13,7 +13,8 @@
 #include <boost/json/detail/config.hpp>
 #include <new>
 
-BOOST_JSON_NS_BEGIN
+namespace boost {
+namespace json {
 namespace detail {
 
 #ifdef _MSC_VER
@@ -25,8 +26,8 @@ namespace detail {
 // A simple memory resource that uses operator new and delete.
 class
     BOOST_SYMBOL_VISIBLE
-    BOOST_JSON_CLASS_DECL
-    default_resource final
+    BOOST_JSON_DECL
+default_resource final
     : public memory_resource
 {
     union holder;
@@ -94,6 +95,7 @@ union default_resource::
 };
 
 } // detail
-BOOST_JSON_NS_END
+} // namespace json
+} // namespace boost
 
 #endif

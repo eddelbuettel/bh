@@ -14,6 +14,7 @@
 //  See http://www.boost.org/libs/smart_ptr/ for documentation.
 //
 
+#include <boost/smart_ptr/detail/requires_cxx11.hpp>
 #include <boost/smart_ptr/detail/shared_count.hpp>
 #include <boost/smart_ptr/detail/sp_convertible.hpp>
 #include <boost/smart_ptr/detail/sp_nullptr_t.hpp>
@@ -45,7 +46,7 @@
 
 #if defined( BOOST_SP_DISABLE_DEPRECATED )
 #pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 namespace boost

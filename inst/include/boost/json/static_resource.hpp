@@ -14,7 +14,8 @@
 #include <boost/json/memory_resource.hpp>
 #include <cstddef>
 
-BOOST_JSON_NS_BEGIN
+namespace boost {
+namespace json {
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -39,7 +40,7 @@ BOOST_JSON_NS_BEGIN
 \n
     @par Example
 
-    This parses a JSON into a value which uses a local
+    This parses a JSON text into a value which uses a local
     stack buffer, then prints the result.
 
     @code
@@ -62,8 +63,10 @@ BOOST_JSON_NS_BEGIN
     @see
         https://en.wikipedia.org/wiki/Region-based_memory_management
 */
-class BOOST_JSON_CLASS_DECL
-    static_resource final
+class
+    BOOST_JSON_DECL
+    BOOST_SYMBOL_VISIBLE
+static_resource final
     : public memory_resource
 {
     void* p_;
@@ -78,16 +81,6 @@ public:
     /// Copy assignment (deleted)
     static_resource& operator=(
         static_resource const&) = delete;
-
-    /** Destructor
-
-        @par Complexity
-        Constant.
-
-        @par Exception Safety
-        No-throw guarantee.
-    */
-    ~static_resource() noexcept;
 
     /** Constructor
 
@@ -238,6 +231,7 @@ struct is_deallocate_trivial<
     static constexpr bool value = true;
 };
 
-BOOST_JSON_NS_END
+} // namespace json
+} // namespace boost
 
 #endif

@@ -13,6 +13,7 @@
 #include <boost/system/detail/config.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/config.hpp>
+#include <boost/config/workaround.hpp>
 #include <string>
 #include <functional>
 #include <cstddef>
@@ -45,7 +46,7 @@ class std_category;
 
 #if ( defined( BOOST_GCC ) && BOOST_GCC >= 40600 ) || defined( BOOST_CLANG )
 #pragma GCC diagnostic push
-  //#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #endif
 
 #if defined(BOOST_MSVC) && BOOST_MSVC < 1900
@@ -116,11 +117,18 @@ protected:
 
 #endif
 
-    BOOST_SYSTEM_CONSTEXPR error_category() BOOST_NOEXCEPT: id_( 0 ), stdcat_(), sc_init_()
+#if !BOOST_WORKAROUND(BOOST_GCC, < 40800)
+    BOOST_CONSTEXPR
+#endif
+    error_category() BOOST_NOEXCEPT: id_( 0 ), stdcat_(), sc_init_()
     {
     }
 
-    explicit BOOST_SYSTEM_CONSTEXPR error_category( boost::ulong_long_type id ) BOOST_NOEXCEPT: id_( id ), stdcat_(), sc_init_()
+    explicit
+#if !BOOST_WORKAROUND(BOOST_GCC, < 40800)
+    BOOST_CONSTEXPR
+#endif
+    error_category( boost::ulong_long_type id ) BOOST_NOEXCEPT: id_( id ), stdcat_(), sc_init_()
     {
     }
 

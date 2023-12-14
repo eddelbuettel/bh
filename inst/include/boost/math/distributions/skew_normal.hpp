@@ -486,7 +486,7 @@ namespace boost{ namespace math{
 
     // 21 elements
     static const RealType shapes[] = {
-      0.0,
+      static_cast<RealType>(0.0),
       static_cast<RealType>(1.000000000000000e-004),
       static_cast<RealType>(2.069138081114790e-004),
       static_cast<RealType>(4.281332398719396e-004),
@@ -511,7 +511,7 @@ namespace boost{ namespace math{
 
     // 21 elements
     static const RealType guess[] = {
-      0.0,
+      static_cast<RealType>(0.0),
       static_cast<RealType>(5.000050000525391e-005),
       static_cast<RealType>(1.500015000148736e-004),
       static_cast<RealType>(3.500035000350010e-004),
@@ -676,8 +676,8 @@ namespace boost{ namespace math{
 
     // refine the result by numerically searching the root of (p-cdf)
 
-    const RealType search_min = range(dist).first;
-    const RealType search_max = range(dist).second;
+    const RealType search_min = support(dist).first;
+    const RealType search_max = support(dist).second;
 
     const int get_digits = policies::digits<RealType, Policy>();// get digits from policy,
     std::uintmax_t m = policies::get_max_root_iterations<Policy>(); // and max iterations.

@@ -23,17 +23,17 @@
 # define BOOST_SPIRIT_X3_STRINGIZE_IMPL(x) #x
 # define BOOST_SPIRIT_X3_STRINGIZE(x) BOOST_SPIRIT_X3_STRINGIZE_IMPL(x)
 # if defined __GNUC__ || defined __clang__
-#  //warning "Spirit X3 will soon use C++17 features which your compiler does not support"
+#  warning "Spirit X3 will soon use C++17 features which your compiler does not support"
 #  if (defined __clang__ && __clang_major__ >= 4 || __GNUC__ >= 7) &&  __cplusplus < 201703L
-#   //warning "Use -std=c++17 or -std=gnu++17 compiler flag to enable C++17 mode"
+#   warning "Use -std=c++17 or -std=gnu++17 compiler flag to enable C++17 mode"
 #  endif
-#  //warning "Minimal supported compiler versions: Clang 4 / GCC 7 / MSC 1915 (VS 2017 v15.8)"
+#  warning "Minimal supported compiler versions: Clang 4 / GCC 7 / MSC 1915 (VS 2017 v15.8)"
 #  if defined __clang__
 #   pragma message "This compiler seems to be Clang " BOOST_SPIRIT_X3_STRINGIZE(__clang_major__) " (__cplusplus=" BOOST_SPIRIT_X3_STRINGIZE(__cplusplus) ")"
 #  else
 #   pragma message "This compiler seems to be GCC " BOOST_SPIRIT_X3_STRINGIZE(__GNUC__) " (__cplusplus=" BOOST_SPIRIT_X3_STRINGIZE(__cplusplus) ")"
 #  endif
-#  //warning "Define BOOST_SPIRIT_X3_HIDE_CXX17_WARNING to hide the warning"
+#  warning "Define BOOST_SPIRIT_X3_HIDE_CXX17_WARNING to hide the warning"
 # elif defined _MSC_VER
 #  pragma message (__FILE__ "(" BOOST_SPIRIT_X3_STRINGIZE(__LINE__) "): warning: Spirit X3 will soon use C++17 features which your compiler does not support" )
 #  ifdef _MSVC_LANG

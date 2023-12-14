@@ -18,6 +18,7 @@
 #include <vector>
 
 #include <boost/core/ignore_unused.hpp>
+#include <boost/range/size.hpp>
 
 #include <boost/geometry/algorithms/detail/overlay/get_turn_info_helpers.hpp>
 #include <boost/geometry/algorithms/detail/overlay/overlay_type.hpp>
@@ -98,7 +99,7 @@ struct for_each_disjoint_geometry_if<OpId, Geometry, Tag, true>
     {
         BOOST_GEOMETRY_ASSERT(first != last);
 
-        const std::size_t count = boost::size(geometry);
+        std::size_t const count = boost::size(geometry);
 
         // O(I)
         // gather info about turns generated for contained geometries
@@ -229,8 +230,8 @@ private:
 template <typename TurnInfo, std::size_t OpId>
 class exit_watcher
 {
-    static const std::size_t op_id = OpId;
-    static const std::size_t other_op_id = (OpId + 1) % 2;
+    static std::size_t const op_id = OpId;
+    static std::size_t const other_op_id = (OpId + 1) % 2;
 
     typedef typename TurnInfo::point_type point_type;
     typedef detail::relate::point_info<point_type> point_info;
@@ -256,11 +257,10 @@ public:
         segment_identifier const& other_id = turn.operations[other_op_id].seg_id;
         overlay::operation_type exit_op = turn.operations[op_id].operation;
 
-        typedef typename std::vector<point_info>::iterator point_iterator;
         // search for the entry point in the same range of other geometry
-        point_iterator entry_it = std::find_if(m_other_entry_points.begin(),
-                                               m_other_entry_points.end(),
-                                               same_single(other_id));
+        auto entry_it = std::find_if(m_other_entry_points.begin(),
+                                     m_other_entry_points.end(),
+                                     same_single(other_id));
 
         // this end point has corresponding entry point
         if ( entry_it != m_other_entry_points.end() )

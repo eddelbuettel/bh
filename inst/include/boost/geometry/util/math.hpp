@@ -450,7 +450,7 @@ struct define_half_pi
 template <typename T>
 struct relaxed_epsilon
 {
-    static inline T apply(const T& factor)
+    static inline T apply(T const& factor)
     {
         return factor * std::numeric_limits<T>::epsilon();
     }
@@ -663,6 +663,20 @@ inline T r2d()
     static T const conversion_coefficient = T(180.0) / geometry::math::pi<T>();
     return conversion_coefficient;
 }
+
+/*!
+\brief Wraps an angle in the range [-pi, +pi] (both inclusive)
+*/
+template <typename T>
+inline T wrap_azimuth_in_radian(T const& azimuth)
+{
+    static T const pi = geometry::math::pi<T>();
+    static T const two_pi = geometry::math::two_pi<T>();
+    T result = azimuth;
+    while (result > pi) { result -= two_pi; }
+    while (result < -pi) { result += two_pi; }
+    return result;
+};
 
 
 #ifndef DOXYGEN_NO_DETAIL

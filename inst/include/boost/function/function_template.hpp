@@ -501,8 +501,16 @@ namespace boost {
 
         void clear(function_buffer& functor) const
         {
+#if defined(BOOST_GCC) && (__GNUC__ >= 11)
+# pragma GCC diagnostic push
+// False positive in GCC 11/12 for empty function objects
+# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
           if (base.manager)
             base.manager(functor, functor, destroy_functor_tag);
+#if defined(BOOST_GCC) && (__GNUC__ >= 11)
+# pragma GCC diagnostic pop
+#endif
         }
 
       private:
@@ -905,10 +913,10 @@ namespace boost {
 #           pragma GCC diagnostic push
             // This warning is technically correct, but we don't want to pay the price for initializing
             // just to silence a warning: https://github.com/boostorg/function/issues/27
-          //#           pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#           if (BOOST_GCC >= 120000)
-              // GCC 12 emits a different warning: https://github.com/boostorg/function/issues/42
-          //#             pragma GCC diagnostic ignored "-Wuninitialized"
+#           pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#           if (BOOST_GCC >= 110000)
+              // GCC 11.3, 12 emit a different warning: https://github.com/boostorg/function/issues/42
+#             pragma GCC diagnostic ignored "-Wuninitialized"
 #           endif
 #         endif
           std::memcpy(this->functor.data, f.functor.data, sizeof(boost::detail::function::function_buffer));
@@ -1007,10 +1015,10 @@ namespace boost {
 #             pragma GCC diagnostic push
               // This warning is technically correct, but we don't want to pay the price for initializing
               // just to silence a warning: https://github.com/boostorg/function/issues/27
-            //#             pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#             pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #             if (BOOST_GCC >= 120000)
                 // GCC 12 emits a different warning: https://github.com/boostorg/function/issues/42
-            //#               pragma GCC diagnostic ignored "-Wuninitialized"
+#               pragma GCC diagnostic ignored "-Wuninitialized"
 #             endif
 #           endif
             std::memcpy(this->functor.data, f.functor.data, sizeof(this->functor.data));
@@ -1021,7 +1029,7 @@ namespace boost {
 #if defined(BOOST_GCC) && (__GNUC__ >= 11)
 # pragma GCC diagnostic push
 // False positive in GCC 11/12 for empty function objects (function_n_test.cpp:673)
-//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
             get_vtable()->base.manager(f.functor, this->functor,
                                      boost::detail::function::move_functor_tag);

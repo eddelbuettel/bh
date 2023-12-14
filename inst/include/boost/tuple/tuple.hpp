@@ -24,7 +24,7 @@ namespace boost { namespace python { class tuple; }}
 #include <boost/static_assert.hpp>
 
 // other compilers
-#include <boost/ref.hpp>
+#include <boost/core/ref.hpp>
 #include <boost/tuple/detail/tuple_basic.hpp>
 
 
@@ -73,7 +73,7 @@ namespace std
 
 #if defined(BOOST_CLANG)
 # pragma clang diagnostic push
-  //# pragma clang diagnostic ignored "-Wmismatched-tags"
+# pragma clang diagnostic ignored "-Wmismatched-tags"
 #endif
 
 // std::tuple_size

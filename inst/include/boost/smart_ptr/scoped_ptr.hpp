@@ -10,6 +10,7 @@
 //
 //  See http://www.boost.org/libs/smart_ptr/ for documentation.
 
+#include <boost/smart_ptr/detail/requires_cxx11.hpp>
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
 #include <boost/core/checked_delete.hpp>
@@ -24,7 +25,7 @@
 
 #if defined( BOOST_SP_DISABLE_DEPRECATED )
 #pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 namespace boost

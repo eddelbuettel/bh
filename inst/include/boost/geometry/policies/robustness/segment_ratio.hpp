@@ -153,7 +153,7 @@ public:
         , m_approximation(0)
     {}
 
-    inline segment_ratio(const Type& numerator, const Type& denominator)
+    inline segment_ratio(Type const& numerator, Type const& denominator)
         : m_numerator(numerator)
         , m_denominator(denominator)
     {
@@ -164,7 +164,7 @@ public:
     segment_ratio& operator=(segment_ratio const&) = default;
     segment_ratio(segment_ratio&&) = default;
     segment_ratio& operator=(segment_ratio&&) = default;
-    
+
     // These are needed because in intersection strategies ratios are assigned
     // in fractions and if a user passes CalculationType then ratio Type in
     // turns is taken from geometry coordinate_type and the one used in
@@ -207,7 +207,7 @@ public:
     inline Type const& numerator() const { return m_numerator; }
     inline Type const& denominator() const { return m_denominator; }
 
-    inline void assign(const Type& numerator, const Type& denominator)
+    inline void assign(Type const& numerator, Type const& denominator)
     {
         m_numerator = numerator;
         m_denominator = denominator;

@@ -19,7 +19,8 @@
 #include <initializer_list>
 #include <iterator>
 
-BOOST_JSON_NS_BEGIN
+namespace boost {
+namespace json {
 
 #ifndef BOOST_JSON_DOCS
 class value;
@@ -184,13 +185,15 @@ public:
     /** Constructor.
 
         The constructed array is empty with zero
-        capacity, using the default memory resource.
+        capacity, using the [default memory resource].
 
         @par Complexity
         Constant.
 
         @par Exception Safety
         No-throw guarantee.
+
+        [default memory resource]: json/allocators/storage_ptr.html#json.allocators.storage_ptr.default_memory_resource
     */
     array() noexcept
         : t_(&empty_)
@@ -279,7 +282,7 @@ public:
         @par Constraints
 
         @code
-        std::is_constructible_v<value, std::iterator_traits<InputIt>::value_type>
+        std::is_constructible_v<value, std::iterator_traits<InputIt>::reference>
         @endcode
 
         @par Complexity
@@ -309,7 +312,7 @@ public:
         ,class = typename std::enable_if<
             std::is_constructible<value,
                 typename std::iterator_traits<
-                    InputIt>::value_type>::value>::type
+                    InputIt>::reference>::value>::type
     #endif
     >
     array(
@@ -590,14 +593,14 @@ public:
         Returns a reference to the element specified at
         location `pos`, with bounds checking. If `pos` is
         not within the range of the container, an exception
-        of type `std::out_of_range` is thrown.
+        of type @ref system_error is thrown.
 
         @par Complexity
         Constant.
 
         @param pos A zero-based index.
 
-        @throw std::out_of_range `pos >= size()`
+        @throw system_error `pos >= size()`
     */
     /* @{ */
     inline
@@ -1067,7 +1070,7 @@ public:
 
         @param new_capacity The new capacity of the array.
 
-        @throw std::length_error `new_capacity > max_size()`
+        @throw system_error `new_capacity > max_size()`
     */
     inline
     void
@@ -1236,7 +1239,7 @@ public:
 
         @par Mandates
         @code
-        std::is_constructible_v<value, std::iterator_traits<InputIt>::value_type>
+        std::is_constructible_v<value, std::iterator_traits<InputIt>::reference>
         @endcode
 
         @par Complexity
@@ -1267,7 +1270,7 @@ public:
         ,class = typename std::enable_if<
             std::is_constructible<value,
                 typename std::iterator_traits<
-                    InputIt>::value_type>::value>::type
+                    InputIt>::reference>::value>::type
     #endif
     >
     iterator
@@ -1739,7 +1742,8 @@ private:
     equal(array const& other) const noexcept;
 };
 
-BOOST_JSON_NS_END
+} // namespace json
+} // namespace boost
 
 // std::hash specialization
 #ifndef BOOST_JSON_DOCS

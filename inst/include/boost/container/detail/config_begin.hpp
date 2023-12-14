@@ -17,6 +17,7 @@
 
 #ifdef BOOST_MSVC
    #pragma warning (push)
+   #pragma warning (disable : 4619) // there is no warning number 'XXXX'
    #pragma warning (disable : 4127) // conditional expression is constant
    #pragma warning (disable : 4146) // unary minus operator applied to unsigned type, result still unsigned
    #pragma warning (disable : 4197) // top-level volatile in cast is ignored
@@ -55,6 +56,6 @@
 //Sign conversion warnings broken before GCC 9.3
 //(https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87519)
 #if BOOST_GCC < 90300
-//#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
 #endif
 #endif

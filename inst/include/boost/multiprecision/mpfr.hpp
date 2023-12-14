@@ -39,22 +39,6 @@
 namespace boost {
 namespace multiprecision {
 
-enum mpfr_allocation_type
-{
-   allocate_stack,
-   allocate_dynamic
-};
-
-namespace backends {
-
-template <unsigned digits10, mpfr_allocation_type AllocationType = allocate_dynamic>
-struct mpfr_float_backend;
-
-template <>
-struct mpfr_float_backend<0, allocate_stack>;
-
-} // namespace backends
-
 template <unsigned digits10, mpfr_allocation_type AllocationType>
 struct number_category<backends::mpfr_float_backend<digits10, AllocationType> > : public std::integral_constant<int, number_kind_floating_point>
 {};
@@ -2020,17 +2004,6 @@ struct number_category<detail::canonical<mpfr_t, backends::mpfr_float_backend<0>
 template <unsigned D, boost::multiprecision::mpfr_allocation_type A1, boost::multiprecision::mpfr_allocation_type A2>
 struct is_equivalent_number_type<backends::mpfr_float_backend<D, A1>, backends::mpfr_float_backend<D, A2> > : public std::integral_constant<bool, true> {};
 
-using boost::multiprecision::backends::mpfr_float_backend;
-
-using mpfr_float_50 = number<mpfr_float_backend<50> >  ;
-using mpfr_float_100 = number<mpfr_float_backend<100> > ;
-using mpfr_float_500 = number<mpfr_float_backend<500> > ;
-using mpfr_float_1000 = number<mpfr_float_backend<1000> >;
-using mpfr_float = number<mpfr_float_backend<0> >   ;
-
-using static_mpfr_float_50 = number<mpfr_float_backend<50, allocate_stack> > ;
-using static_mpfr_float_100 = number<mpfr_float_backend<100, allocate_stack> >;
-
 template <unsigned Digits10, boost::multiprecision::mpfr_allocation_type AllocateType, boost::multiprecision::expression_template_option ExpressionTemplates>
 inline boost::multiprecision::number<boost::multiprecision::mpfr_float_backend<Digits10, AllocateType>, ExpressionTemplates> copysign BOOST_PREVENT_MACRO_SUBSTITUTION(const boost::multiprecision::number<boost::multiprecision::mpfr_float_backend<Digits10, AllocateType>, ExpressionTemplates>& a, const boost::multiprecision::number<boost::multiprecision::mpfr_float_backend<Digits10, AllocateType>, ExpressionTemplates>& b)
 {
@@ -3461,7 +3434,7 @@ class numeric_limits<boost::multiprecision::number<boost::multiprecision::mpfr_f
    {
       return number_type(0);
    }
-   static constexpr number_type denorm_min() { return number_type(0); }
+   static constexpr number_type denorm_min() { return (min)(); }
    static constexpr bool        is_iec559         = false;
    static constexpr bool        is_bounded        = true;
    static constexpr bool        is_modulo         = false;
@@ -3577,7 +3550,7 @@ class numeric_limits<boost::multiprecision::number<boost::multiprecision::mpfr_f
       return value;
    }
    static number_type          signaling_NaN() { return number_type(0); }
-   static number_type          denorm_min() { return number_type(0); }
+   static number_type          denorm_min() { return (min)(); }
    static constexpr bool is_iec559                = false;
    static constexpr bool is_bounded               = true;
    static constexpr bool is_modulo                = false;

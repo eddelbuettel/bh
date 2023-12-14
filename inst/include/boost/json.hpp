@@ -23,11 +23,13 @@
 #include <boost/json/null_resource.hpp>
 #include <boost/json/object.hpp>
 #include <boost/json/parse.hpp>
+#include <boost/json/parse_into.hpp>
 #include <boost/json/parse_options.hpp>
 #include <boost/json/parser.hpp>
 #include <boost/json/pilfer.hpp>
 #include <boost/json/serialize.hpp>
 #include <boost/json/serializer.hpp>
+#include <boost/json/set_pointer_options.hpp>
 #include <boost/json/static_resource.hpp>
 #include <boost/json/storage_ptr.hpp>
 #include <boost/json/stream_parser.hpp>

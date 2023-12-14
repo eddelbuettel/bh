@@ -17,7 +17,8 @@
 #include <cstddef>
 #include <utility>
 
-BOOST_JSON_NS_BEGIN
+namespace boost {
+namespace json {
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -55,7 +56,7 @@ BOOST_JSON_NS_BEGIN
 
     @par Example
 
-    This parses a JSON into a value which uses a local
+    This parses a JSON text into a value which uses a local
     stack buffer, then prints the result.
 
     @code
@@ -82,8 +83,10 @@ BOOST_JSON_NS_BEGIN
     @see
         https://en.wikipedia.org/wiki/Region-based_memory_management
 */
-class BOOST_JSON_CLASS_DECL
-    monotonic_resource final
+class
+    BOOST_JSON_DECL
+    BOOST_SYMBOL_VISIBLE
+monotonic_resource final
     : public memory_resource
 {
     struct block;
@@ -345,6 +348,7 @@ struct is_deallocate_trivial<
     static constexpr bool value = true;
 };
 
-BOOST_JSON_NS_END
+} // namespace json
+} // namespace boost
 
 #endif
