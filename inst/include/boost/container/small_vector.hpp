@@ -472,8 +472,8 @@ BOOST_CONTAINER_FORCEINLINE typename small_vector_allocator<T, VoidAlloc, Option
    //and aligned storage is allowed to hold any type
    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)
    #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wcast-align"
-   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+   //   #pragma GCC diagnostic ignored "-Wcast-align"
+   //   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
    #endif
    const vector_type& v = reinterpret_cast<const vector_type&>(*this);
    BOOST_ASSERT((std::size_t(this) % dtl::alignment_of<strawman_t>::value) == 0);
@@ -494,8 +494,8 @@ BOOST_CONTAINER_FORCEINLINE typename small_vector_allocator<T, VoidAlloc, Option
 
    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)
    #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wcast-align"
-   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+   //   #pragma GCC diagnostic ignored "-Wcast-align"
+   //   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
    #endif
    vector_type& v = reinterpret_cast<vector_type&>(*this);
    BOOST_ASSERT((std::size_t(this) % dtl::alignment_of<strawman_t>::value) == 0);
