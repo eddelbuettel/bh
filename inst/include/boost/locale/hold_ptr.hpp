@@ -8,6 +8,7 @@
 #define BOOST_LOCALE_HOLD_PTR_H
 
 #include <boost/locale/config.hpp>
+#include <boost/core/exchange.hpp>
 
 namespace boost { namespace locale {
     /// \brief a smart pointer similar to std::unique_ptr but the
@@ -28,7 +29,7 @@ namespace boost { namespace locale {
         hold_ptr(const hold_ptr&) = delete;
         hold_ptr& operator=(const hold_ptr&) = delete;
         // Movable
-        hold_ptr(hold_ptr&& other) noexcept : ptr_(other.ptr_) { other.ptr_ = nullptr; }
+        hold_ptr(hold_ptr&& other) noexcept : ptr_(exchange(other.ptr_, nullptr)) {}
         hold_ptr& operator=(hold_ptr&& other) noexcept
         {
             swap(other);
@@ -53,15 +54,10 @@ namespace boost { namespace locale {
         /// Get a mutable pointer to the object
         T* operator->() { return ptr_; }
 
-        /// Transfer an ownership on the pointer to user
-        T* release()
-        {
-            T* tmp = ptr_;
-            ptr_ = nullptr;
-            return tmp;
-        }
+        /// Transfer ownership of the pointer to user
+        T* release() { return exchange(ptr_, nullptr); }
 
-        /// Set new value to pointer, previous object is destroyed, ownership on new object is transferred
+        /// Set new value to pointer, previous object is destroyed, ownership of new object is transferred
         void reset(T* p = nullptr)
         {
             if(ptr_)
@@ -70,12 +66,7 @@ namespace boost { namespace locale {
         }
 
         /// Swap two pointers
-        void swap(hold_ptr& other)
-        {
-            T* tmp = other.ptr_;
-            other.ptr_ = ptr_;
-            ptr_ = tmp;
-        }
+        void swap(hold_ptr& other) noexcept { ptr_ = exchange(other.ptr_, ptr_); }
 
     private:
         T* ptr_;

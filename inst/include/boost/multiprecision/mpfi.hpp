@@ -35,15 +35,6 @@
 
 namespace boost {
 namespace multiprecision {
-namespace backends {
-
-template <unsigned digits10>
-struct mpfi_float_backend;
-
-template <class Backend>
-struct debug_adaptor;
-
-} // namespace backends
 
 template <unsigned digits10>
 struct number_category<backends::mpfi_float_backend<digits10> > : public std::integral_constant<int, number_kind_floating_point>
@@ -1377,14 +1368,6 @@ template <unsigned Digits10>
 struct is_interval_number<backends::mpfi_float_backend<Digits10> > : public std::integral_constant<bool, true>
 {};
 
-using boost::multiprecision::backends::mpfi_float_backend;
-
-using mpfi_float_50 = number<mpfi_float_backend<50> >  ;
-using mpfi_float_100 = number<mpfi_float_backend<100> > ;
-using mpfi_float_500 = number<mpfi_float_backend<500> > ;
-using mpfi_float_1000 = number<mpfi_float_backend<1000> >;
-using mpfi_float = number<mpfi_float_backend<0> >   ;
-
 //
 // Special interval specific functions:
 //
@@ -2405,7 +2388,7 @@ class numeric_limits<boost::multiprecision::number<boost::multiprecision::mpfi_f
    {
       return number_type(0);
    }
-   static constexpr number_type denorm_min() { return number_type(0); }
+   static constexpr number_type denorm_min() { return (min)(); }
    static constexpr bool        is_iec559         = false;
    static constexpr bool        is_bounded        = true;
    static constexpr bool        is_modulo         = false;

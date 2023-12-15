@@ -2,12 +2,18 @@
 
 // Copyright (c) 2021 Barend Gehrels, Amsterdam, the Netherlands.
 
+// This file was modified by Oracle on 2023.
+// Modifications copyright (c) 2023 Oracle and/or its affiliates.
+// Contributed and/or modified by Vissarion Fysikopoulos, on behalf of Oracle
+
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_DISCARD_DUPLICATE_TURNS_HPP
 #define BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_DISCARD_DUPLICATE_TURNS_HPP
+
+#include <map>
 
 #include <boost/geometry/algorithms/detail/overlay/turn_info.hpp>
 #include <boost/geometry/algorithms/detail/overlay/get_ring.hpp>
@@ -108,7 +114,7 @@ inline void discard_duplicate_start_turns(Turns& turns,
     {
         if (turn.method == method_start)
         {
-            for (const auto& op : turn.operations)
+            for (auto const& op : turn.operations)
             {
                 start_turns_per_segment[adapt_id(op.seg_id)].push_back(index);
             }
@@ -124,7 +130,7 @@ inline void discard_duplicate_start_turns(Turns& turns,
         // Also avoid comparing "start" with itself.
         if (turn.method != method_crosses && turn.method != method_start)
         {
-            for (const auto& op : turn.operations)
+            for (auto const& op : turn.operations)
             {
                 auto it = start_turns_per_segment.find(adapt_id(op.seg_id));
                 if (it != start_turns_per_segment.end())

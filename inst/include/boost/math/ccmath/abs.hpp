@@ -8,10 +8,12 @@
 #ifndef BOOST_MATH_CCMATH_ABS
 #define BOOST_MATH_CCMATH_ABS
 
-#include <cmath>
-#include <type_traits>
-#include <limits>
-#include <boost/math/tools/is_constant_evaluated.hpp>
+#include <boost/math/ccmath/detail/config.hpp>
+
+#ifdef BOOST_MATH_NO_CCMATH
+#error "The header <boost/math/abs.hpp> can only be used in C++17 and later."
+#endif
+
 #include <boost/math/tools/assert.hpp>
 #include <boost/math/ccmath/isnan.hpp>
 #include <boost/math/ccmath/isinf.hpp>
@@ -23,7 +25,7 @@ namespace detail {
 template <typename T> 
 constexpr T abs_impl(T x) noexcept
 {
-    if (boost::math::ccmath::isnan(x))
+    if ((boost::math::ccmath::isnan)(x))
     {
         return std::numeric_limits<T>::quiet_NaN();
     }
@@ -67,7 +69,7 @@ constexpr T abs(T x) noexcept
     }
     else
     {
-        static_assert(sizeof(T) == 0, "Taking the absolute value of an unsigned value not covertible to int is UB.");
+        static_assert(sizeof(T) == 0, "Taking the absolute value of an unsigned value not convertible to int is UB.");
         return T(0); // Unreachable, but suppresses warnings
     }
 }

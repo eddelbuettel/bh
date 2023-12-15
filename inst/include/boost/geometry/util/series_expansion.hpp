@@ -1,6 +1,7 @@
 // Boost.Geometry
 
 // Copyright (c) 2018 Adeel Ahmad, Islamabad, Pakistan.
+// Copyright (c) 2023 Adam Wulkiewicz, Lodz, Poland.
 
 // Contributed and/or modified by Adeel Ahmad, as part of Google Summer of Code 2018 program.
 
@@ -29,6 +30,7 @@
 #ifndef BOOST_GEOMETRY_UTIL_SERIES_EXPANSION_HPP
 #define BOOST_GEOMETRY_UTIL_SERIES_EXPANSION_HPP
 
+#include <boost/array.hpp>
 #include <boost/geometry/core/assert.hpp>
 #include <boost/geometry/util/math.hpp>
 
@@ -60,9 +62,9 @@ namespace boost { namespace geometry { namespace series_expansion {
                s/case\sCT(/case /g; s/):/:/g; s/epsCT(2)/eps2/g;'
     */
     template <size_t SeriesOrder, typename CT>
-    inline CT evaluate_A1(CT eps)
+    inline CT evaluate_A1(CT const& eps)
     {
-        CT eps2 = math::sqr(eps);
+        CT const eps2 = math::sqr(eps);
         CT t;
         switch (SeriesOrder/2)
         {
@@ -78,7 +80,7 @@ namespace boost { namespace geometry { namespace series_expansion {
         case 3:
             t = eps2*(eps2*(eps2+CT(4))+CT(64))/CT(256);
             break;
-        case 4:
+        default:
             t = eps2*(eps2*(eps2*(CT(25)*eps2+CT(64))+CT(256))+CT(4096))/CT(16384);
             break;
         }
@@ -224,7 +226,7 @@ namespace boost { namespace geometry { namespace series_expansion {
     template <typename Coeffs, typename CT>
     inline void evaluate_coeffs_C1(Coeffs &c, CT const& eps)
     {
-        CT eps2 = math::sqr(eps);
+        CT const eps2 = math::sqr(eps);
         CT d = eps;
         switch (int(Coeffs::static_size) - 1)
         {

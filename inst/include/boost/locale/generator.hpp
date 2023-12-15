@@ -6,9 +6,9 @@
 
 #ifndef BOOST_LOCALE_GENERATOR_HPP
 #define BOOST_LOCALE_GENERATOR_HPP
-#include <boost/locale/config.hpp>
+
 #include <boost/locale/hold_ptr.hpp>
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <locale>
 #include <memory>
 #include <string>
@@ -35,11 +35,14 @@ namespace locale {
         nochar = 0,       ///< Unspecified character category for character independent facets
         char_f = 1 << 0,  ///< 8-bit character facets
         wchar_f = 1 << 1, ///< wide character facets
+#ifdef __cpp_char8_t
+        char8_f = 1 << 2, ///< C++20 char8_t facets
+#endif
 #ifdef BOOST_LOCALE_ENABLE_CHAR16_T
-        char16_f = 1 << 2, ///< C++11 char16_t facets
+        char16_f = 1 << 3, ///< C++11 char16_t facets
 #endif
 #ifdef BOOST_LOCALE_ENABLE_CHAR32_T
-        char32_f = 1 << 3, ///< C++11 char32_t facets
+        char32_f = 1 << 4, ///< C++11 char32_t facets
 #endif
     };
     typedef BOOST_DEPRECATED("Use char_facet_t") char_facet_t character_facet_type;
@@ -52,6 +55,8 @@ namespace locale {
       char_facet_t::char32_f;
 #elif defined BOOST_LOCALE_ENABLE_CHAR16_T
       char_facet_t::char16_f;
+#elif defined __cpp_char8_t
+      char_facet_t::char8_f;
 #else
       char_facet_t::wchar_f;
 #endif
@@ -181,12 +186,6 @@ namespace locale {
         std::locale generate(const std::locale& base, const std::string& id) const;
         /// Shortcut to generate(id)
         std::locale operator()(const std::string& id) const { return generate(id); }
-
-        /// Set backend specific option
-        void set_option(const std::string& name, const std::string& value);
-
-        /// Clear backend specific options
-        void clear_options();
 
     private:
         void set_all_options(localization_backend& backend, const std::string& id) const;

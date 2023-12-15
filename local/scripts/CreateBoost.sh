@@ -2,7 +2,7 @@
 ##
 ## CreateBoost.sh -- derived from CreateBoost.R
 ##
-## Jay Emerson and Dirk Eddelbuettel,  2012 - 2022
+## Jay Emerson and Dirk Eddelbuettel,  2012 - 2023
 
 
 ## (1) Adjust these variables as needed
@@ -10,10 +10,10 @@
 ## -- on a standard git checkout, this repo it may be ~/git/bh
 pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
-boosttargz="boost_1_81_0.tar.gz"
+boosttargz="boost_1_84_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.81.0-0"
-date="2022-12-15"
+version="1.84.0-0"
+date="2023-12-13"
 
 
 
@@ -38,7 +38,7 @@ pkgincl="${pkgdir}/inst/include/"
 ## local files containing R package pieces
 localfiles="${pkgdir}/local/files"
 ## local boost/ paths
-boostinstall="${pkgincl}/boost/"
+boostinstall="${pkgincl}/boost"
 
 
 ## (4) Display current settings

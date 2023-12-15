@@ -15,11 +15,10 @@
 #include <boost/asio/associated_allocator.hpp>
 #include <boost/asio/associated_cancellation_slot.hpp>
 #include <boost/asio/associated_executor.hpp>
-#include <boost/asio/handler_alloc_hook.hpp>
 #include <boost/asio/handler_continuation_hook.hpp>
-#include <boost/asio/handler_invoke_hook.hpp>
 #include <boost/core/ignore_unused.hpp>
 #include <boost/mp11/integer_sequence.hpp>
+#include <boost/bind/std_placeholders.hpp>
 #include <boost/is_placeholder.hpp>
 #include <functional>
 #include <type_traits>
@@ -85,7 +84,9 @@ class bind_wrapper
     static
     typename std::enable_if<
         boost::is_placeholder<typename
-            std::decay<Arg>::type>::value != 0,
+            std::decay<Arg>::type>::value != 0 &&
+        std::is_placeholder<typename
+            std::decay<Arg>::type>::value == 0,
         tuple_element<boost::is_placeholder<
             typename std::decay<Arg>::type>::value - 1,
         Vals>>::type&&
@@ -157,16 +158,6 @@ public:
 
     //
 
-    template<class Function>
-    friend
-    boost::asio::asio_handler_invoke_is_deprecated
-    asio_handler_invoke(
-        Function&& f, bind_wrapper* op)
-    {
-        using boost::asio::asio_handler_invoke;
-        return asio_handler_invoke(f, std::addressof(op->h_));
-    }
-
     friend
     bool asio_handler_is_continuation(
         bind_wrapper* op)
@@ -174,26 +165,6 @@ public:
         using boost::asio::asio_handler_is_continuation;
         return asio_handler_is_continuation(
                 std::addressof(op->h_));
-    }
-
-    friend
-    boost::asio::asio_handler_allocate_is_deprecated
-    asio_handler_allocate(
-        std::size_t size, bind_wrapper* op)
-    {
-        using boost::asio::asio_handler_allocate;
-        return asio_handler_allocate(
-            size, std::addressof(op->h_));
-    }
-
-    friend
-    boost::asio::asio_handler_deallocate_is_deprecated
-    asio_handler_deallocate(
-        void* p, std::size_t size, bind_wrapper* op)
-    {
-        using boost::asio::asio_handler_deallocate;
-        return asio_handler_deallocate(
-            p, size, std::addressof(op->h_));
     }
 };
 
@@ -274,16 +245,6 @@ public:
 
     //
 
-    template<class Function>
-    friend
-    boost::asio::asio_handler_invoke_is_deprecated
-    asio_handler_invoke(
-        Function&& f, bind_front_wrapper* op)
-    {
-        using boost::asio::asio_handler_invoke;
-        return asio_handler_invoke(f, std::addressof(op->h_));
-    }
-
     friend
     bool asio_handler_is_continuation(
         bind_front_wrapper* op)
@@ -291,26 +252,6 @@ public:
         using boost::asio::asio_handler_is_continuation;
         return asio_handler_is_continuation(
             std::addressof(op->h_));
-    }
-
-    friend
-    boost::asio::asio_handler_allocate_is_deprecated
-    asio_handler_allocate(
-        std::size_t size, bind_front_wrapper* op)
-    {
-        using boost::asio::asio_handler_allocate;
-        return asio_handler_allocate(
-            size, std::addressof(op->h_));
-    }
-
-    friend
-    boost::asio::asio_handler_deallocate_is_deprecated
-    asio_handler_deallocate(
-        void* p, std::size_t size, bind_front_wrapper* op)
-    {
-        using boost::asio::asio_handler_deallocate;
-        return asio_handler_deallocate(
-            p, size, std::addressof(op->h_));
     }
 };
 

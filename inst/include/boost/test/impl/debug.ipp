@@ -297,6 +297,8 @@ process_info::process_info( int pid )
 
     m_binary_path_buff[num_read] = 0;
     m_binary_path.assign( m_binary_path_buff, num_read );
+#else
+    (void) pid;  // silence 'unused variable' warning
 #endif
 }
 
@@ -691,6 +693,7 @@ under_debugger()
     size = sizeof(info);
     junk = sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, NULL, 0);
     assert(junk == 0);
+    (void)junk; // Silence unused variable warning
 
     // We're being debugged if the P_TRACED flag is set.
     return ( (info.kp_proc.p_flag & P_TRACED) != 0 );
@@ -880,7 +883,7 @@ attach_debugger( bool break_or_continue )
     // Debugger command line
 
     char cmd_line[MAX_CMD_LINE];
-    std::snprintf( cmd_line, sizeof(cmd_line), format, ::GetCurrentProcessId(), dbg_init_done_ev );
+    std::sprintf( cmd_line, format, ::GetCurrentProcessId(), dbg_init_done_ev );
 
     // *************************************************** //
     // Debugger window parameters

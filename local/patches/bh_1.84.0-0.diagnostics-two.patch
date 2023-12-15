@@ -1,0 +1,78 @@
+diff --git a/inst/include/boost/container/string.hpp b/inst/include/boost/container/string.hpp
+index 8a34876e..78e5aea1 100644
+--- a/inst/include/boost/container/string.hpp
++++ b/inst/include/boost/container/string.hpp
+@@ -67,7 +67,7 @@
+ //GCC 12 has a regression for array-bounds warnings
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 120000) && (BOOST_GCC < 130000)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Warray-bounds"
++//#pragma GCC diagnostic ignored "-Warray-bounds"
+ #endif
+ 
+ 
+diff --git a/inst/include/boost/filesystem/detail/header.hpp b/inst/include/boost/filesystem/detail/header.hpp
+index 70308ed8..f5ceed76 100644
+--- a/inst/include/boost/filesystem/detail/header.hpp
++++ b/inst/include/boost/filesystem/detail/header.hpp
+@@ -46,7 +46,7 @@
+ 
+ #if defined(__clang__)
+ // template argument uses unnamed type
+-#pragma clang diagnostic ignored "-Wunnamed-type-template-args"
++//#pragma clang diagnostic ignored "-Wunnamed-type-template-args"
+ #endif // defined(__clang__)
+ 
+ #endif
+diff --git a/inst/include/boost/static_string/static_string.hpp b/inst/include/boost/static_string/static_string.hpp
+index 27fc2bc0..def31dce 100644
+--- a/inst/include/boost/static_string/static_string.hpp
++++ b/inst/include/boost/static_string/static_string.hpp
+@@ -13,16 +13,16 @@
+ 
+ #if defined(__GNUC__) && __GNUC__ >= 8
+ #pragma GCC diagnostic push
+-#pragma GCC system_header
++//#pragma GCC system_header
+ // false positives
+-#pragma GCC diagnostic ignored "-Warray-bounds"
+-#pragma GCC diagnostic ignored "-Wrestrict"
+-#pragma GCC diagnostic ignored "-Wstringop-overflow"
++//#pragma GCC diagnostic ignored "-Warray-bounds"
++//#pragma GCC diagnostic ignored "-Wrestrict"
++//#pragma GCC diagnostic ignored "-Wstringop-overflow"
+ #endif
+ 
+ #if defined(__GNUC__) && __GNUC__ >= 7
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wnoexcept-type"
++//#pragma GCC diagnostic ignored "-Wnoexcept-type"
+ #endif
+ 
+ // External include guard
+diff --git a/inst/include/boost/unordered/detail/archive_constructed.hpp b/inst/include/boost/unordered/detail/archive_constructed.hpp
+index 341e2dbd..a6128a38 100644
+--- a/inst/include/boost/unordered/detail/archive_constructed.hpp
++++ b/inst/include/boost/unordered/detail/archive_constructed.hpp
+@@ -50,7 +50,7 @@ struct archive_constructed:private noncopyable
+ 
+ #if defined(BOOST_UNORDERED_IGNORE_WSTRICT_ALIASING)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
++  //#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+ #endif
+ 
+   T& get(){return *space.address();}
+diff --git a/inst/include/boost/unordered/detail/foa/ignore_wshadow.hpp b/inst/include/boost/unordered/detail/foa/ignore_wshadow.hpp
+index f84262bc..c894fd02 100644
+--- a/inst/include/boost/unordered/detail/foa/ignore_wshadow.hpp
++++ b/inst/include/boost/unordered/detail/foa/ignore_wshadow.hpp
+@@ -28,7 +28,7 @@
+  */
+ 
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wshadow"
++//#pragma GCC diagnostic ignored "-Wshadow"
+ #else
+ #pragma GCC diagnostic pop
+ #endif

@@ -12,6 +12,8 @@
 
 #include <iterator>
 
+#include <boost/range/size.hpp>
+
 #include <boost/geometry/algorithms/covered_by.hpp>
 #include <boost/geometry/algorithms/detail/closest_points/range_to_geometry_rtree.hpp>
 #include <boost/geometry/algorithms/detail/closest_points/utilities.hpp>
@@ -33,11 +35,11 @@ namespace detail { namespace closest_points
 
 struct multipoint_to_multipoint
 {
-    template 
+    template
     <
-        typename MultiPoint1, 
-        typename MultiPoint2, 
-        typename Segment, 
+        typename MultiPoint1,
+        typename MultiPoint2,
+        typename Segment,
         typename Strategies
     >
     static inline void apply(MultiPoint1 const& multipoint1,
@@ -67,11 +69,11 @@ struct multipoint_to_multipoint
 
 struct multipoint_to_linear
 {
-    template 
+    template
     <
-        typename MultiPoint, 
-        typename Linear, 
-        typename Segment, 
+        typename MultiPoint,
+        typename Linear,
+        typename Segment,
         typename Strategies
     >
     static inline void apply(MultiPoint const& multipoint,
@@ -90,11 +92,11 @@ struct multipoint_to_linear
 
 struct linear_to_multipoint
 {
-    template 
+    template
     <
-        typename Linear, 
-        typename MultiPoint, 
-        typename Segment, 
+        typename Linear,
+        typename MultiPoint,
+        typename Segment,
         typename Strategies
     >
     static inline void apply(Linear const& linear,
@@ -109,11 +111,11 @@ struct linear_to_multipoint
 
 struct segment_to_multipoint
 {
-    template 
+    template
     <
-        typename Segment, 
-        typename MultiPoint, 
-        typename OutSegment, 
+        typename Segment,
+        typename MultiPoint,
+        typename OutSegment,
         typename Strategies
     >
     static inline void apply(Segment const& segment,
@@ -134,11 +136,11 @@ struct segment_to_multipoint
 
 struct multipoint_to_segment
 {
-    template 
+    template
     <
-        typename MultiPoint, 
-        typename Segment, 
-        typename OutSegment, 
+        typename MultiPoint,
+        typename Segment,
+        typename OutSegment,
         typename Strategies
     >
     static inline void apply(MultiPoint const& multipoint,
@@ -152,7 +154,7 @@ struct multipoint_to_segment
             >;
         linestring_type linestring;
         convert(segment, linestring);
-        multipoint_to_linear::apply(multipoint, linestring, shortest_seg, 
+        multipoint_to_linear::apply(multipoint, linestring, shortest_seg,
             strategies);
     }
 };
@@ -182,11 +184,11 @@ private:
 
 public:
 
-    template 
+    template
     <
-        typename MultiPoint, 
-        typename Areal, 
-        typename Segment, 
+        typename MultiPoint,
+        typename Areal,
+        typename Segment,
         typename Strategies
     >
     static inline void apply(MultiPoint const& multipoint,
@@ -200,11 +202,11 @@ public:
                 boost::begin(multipoint),
                 boost::end(multipoint),
                 predicate);
-        
+
         if (it != boost::end(multipoint))
         {
             return set_segment_from_points::apply(*it, *it, shortest_seg);
-            
+
         }
 
         point_or_segment_range_to_geometry_rtree::apply(
@@ -218,11 +220,11 @@ public:
 
 struct areal_to_multipoint
 {
-    template 
+    template
     <
-        typename Areal, 
-        typename MultiPoint, 
-        typename Segment, 
+        typename Areal,
+        typename MultiPoint,
+        typename Segment,
         typename Strategies
     >
     static inline void apply(Areal const& areal,
@@ -248,7 +250,7 @@ namespace dispatch
 template <typename MultiPoint1, typename MultiPoint2>
 struct closest_points
     <
-        MultiPoint1, MultiPoint2, 
+        MultiPoint1, MultiPoint2,
         multi_point_tag, multi_point_tag,
         false
     > : detail::closest_points::multipoint_to_multipoint
@@ -258,7 +260,7 @@ struct closest_points
 template <typename MultiPoint, typename Linear>
 struct closest_points
     <
-        MultiPoint, Linear, 
+        MultiPoint, Linear,
         multi_point_tag, linear_tag,
         false
     > : detail::closest_points::multipoint_to_linear
@@ -268,7 +270,7 @@ struct closest_points
 template <typename Linear, typename MultiPoint>
 struct closest_points
     <
-         Linear, MultiPoint, 
+         Linear, MultiPoint,
          linear_tag, multi_point_tag,
          false
     > : detail::closest_points::linear_to_multipoint
@@ -278,7 +280,7 @@ struct closest_points
 template <typename MultiPoint, typename Segment>
 struct closest_points
     <
-        MultiPoint, Segment, 
+        MultiPoint, Segment,
         multi_point_tag, segment_tag,
         false
     > : detail::closest_points::multipoint_to_segment
@@ -288,7 +290,7 @@ struct closest_points
 template <typename Segment, typename MultiPoint>
 struct closest_points
     <
-         Segment, MultiPoint, 
+         Segment, MultiPoint,
          segment_tag, multi_point_tag,
          false
     > : detail::closest_points::segment_to_multipoint
@@ -298,7 +300,7 @@ struct closest_points
 template <typename MultiPoint, typename Areal>
 struct closest_points
     <
-        MultiPoint, Areal, 
+        MultiPoint, Areal,
         multi_point_tag, areal_tag,
         false
     > : detail::closest_points::multipoint_to_areal
@@ -308,7 +310,7 @@ struct closest_points
 template <typename Areal, typename MultiPoint>
 struct closest_points
     <
-        Areal, MultiPoint, 
+        Areal, MultiPoint,
         areal_tag, multi_point_tag,
         false
     > : detail::closest_points::areal_to_multipoint

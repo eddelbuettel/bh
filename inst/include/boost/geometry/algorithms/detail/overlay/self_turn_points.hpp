@@ -24,7 +24,6 @@
 #include <boost/geometry/algorithms/detail/overlay/get_turns.hpp>
 #include <boost/geometry/algorithms/detail/sections/section_box_policies.hpp>
 
-#include <boost/geometry/core/access.hpp>
 #include <boost/geometry/core/coordinate_dimension.hpp>
 #include <boost/geometry/core/point_order.hpp>
 #include <boost/geometry/core/tags.hpp>
@@ -356,7 +355,7 @@ struct self_get_turn_points<Reverse, AssignPolicy, Strategy, false>
 namespace detail { namespace self_get_turn_points
 {
 
-// Version where Reverse can be specified manually. TODO: 
+// Version where Reverse can be specified manually. TODO:
 // can most probably be merged with self_get_turn_points::get_turn
 template
 <

@@ -61,8 +61,12 @@ inline std::string build_args(const std::string & exe, std::vector<std::string> 
                 arg += '"';
             }
         }
+        else
+        {
+            arg = "\"\"";
+        }
 
-        if (!st.empty())//first one does not need a preceeding space
+        if (!st.empty())//first one does not need a preceding space
             st += ' ';
 
         st += arg;
@@ -105,8 +109,12 @@ inline std::wstring build_args(const std::wstring & exe, std::vector<std::wstrin
                 arg += '"';
             }
         }
+        else
+        {
+            arg = L"\"\"";
+        }
 
-        if (!st.empty())//first one does not need a preceeding space
+        if (!st.empty())//first one does not need a preceding space
             st += L' ';
 
         st += arg;

@@ -11,9 +11,9 @@
 #include <boost/locale/boundary/facets.hpp>
 #include <boost/locale/boundary/segment.hpp>
 #include <boost/locale/boundary/types.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <algorithm>
+#include <cstdint>
 #include <iterator>
 #include <locale>
 #include <memory>
@@ -40,6 +40,14 @@ namespace boost { namespace locale { namespace boundary {
     /// \cond INTERNAL
 
     namespace detail {
+        template<typename Char>
+        const boundary_indexing<Char>& get_boundary_indexing(const std::locale& l)
+        {
+            using facet_type = boundary_indexing<Char>;
+            if(!std::has_facet<facet_type>(l))
+                throw std::runtime_error("Locale was generated without segmentation support!");
+            return std::use_facet<facet_type>(l);
+        }
 
         template<typename IteratorType,
                  typename CategoryType = typename std::iterator_traits<IteratorType>::iterator_category>
@@ -48,7 +56,7 @@ namespace boost { namespace locale { namespace boundary {
             static index_type map(boundary_type t, IteratorType b, IteratorType e, const std::locale& l)
             {
                 std::basic_string<char_type> str(b, e);
-                return std::use_facet<boundary_indexing<char_type>>(l).map(t, str.c_str(), str.c_str() + str.size());
+                return get_boundary_indexing<char_type>(l).map(t, str.c_str(), str.c_str() + str.size());
             }
         };
 
@@ -78,12 +86,11 @@ namespace boost { namespace locale { namespace boundary {
                 if(linear_iterator_traits<char_type, IteratorType>::is_linear && b != e) {
                     const char_type* begin = &*b;
                     const char_type* end = begin + (e - b);
-                    index_type tmp = std::use_facet<boundary_indexing<char_type>>(l).map(t, begin, end);
+                    index_type tmp = get_boundary_indexing<char_type>(l).map(t, begin, end);
                     result.swap(tmp);
                 } else {
                     std::basic_string<char_type> str(b, e);
-                    index_type tmp =
-                      std::use_facet<boundary_indexing<char_type>>(l).map(t, str.c_str(), str.c_str() + str.size());
+                    index_type tmp = get_boundary_indexing<char_type>(l).map(t, str.c_str(), str.c_str() + str.size());
                     result.swap(tmp);
                 }
                 return result;
@@ -126,7 +133,7 @@ namespace boost { namespace locale { namespace boundary {
             typedef mapping<base_iterator> mapping_type;
             typedef segment<base_iterator> segment_type;
 
-            segment_index_iterator() : current_(0, 0), map_(0), mask_(0), full_select_(false) {}
+            segment_index_iterator() : current_(0, 0), map_(nullptr), mask_(0), full_select_(false) {}
 
             segment_index_iterator(base_iterator p, const mapping_type* map, rule_type mask, bool full_select) :
                 map_(map), mask_(mask), full_select_(full_select)
@@ -214,11 +221,10 @@ namespace boost { namespace locale { namespace boundary {
 
             void set(base_iterator p)
             {
-                size_t dist = std::distance(map_->begin(), p);
-                index_type::const_iterator b = map_->index().begin(), e = map_->index().end();
-                index_type::const_iterator boundary_point = std::upper_bound(b, e, break_info(dist));
+                const auto b = map_->index().begin(), e = map_->index().end();
+                auto boundary_point = std::upper_bound(b, e, break_info(std::distance(map_->begin(), p)));
                 while(boundary_point != e && (boundary_point->rule & mask_) == 0)
-                    boundary_point++;
+                    ++boundary_point;
 
                 current_.first = current_.second = boundary_point - b;
 
@@ -252,9 +258,8 @@ namespace boost { namespace locale { namespace boundary {
 
             void update_rule()
             {
-                if(current_.second != size()) {
+                if(current_.second != size())
                     value_.rule(index()[current_.second].rule);
-                }
             }
             size_t get_offset(size_t ind) const
             {
@@ -290,7 +295,7 @@ namespace boost { namespace locale { namespace boundary {
             typedef mapping<base_iterator> mapping_type;
             typedef boundary_point<base_iterator> boundary_point_type;
 
-            boundary_point_index_iterator() : current_(0), map_(0), mask_(0) {}
+            boundary_point_index_iterator() : current_(0), map_(nullptr), mask_(0) {}
 
             boundary_point_index_iterator(bool is_begin, const mapping_type* map, rule_type mask) :
                 map_(map), mask_(mask)
@@ -351,14 +356,13 @@ namespace boost { namespace locale { namespace boundary {
             {
                 size_t dist = std::distance(map_->begin(), p);
 
-                index_type::const_iterator b = index().begin();
-                index_type::const_iterator e = index().end();
-                index_type::const_iterator ptr = std::lower_bound(b, e, break_info(dist));
+                const auto b = index().begin(), e = index().end();
+                const auto ptr = std::lower_bound(b, e, break_info(dist));
 
-                if(ptr == index().end())
+                if(ptr == e)
                     current_ = size() - 1;
                 else
-                    current_ = ptr - index().begin();
+                    current_ = ptr - b;
 
                 while(!valid_offset(current_))
                     current_++;
@@ -381,9 +385,8 @@ namespace boost { namespace locale { namespace boundary {
 
             void update_rule()
             {
-                if(current_ != size()) {
+                if(current_ != size())
                     value_.rule(index()[current_].rule);
-                }
             }
             size_t get_offset(size_t ind) const
             {
@@ -865,6 +868,9 @@ namespace boost { namespace locale { namespace boundary {
 
     typedef segment_index<std::string::const_iterator> ssegment_index;   ///< convenience typedef
     typedef segment_index<std::wstring::const_iterator> wssegment_index; ///< convenience typedef
+#ifndef BOOST_LOCALE_NO_CXX20_STRING8
+    typedef segment_index<std::u8string::const_iterator> u8ssegment_index; ///< convenience typedef
+#endif
 #ifdef BOOST_LOCALE_ENABLE_CHAR16_T
     typedef segment_index<std::u16string::const_iterator> u16ssegment_index; ///< convenience typedef
 #endif
@@ -874,6 +880,9 @@ namespace boost { namespace locale { namespace boundary {
 
     typedef segment_index<const char*> csegment_index;     ///< convenience typedef
     typedef segment_index<const wchar_t*> wcsegment_index; ///< convenience typedef
+#ifdef __cpp_char8_t
+    typedef segment_index<const char8_t*> u8csegment_index; ///< convenience typedef
+#endif
 #ifdef BOOST_LOCALE_ENABLE_CHAR16_T
     typedef segment_index<const char16_t*> u16csegment_index; ///< convenience typedef
 #endif
@@ -883,6 +892,9 @@ namespace boost { namespace locale { namespace boundary {
 
     typedef boundary_point_index<std::string::const_iterator> sboundary_point_index;   ///< convenience typedef
     typedef boundary_point_index<std::wstring::const_iterator> wsboundary_point_index; ///< convenience typedef
+#ifndef BOOST_LOCALE_NO_CXX20_STRING8
+    typedef boundary_point_index<std::u8string::const_iterator> u8sboundary_point_index; ///< convenience typedef
+#endif
 #ifdef BOOST_LOCALE_ENABLE_CHAR16_T
     typedef boundary_point_index<std::u16string::const_iterator> u16sboundary_point_index; ///< convenience typedef
 #endif
@@ -892,6 +904,9 @@ namespace boost { namespace locale { namespace boundary {
 
     typedef boundary_point_index<const char*> cboundary_point_index;     ///< convenience typedef
     typedef boundary_point_index<const wchar_t*> wcboundary_point_index; ///< convenience typedef
+#ifdef __cpp_char8_t
+    typedef boundary_point_index<const char8_t*> u8cboundary_point_index; ///< convenience typedef
+#endif
 #ifdef BOOST_LOCALE_ENABLE_CHAR16_T
     typedef boundary_point_index<const char16_t*> u16cboundary_point_index; ///< convenience typedef
 #endif

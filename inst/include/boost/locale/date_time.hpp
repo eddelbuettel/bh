@@ -11,6 +11,7 @@
 #include <boost/locale/formatting.hpp>
 #include <boost/locale/hold_ptr.hpp>
 #include <boost/locale/time_zone.hpp>
+#include <array>
 #include <locale>
 #include <stdexcept>
 #include <vector>
@@ -388,14 +389,14 @@ namespace boost { namespace locale {
 
     } // namespace period
 
-    /// \brief this class that represents a set of periods,
+    /// \brief This class represents a set of periods.
     ///
     /// It is generally created by operations on periods:
     /// 1995*year + 3*month + 1*day. Note: operations are not commutative.
     class date_time_period_set {
     public:
         /// Default constructor - empty set
-        date_time_period_set() {}
+        date_time_period_set() = default;
 
         /// Create a set of single period with value 1
         date_time_period_set(period::period_type f) { basic_[0] = date_time_period(f); }
@@ -406,25 +407,21 @@ namespace boost { namespace locale {
         /// Append date_time_period \a f to the set
         void add(date_time_period f)
         {
-            size_t n = size();
-            if(n < 4)
+            const size_t n = size();
+            if(n < basic_.size())
                 basic_[n] = f;
             else
                 periods_.push_back(f);
         }
 
-        /// Get number if items in list
+        /// Get number of items in list
         size_t size() const
         {
-            if(basic_[0].type == period::period_type())
-                return 0;
-            if(basic_[1].type == period::period_type())
-                return 1;
-            if(basic_[2].type == period::period_type())
-                return 2;
-            if(basic_[3].type == period::period_type())
-                return 3;
-            return 4 + periods_.size();
+            for(size_t i = 0; i < basic_.size(); ++i) {
+                if(basic_[i].type == period::period_type())
+                    return i;
+            }
+            return basic_.size() + periods_.size();
         }
 
         /// Get item at position \a n the set, n should be in range [0,size)
@@ -432,14 +429,14 @@ namespace boost { namespace locale {
         {
             if(n >= size())
                 throw std::out_of_range("Invalid index to date_time_period");
-            if(n < 4)
+            if(n < basic_.size())
                 return basic_[n];
             else
-                return periods_[n - 4];
+                return periods_[n - basic_.size()];
         }
 
     private:
-        date_time_period basic_[4];
+        std::array<date_time_period, 4> basic_;
         std::vector<date_time_period> periods_;
     };
 
@@ -470,29 +467,29 @@ namespace boost { namespace locale {
     public:
         /// Create calendar taking locale and timezone information from ios_base instance.
         ///
-        /// \note throws std::bad_cast if ios does not have a locale with installed \ref calendar_facet
+        /// \throws std::bad_cast: \a ios does not have a locale with installed \ref calendar_facet
         /// facet installed
         calendar(std::ios_base& ios);
 
         /// Create calendar with locale \a l and time_zone \a zone
         ///
-        /// \note throws std::bad_cast if loc does not have \ref calendar_facet facet installed
+        /// \throws std::bad_cast: \a l does not have \ref calendar_facet facet installed
         calendar(const std::locale& l, const std::string& zone);
 
         /// Create calendar with locale \a l and default timezone
         ///
-        /// \note throws std::bad_cast if loc does not have \ref calendar_facet facet installed
+        /// \throws std::bad_cast: \a l does not have \ref calendar_facet facet installed
         calendar(const std::locale& l);
 
         /// Create calendar with default locale and timezone \a zone
         ///
-        /// \note throws std::bad_cast if global locale does not have \ref calendar_facet facet installed
+        /// \throws std::bad_cast: global locale does not have \ref calendar_facet facet installed
 
         calendar(const std::string& zone);
 
         /// Create calendar with default locale and timezone
         ///
-        /// \note throws std::bad_cast if global locale does not have \ref calendar_facet facet installed
+        /// \throws std::bad_cast: global locale does not have \ref calendar_facet facet installed
         calendar();
         ~calendar();
 
@@ -515,9 +512,9 @@ namespace boost { namespace locale {
         int first_day_of_week() const;
 
         /// get calendar's locale
-        std::locale get_locale() const;
+        const std::locale& get_locale() const;
         /// get calendar's time zone
-        std::string get_time_zone() const;
+        const std::string& get_time_zone() const;
 
         /// Check if the calendar is Gregorian
         bool is_gregorian() const;
@@ -562,13 +559,13 @@ namespace boost { namespace locale {
     public:
         /// Default constructor, uses default calendar initialized date_time object to current time.
         ///
-        /// \note throws std::bad_cast if the global locale does not have \ref calendar_facet facet installed
+        /// \throws std::bad_cast: Global locale does not have \ref calendar_facet facet installed
         date_time();
 
         /// Copy a date_time
         date_time(const date_time& other);
-        // Move construct a new date_time
-        date_time(date_time&& other) = default;
+        // Move construct a date_time
+        date_time(date_time&&) noexcept = default;
 
         /// copy date_time and change some fields according to the \a set
         date_time(const date_time& other, const date_time_period_set& set);
@@ -576,11 +573,11 @@ namespace boost { namespace locale {
         /// assign the date_time
         date_time& operator=(const date_time& other);
         // Move assign a date_time
-        date_time& operator=(date_time&& other) = default;
+        date_time& operator=(date_time&&) noexcept = default;
 
         /// Create a date_time object using POSIX time \a time and default calendar
         ///
-        /// \note throws std::bad_cast if the global locale does not have \ref calendar_facet facet installed
+        /// \throws std::bad_cast: Global locale does not have \ref calendar_facet facet installed
         date_time(double time);
 
         /// Create a date_time object using POSIX time \a time and calendar \a cal
@@ -591,7 +588,7 @@ namespace boost { namespace locale {
 
         /// Create a date_time object using default calendar and define values given in \a set
         ///
-        /// \note throws std::bad_cast if the global locale does not have \ref calendar_facet facet installed
+        /// \throws std::bad_cast: Global locale does not have \ref calendar_facet facet installed
         date_time(const date_time_period_set& set);
 
         /// Create a date_time object using calendar \a cal and define values given in \a set
@@ -672,6 +669,9 @@ namespace boost { namespace locale {
         /// This time can be fetched from Operating system clock using C function time, gettimeofday and others.
         void time(double v);
 
+        /// Get the name of the associated timezone
+        std::string timezone() const;
+
         /// compare date_time in the timeline (ignores difference in calendar, timezone etc)
         bool operator==(const date_time& other) const;
         /// compare date_time in the timeline (ignores difference in calendar, timezone etc)
@@ -686,7 +686,7 @@ namespace boost { namespace locale {
         bool operator>=(const date_time& other) const;
 
         /// swaps two dates - efficient, does not throw
-        void swap(date_time& other);
+        void swap(date_time& other) noexcept;
 
         /// calculate the distance from this date_time to \a other in terms of periods \a f
         int difference(const date_time& other, period::period_type f) const;
@@ -704,13 +704,18 @@ namespace boost { namespace locale {
         hold_ptr<abstract_calendar> impl_;
     };
 
+    inline void swap(date_time& left, date_time& right) noexcept
+    {
+        left.swap(right);
+    }
+
     /// Writes date_time \a t to output stream \a out.
     ///
     /// This function uses locale, calendar and time zone of the target stream \a in.
     ///
     /// For example:
     /// \code
-    ///  date_time now(time(0),hebrew_calendar)
+    ///  date_time now(time(nullptr),hebrew_calendar)
     ///  std::cout << "Year: " << period::year(now) << " Full Date:" << now;
     /// \endcode
     ///
@@ -718,16 +723,15 @@ namespace boost { namespace locale {
     template<typename CharType>
     std::basic_ostream<CharType>& operator<<(std::basic_ostream<CharType>& out, const date_time& t)
     {
-        double time_point = t.time();
-        uint64_t display_flags = ios_info::get(out).display_flags();
-        if(display_flags == flags::date || display_flags == flags::time || display_flags == flags::datetime
-           || display_flags == flags::strftime)
-        {
+        const double time_point = t.time();
+        ios_info& info = ios_info::get(out);
+        const uint64_t display_flags = info.display_flags();
+        if(as::detail::is_datetime_display_flags(display_flags)) {
             out << time_point;
         } else {
-            ios_info::get(out).display_flags(flags::datetime);
+            info.display_flags(flags::datetime);
             out << time_point;
-            ios_info::get(out).display_flags(display_flags);
+            info.display_flags(display_flags);
         }
         return out;
     }
@@ -739,10 +743,8 @@ namespace boost { namespace locale {
     std::basic_istream<CharType>& operator>>(std::basic_istream<CharType>& in, date_time& t)
     {
         double v;
-        uint64_t display_flags = ios_info::get(in).display_flags();
-        if(display_flags == flags::date || display_flags == flags::time || display_flags == flags::datetime
-           || display_flags == flags::strftime)
-        {
+        const uint64_t display_flags = ios_info::get(in).display_flags();
+        if(as::detail::is_datetime_display_flags(display_flags)) {
             in >> v;
         } else {
             ios_info::get(in).display_flags(flags::datetime);
