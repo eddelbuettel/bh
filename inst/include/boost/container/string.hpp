@@ -67,7 +67,7 @@
 //GCC 12 has a regression for array-bounds warnings
 #if defined(BOOST_GCC) && (BOOST_GCC >= 120000) && (BOOST_GCC < 130000)
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warray-bounds"
+//#pragma GCC diagnostic ignored "-Warray-bounds"
 #endif
 
 

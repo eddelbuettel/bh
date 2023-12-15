@@ -46,7 +46,7 @@
 
 #if defined(__clang__)
 // template argument uses unnamed type
-#pragma clang diagnostic ignored "-Wunnamed-type-template-args"
+//#pragma clang diagnostic ignored "-Wunnamed-type-template-args"
 #endif // defined(__clang__)
 
 #endif
