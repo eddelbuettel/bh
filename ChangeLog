@@ -1,3 +1,7 @@
+2024-01-09  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date):  Release 1.84.0-0
+
 2023-12-15  Dirk Eddelbuettel  <edd@debian.org>
 
 	* DESCRIPTION (Version, Date):  Pre-Release 1.84.0-0
@@ -10,7 +14,7 @@
 	patch sets from CRAN demands on file path length and diagnostics
 	* local/patches/bh_1.84.0-0.diagnostics-two.patch: Added
 
-	* local/scripts/CreateBoost.sh: Update for 1.84.0, added url
+	* local/scripts/CreateBoost.sh: Update for 1.84.0, added qvm
 
 2023-01-17  Dirk Eddelbuettel  <edd@debian.org>
 

@@ -7,10 +7,10 @@
 \newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
-\section{Changes in version 1.84.0-0 (2023-12-15)}{
+\section{Changes in version 1.84.0-0 (2024-01-09)}{
   \itemize{
-    \item Pre-release to allow work on five affected packages
-    \item Upgrade to \boost 1.81.0 (\ghpr{87})
+    \item Upgrade to \boost 1.84.0 
+    \item Added \boostPkg{qvm} (requested in \ghit{97})
   }
 }
 
