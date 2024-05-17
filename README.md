@@ -3,7 +3,7 @@
 [![CI](https://github.com/eddelbuettel/bh/workflows/ci/badge.svg)](https://github.com/eddelbuettel/bh/actions?query=workflow%3Aci)
 [![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](https://www.boost.org/users/license.html)
 [![CRAN](http://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH)
-[![Dependencies](https://tinyverse.netlify.com/badge/BH)](https://cran.r-project.org/package=BH)
+[![Dependencies](https://tinyverse.netlify.app/badge/BH)](https://cran.r-project.org/package=BH)
 [![Last Commit](https://img.shields.io/github/last-commit/eddelbuettel/bh)](https://github.com/eddelbuettel/bh)
 [![Downloads (monthly)](http://cranlogs.r-pkg.org/badges/BH?color=brightgreen)](https://www.r-pkg.org:443/pkg/BH)
 [![Downloads (total)](https://cranlogs.r-pkg.org/badges/grand-total/BH?color=brightgreen)](https://www.r-pkg.org:443/pkg/BH)
