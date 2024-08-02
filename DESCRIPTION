@@ -3,8 +3,11 @@ Type: Package
 Title: Boost C++ Header Files
 Version: 1.84.0-0
 Date: 2024-01-09
-Author: Dirk Eddelbuettel, John W. Emerson and Michael J. Kane
-Maintainer: Dirk Eddelbuettel <edd@debian.org>
+Authors@R: c(person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd@debian.org",
+                    comment = c(ORCID = "0000-0001-6419-907X")),
+             person("John W.", "Emerson", role = "aut"), 
+             person("Michael J.", "Kane", role = "aut", 
+                    comment = c(ORCID = "0000-0003-1899-6662")))
 Description: Boost provides free peer-reviewed portable C++ source 
  libraries.  A large part of Boost is provided as C++ template code
  which is resolved entirely at compile-time without linking.  This 
