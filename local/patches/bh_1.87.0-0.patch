@@ -1,0 +1,1886 @@
+diff --git a/inst/include/boost/asio/detail/push_options.hpp b/inst/include/boost/asio/detail/push_options.hpp
+index 31229364..8ea8c589 100644
+--- a/inst/include/boost/asio/detail/push_options.hpp
++++ b/inst/include/boost/asio/detail/push_options.hpp
+@@ -61,9 +61,9 @@
+ # endif // !defined(_WIN32) && !defined(__WIN32__) && !defined(WIN32)
+ 
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
++//# pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+ # if (__clang_major__ >= 6)
+-#  pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
++//#  pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+ # endif // (__clang_major__ >= 6)
+ 
+ # pragma push_macro ("emit")
+@@ -102,12 +102,12 @@
+ # endif // (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
+ 
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
++//# pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+ # if (__GNUC__ == 4 && __GNUC_MINOR__ >= 7) || (__GNUC__ > 4)
+-#  pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
++//#  pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+ # endif // (__GNUC__ == 4 && __GNUC_MINOR__ >= 7) || (__GNUC__ > 4)
+ # if (__GNUC__ >= 7)
+-#  pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
++//#  pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+ # endif // (__GNUC__ >= 7)
+ 
+ # pragma push_macro ("emit")
+diff --git a/inst/include/boost/atomic/detail/bitwise_cast.hpp b/inst/include/boost/atomic/detail/bitwise_cast.hpp
+index 3318eb44..176077a5 100644
+--- a/inst/include/boost/atomic/detail/bitwise_cast.hpp
++++ b/inst/include/boost/atomic/detail/bitwise_cast.hpp
+@@ -56,7 +56,7 @@
+ #if defined(BOOST_GCC) && BOOST_GCC >= 80000
+ #pragma GCC diagnostic push
+ // copying an object of non-trivial type X from an array of Y. This is benign because we use memcpy to copy trivially copyable objects.
+-#pragma GCC diagnostic ignored "-Wclass-memaccess"
++//#pragma GCC diagnostic ignored "-Wclass-memaccess"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/atomic/detail/extra_fp_ops_generic.hpp b/inst/include/boost/atomic/detail/extra_fp_ops_generic.hpp
+index aefd7d32..029c1594 100644
+--- a/inst/include/boost/atomic/detail/extra_fp_ops_generic.hpp
++++ b/inst/include/boost/atomic/detail/extra_fp_ops_generic.hpp
+@@ -31,7 +31,7 @@
+ #if defined(BOOST_GCC) && BOOST_GCC >= 60000
+ #pragma GCC diagnostic push
+ // ignoring attributes on template argument X - this warning is because we need to pass storage_type as a template argument; no problem in this case
+-#pragma GCC diagnostic ignored "-Wignored-attributes"
++//#pragma GCC diagnostic ignored "-Wignored-attributes"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/atomic/detail/header.hpp b/inst/include/boost/atomic/detail/header.hpp
+index 0251c616..5dbe0572 100644
+--- a/inst/include/boost/atomic/detail/header.hpp
++++ b/inst/include/boost/atomic/detail/header.hpp
+@@ -55,17 +55,17 @@
+ 
+ #pragma GCC diagnostic push
+ // unused parameter 'arg'
+-#pragma GCC diagnostic ignored "-Wunused-parameter"
++//#pragma GCC diagnostic ignored "-Wunused-parameter"
+ // missing initializer for member var
+-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
++//#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+ 
+ #elif defined(BOOST_CLANG)
+ 
+ #pragma clang diagnostic push
+ // unused parameter 'arg'
+-#pragma clang diagnostic ignored "-Wunused-parameter"
++//#pragma clang diagnostic ignored "-Wunused-parameter"
+ // missing initializer for member var
+-#pragma clang diagnostic ignored "-Wmissing-field-initializers"
++//#pragma clang diagnostic ignored "-Wmissing-field-initializers"
+ 
+ #endif
+ 
+diff --git a/inst/include/boost/beast/_experimental/unit_test/suite.hpp b/inst/include/boost/beast/_experimental/unit_test/suite.hpp
+index b82eb539..7e5b55fd 100644
+--- a/inst/include/boost/beast/_experimental/unit_test/suite.hpp
++++ b/inst/include/boost/beast/_experimental/unit_test/suite.hpp
+@@ -18,7 +18,7 @@
+ 
+ #if defined(BOOST_GCC) && BOOST_GCC >= 70000 && BOOST_GCC < 80000
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wnoexcept-type"
++//#pragma GCC diagnostic ignored "-Wnoexcept-type"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/bind.hpp b/inst/include/boost/bind.hpp
+index 48cc4094..0f00ad35 100644
+--- a/inst/include/boost/bind.hpp
++++ b/inst/include/boost/bind.hpp
+@@ -45,7 +45,7 @@ BOOST_PRAGMA_MESSAGE(
+ #if defined(BOOST_CLANG)
+ # pragma clang diagnostic push
+ # if  __has_warning("-Wheader-hygiene")
+-#  pragma clang diagnostic ignored "-Wheader-hygiene"
++//#  pragma clang diagnostic ignored "-Wheader-hygiene"
+ # endif
+ #endif
+ 
+diff --git a/inst/include/boost/concept/detail/general.hpp b/inst/include/boost/concept/detail/general.hpp
+index 8d7d6f69..53d3b49c 100644
+--- a/inst/include/boost/concept/detail/general.hpp
++++ b/inst/include/boost/concept/detail/general.hpp
+@@ -30,7 +30,7 @@ struct requirement
+ {
+ #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
+ #   pragma GCC diagnostic push
+-#   pragma GCC diagnostic ignored "-Wnonnull"
++  //#   pragma GCC diagnostic ignored "-Wnonnull"
+ #   endif
+     static void failed() { ((Model*)0)->~Model(); }
+ #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
+@@ -45,7 +45,7 @@ struct requirement<failed ************ Model::************>
+ {
+ #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
+ #   pragma GCC diagnostic push
+-#   pragma GCC diagnostic ignored "-Wnonnull"
++  //#   pragma GCC diagnostic ignored "-Wnonnull"
+ #   endif
+     static void failed() { ((Model*)0)->~Model(); }
+ #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
+@@ -60,7 +60,7 @@ struct constraint
+ {
+ #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
+ #   pragma GCC diagnostic push
+-#   pragma GCC diagnostic ignored "-Wnonnull"
++  //#   pragma GCC diagnostic ignored "-Wnonnull"
+ #   endif
+     static void failed() { ((Model*)0)->constraints(); }
+ #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
+diff --git a/inst/include/boost/concept/usage.hpp b/inst/include/boost/concept/usage.hpp
+index fe88b5f5..56f934dc 100644
+--- a/inst/include/boost/concept/usage.hpp
++++ b/inst/include/boost/concept/usage.hpp
+@@ -15,7 +15,7 @@ struct usage_requirements
+ {
+ #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
+ #   pragma GCC diagnostic push
+-#   pragma GCC diagnostic ignored "-Wnonnull"
++  //#   pragma GCC diagnostic ignored "-Wnonnull"
+ #   endif
+     ~usage_requirements() { ((Model*)0)->~Model(); }
+ #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
+diff --git a/inst/include/boost/container/allocator_traits.hpp b/inst/include/boost/container/allocator_traits.hpp
+index dd5bf0e4..4f554fba 100644
+--- a/inst/include/boost/container/allocator_traits.hpp
++++ b/inst/include/boost/container/allocator_traits.hpp
+@@ -51,8 +51,8 @@
+ 
+ #if defined(BOOST_CONTAINER_GCC_COMPATIBLE_HAS_DIAGNOSTIC_IGNORED)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wunused-result"
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wunused-result"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ #define BOOST_INTRUSIVE_HAS_MEMBER_FUNCTION_CALLABLE_WITH_FUNCNAME allocate
+diff --git a/inst/include/boost/container/detail/config_begin.hpp b/inst/include/boost/container/detail/config_begin.hpp
+index d459a066..55661109 100644
+--- a/inst/include/boost/container/detail/config_begin.hpp
++++ b/inst/include/boost/container/detail/config_begin.hpp
+@@ -57,6 +57,6 @@
+ //Sign conversion warnings broken before GCC 9.3
+ //(https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87519)
+ #if BOOST_GCC < 90300
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
+ #endif
+ #endif
+diff --git a/inst/include/boost/container/detail/copy_move_algo.hpp b/inst/include/boost/container/detail/copy_move_algo.hpp
+index 7c7d216f..e2b6f7bd 100644
+--- a/inst/include/boost/container/detail/copy_move_algo.hpp
++++ b/inst/include/boost/container/detail/copy_move_algo.hpp
+@@ -42,19 +42,19 @@
+ #pragma GCC diagnostic push
+ //pair memcpy optimizations rightfully detected by GCC
+ #  if defined(BOOST_GCC) && (BOOST_GCC >= 80000)
+-#     pragma GCC diagnostic ignored "-Wclass-memaccess"
++//#     pragma GCC diagnostic ignored "-Wclass-memaccess"
+ #  endif
+ //GCC 8 seems a bit confused about array access error with static_vector
+ //when out of bound exceptions are being thrown.
+ #  if defined(BOOST_GCC) && ((BOOST_GCC >= 80000) && (BOOST_GCC < 80200))
+-#     pragma GCC diagnostic ignored "-Wstringop-overflow"
++//#     pragma GCC diagnostic ignored "-Wstringop-overflow"
+ #  endif
+ //GCC 12 seems a bit confused about array access error with small_vector
+ #  if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
+-#     pragma GCC diagnostic ignored "-Wstringop-overread"
+-#     pragma GCC diagnostic ignored "-Wstringop-overflow"
++//#     pragma GCC diagnostic ignored "-Wstringop-overread"
++//#     pragma GCC diagnostic ignored "-Wstringop-overflow"
+ #  endif
+-#  pragma GCC diagnostic ignored "-Warray-bounds"
++//#  pragma GCC diagnostic ignored "-Warray-bounds"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/container/detail/flat_tree.hpp b/inst/include/boost/container/detail/flat_tree.hpp
+index a753a456..b17e4f7d 100644
+--- a/inst/include/boost/container/detail/flat_tree.hpp
++++ b/inst/include/boost/container/detail/flat_tree.hpp
+@@ -59,7 +59,7 @@
+ 
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wunused-result"
++//#pragma GCC diagnostic ignored "-Wunused-result"
+ #endif
+ 
+ //merge_unique
+diff --git a/inst/include/boost/container/detail/is_container.hpp b/inst/include/boost/container/detail/is_container.hpp
+index fe44b465..ccf9119d 100644
+--- a/inst/include/boost/container/detail/is_container.hpp
++++ b/inst/include/boost/container/detail/is_container.hpp
+@@ -20,7 +20,7 @@
+ 
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wunused-result"
++//#pragma GCC diagnostic ignored "-Wunused-result"
+ #endif
+ 
+ //empty
+diff --git a/inst/include/boost/container/detail/is_contiguous_container.hpp b/inst/include/boost/container/detail/is_contiguous_container.hpp
+index e0cf6bab..97245f1c 100644
+--- a/inst/include/boost/container/detail/is_contiguous_container.hpp
++++ b/inst/include/boost/container/detail/is_contiguous_container.hpp
+@@ -20,7 +20,7 @@
+ 
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wunused-result"
++//#pragma GCC diagnostic ignored "-Wunused-result"
+ #endif
+ 
+ //data
+diff --git a/inst/include/boost/container/detail/node_alloc_holder.hpp b/inst/include/boost/container/detail/node_alloc_holder.hpp
+index 32023e39..31e3f9b4 100644
+--- a/inst/include/boost/container/detail/node_alloc_holder.hpp
++++ b/inst/include/boost/container/detail/node_alloc_holder.hpp
+@@ -82,7 +82,7 @@ struct base_node
+ 
+    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600) && (BOOST_GCC < 80000)
+       #pragma GCC diagnostic push
+-      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
++  //      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+       #define BOOST_CONTAINER_DISABLE_ALIASING_WARNING
+    #  endif
+    public:
+diff --git a/inst/include/boost/container/node_handle.hpp b/inst/include/boost/container/node_handle.hpp
+index 5179022d..3ec8f7ee 100644
+--- a/inst/include/boost/container/node_handle.hpp
++++ b/inst/include/boost/container/node_handle.hpp
+@@ -36,7 +36,7 @@
+ //GCC 12 is confused about maybe uninitialized allocators
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 120000) && (BOOST_GCC < 130000)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+ 
+ 
+diff --git a/inst/include/boost/container/small_vector.hpp b/inst/include/boost/container/small_vector.hpp
+index afed9108..3d95ad6c 100644
+--- a/inst/include/boost/container/small_vector.hpp
++++ b/inst/include/boost/container/small_vector.hpp
+@@ -482,8 +482,8 @@ inline std::size_t get_small_vector_storage_offset()
+ 
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wcast-align"
+-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
++//#pragma GCC diagnostic ignored "-Wcast-align"
++//#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+ #endif
+ 
+ //Internal storage hack
+diff --git a/inst/include/boost/container/stable_vector.hpp b/inst/include/boost/container/stable_vector.hpp
+index f8952c83..af9abfa5 100644
+--- a/inst/include/boost/container/stable_vector.hpp
++++ b/inst/include/boost/container/stable_vector.hpp
+@@ -161,7 +161,7 @@ struct node
+ 
+    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600) && (BOOST_GCC < 80000)
+       #pragma GCC diagnostic push
+-      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
++  //      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+       #define BOOST_CONTAINER_DISABLE_ALIASING_WARNING
+    #  endif
+ 
+diff --git a/inst/include/boost/container/string.hpp b/inst/include/boost/container/string.hpp
+index 4a69e192..59a6bac2 100644
+--- a/inst/include/boost/container/string.hpp
++++ b/inst/include/boost/container/string.hpp
+@@ -65,7 +65,7 @@
+ //GCC 12 has a regression for array-bounds warnings
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 120000) && (BOOST_GCC < 130000)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Warray-bounds"
++//#pragma GCC diagnostic ignored "-Warray-bounds"
+ #endif
+ 
+ 
+@@ -136,7 +136,7 @@ class basic_string_base
+ 
+    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600)
+    #pragma GCC diagnostic push
+-   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++  //   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+    #endif
+ 
+    //This is the structure controlling a long string
+@@ -404,7 +404,7 @@ class basic_string_base
+    //GCC seems a bit confused about uninitialized accesses
+    #if defined(BOOST_GCC) && (BOOST_GCC >= 40700)
+    #pragma GCC diagnostic push
+-   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++  //   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+    #endif
+ 
+    inline pointer priv_long_addr() const
+diff --git a/inst/include/boost/core/allocator_access.hpp b/inst/include/boost/core/allocator_access.hpp
+index 0f0ed325..88084a81 100644
+--- a/inst/include/boost/core/allocator_access.hpp
++++ b/inst/include/boost/core/allocator_access.hpp
+@@ -46,14 +46,14 @@ _STL_DISABLE_DEPRECATED_WARNING
+ #if defined(__clang__) && defined(__has_warning)
+ # if __has_warning("-Wdeprecated-declarations")
+ #  pragma clang diagnostic push
+-#  pragma clang diagnostic ignored "-Wdeprecated-declarations"
++//#  pragma clang diagnostic ignored "-Wdeprecated-declarations"
+ # endif
+ #elif defined(_MSC_VER)
+ # pragma warning(push)
+ # pragma warning(disable: 4996)
+ #elif defined(BOOST_GCC) && BOOST_GCC >= 40600
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/core/detail/lwt_unattended.hpp b/inst/include/boost/core/detail/lwt_unattended.hpp
+index 96fc5fc5..0d98f2e6 100644
+--- a/inst/include/boost/core/detail/lwt_unattended.hpp
++++ b/inst/include/boost/core/detail/lwt_unattended.hpp
+@@ -32,7 +32,7 @@ inline void lwt_unattended()
+ 
+ # if defined(__clang__)
+ #  pragma clang diagnostic push
+-#  pragma clang diagnostic ignored "-Wdeprecated-declarations"
++//#  pragma clang diagnostic ignored "-Wdeprecated-declarations"
+ # endif
+ 
+ #if !defined(WINAPI_FAMILY) || WINAPI_FAMILY == 100 /*WINAPI_FAMILY_DESKTOP_APP*/
+diff --git a/inst/include/boost/core/detail/string_view.hpp b/inst/include/boost/core/detail/string_view.hpp
+index 5cce6f6c..83a3d45a 100644
+--- a/inst/include/boost/core/detail/string_view.hpp
++++ b/inst/include/boost/core/detail/string_view.hpp
+@@ -61,7 +61,7 @@ template<> struct sv_to_uchar<char>
+ 
+ #if defined(__GNUC__) && __GNUC__ * 100 + __GNUC_MINOR__ >= 406
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wtype-limits"
++  //# pragma GCC diagnostic ignored "-Wtype-limits"
+ #endif
+ 
+ template<class Ch> BOOST_CXX14_CONSTEXPR std::size_t find_first_of( Ch const* p_, std::size_t n_, Ch const* s, std::size_t pos, std::size_t n ) BOOST_NOEXCEPT
+diff --git a/inst/include/boost/core/lightweight_test.hpp b/inst/include/boost/core/lightweight_test.hpp
+index 43baea05..aa32efbf 100644
+--- a/inst/include/boost/core/lightweight_test.hpp
++++ b/inst/include/boost/core/lightweight_test.hpp
+@@ -145,15 +145,15 @@ inline void no_throw_failed_impl(const char* expr, const char* what, const char*
+ #if defined(__clang__) && defined(__has_warning)
+ # if __has_warning("-Wsign-compare")
+ #  pragma clang diagnostic push
+-#  pragma clang diagnostic ignored "-Wsign-compare"
++//#  pragma clang diagnostic ignored "-Wsign-compare"
+ # endif
+ #elif defined(_MSC_VER)
+ # pragma warning(push)
+ # pragma warning(disable: 4389)
+ #elif defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wsign-compare"
+-# pragma GCC diagnostic ignored "-Wsign-conversion"
++//# pragma GCC diagnostic ignored "-Wsign-compare"
++//# pragma GCC diagnostic ignored "-Wsign-conversion"
+ #endif
+ 
+ // specialize test output for char pointers to avoid printing as cstring
+diff --git a/inst/include/boost/date_time/c_time.hpp b/inst/include/boost/date_time/c_time.hpp
+index 24286f8a..d64bfcf4 100644
+--- a/inst/include/boost/date_time/c_time.hpp
++++ b/inst/include/boost/date_time/c_time.hpp
+@@ -92,7 +92,7 @@ namespace date_time {
+ 
+ #if defined(__clang__) // Clang has to be checked before MSVC
+ #pragma clang diagnostic push
+-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
++    //#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+ #elif (defined(_MSC_VER) && (_MSC_VER >= 1400))
+ #pragma warning(push) // preserve warning settings
+ #pragma warning(disable : 4996) // disable depricated localtime/gmtime warning on vc8
+diff --git a/inst/include/boost/filesystem/detail/header.hpp b/inst/include/boost/filesystem/detail/header.hpp
+index f98b0aba..f5ceed76 100644
+--- a/inst/include/boost/filesystem/detail/header.hpp
++++ b/inst/include/boost/filesystem/detail/header.hpp
+@@ -40,13 +40,13 @@
+ 
+ #pragma GCC diagnostic push
+ // unused parameter 'arg'
+-#pragma GCC diagnostic ignored "-Wunused-parameter"
++//#pragma GCC diagnostic ignored "-Wunused-parameter"
+ // unused function 'foo'
+-#pragma GCC diagnostic ignored "-Wunused-function"
++//#pragma GCC diagnostic ignored "-Wunused-function"
+ 
+ #if defined(__clang__)
+ // template argument uses unnamed type
+-#pragma clang diagnostic ignored "-Wunnamed-type-template-args"
++//#pragma clang diagnostic ignored "-Wunnamed-type-template-args"
+ #endif // defined(__clang__)
+ 
+ #endif
+diff --git a/inst/include/boost/function/function_base.hpp b/inst/include/boost/function/function_base.hpp
+index ca15b7b7..73186251 100644
+--- a/inst/include/boost/function/function_base.hpp
++++ b/inst/include/boost/function/function_base.hpp
+@@ -581,7 +581,7 @@ public: // should be protected, but GCC 2.95.3 will fail to allow access
+ 
+ #if defined(BOOST_CLANG)
+ #   pragma clang diagnostic push
+-#   pragma clang diagnostic ignored "-Wweak-vtables"
++  //#   pragma clang diagnostic ignored "-Wweak-vtables"
+ #endif
+ /**
+  * The bad_function_call exception class is thrown when a boost::function
+diff --git a/inst/include/boost/function/function_template.hpp b/inst/include/boost/function/function_template.hpp
+index ac4a5b24..777feca0 100644
+--- a/inst/include/boost/function/function_template.hpp
++++ b/inst/include/boost/function/function_template.hpp
+@@ -436,7 +436,7 @@ namespace boost {
+ #if defined(BOOST_GCC) && (__GNUC__ >= 11)
+ # pragma GCC diagnostic push
+ // False positive in GCC 11/12 for empty function objects
+-# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+           if (base.manager)
+             base.manager(functor, functor, destroy_functor_tag);
+@@ -899,10 +899,10 @@ namespace boost {
+ #           pragma GCC diagnostic push
+             // This warning is technically correct, but we don't want to pay the price for initializing
+             // just to silence a warning: https://github.com/boostorg/function/issues/27
+-#           pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//#           pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #           if (BOOST_GCC >= 110000)
+               // GCC 11.3, 12 emit a different warning: https://github.com/boostorg/function/issues/42
+-#             pragma GCC diagnostic ignored "-Wuninitialized"
++//#             pragma GCC diagnostic ignored "-Wuninitialized"
+ #           endif
+ #         endif
+           std::memcpy(this->functor.data, f.functor.data, sizeof(boost::detail::function::function_buffer));
+@@ -999,10 +999,10 @@ namespace boost {
+ #             pragma GCC diagnostic push
+               // This warning is technically correct, but we don't want to pay the price for initializing
+               // just to silence a warning: https://github.com/boostorg/function/issues/27
+-#             pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++            //#             pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #             if (BOOST_GCC >= 120000)
+                 // GCC 12 emits a different warning: https://github.com/boostorg/function/issues/42
+-#               pragma GCC diagnostic ignored "-Wuninitialized"
++            //#               pragma GCC diagnostic ignored "-Wuninitialized"
+ #             endif
+ #           endif
+             std::memcpy(this->functor.data, f.functor.data, sizeof(this->functor.data));
+@@ -1013,7 +1013,7 @@ namespace boost {
+ #if defined(BOOST_GCC) && (__GNUC__ >= 11)
+ # pragma GCC diagnostic push
+ // False positive in GCC 11/12 for empty function objects (function_n_test.cpp:673)
+-# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+             get_vtable()->base.manager(f.functor, this->functor,
+                                      boost::detail::function::move_functor_tag);
+diff --git a/inst/include/boost/get_pointer.hpp b/inst/include/boost/get_pointer.hpp
+index 36e2cd7d..b8d82f07 100644
+--- a/inst/include/boost/get_pointer.hpp
++++ b/inst/include/boost/get_pointer.hpp
+@@ -41,7 +41,7 @@ template<class T> T * get_pointer(T * p)
+ #if defined( BOOST_CORE_DETAIL_DISABLE_LIBSTDCXX_DEPRECATED_WARNINGS )
+ // Disable libstdc++ warnings about std::auto_ptr being deprecated in C++11 mode
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++  //#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #define BOOST_CORE_DETAIL_DISABLED_DEPRECATED_WARNINGS
+ #endif
+ 
+diff --git a/inst/include/boost/interprocess/detail/config_begin.hpp b/inst/include/boost/interprocess/detail/config_begin.hpp
+index 8c8a0ff5..bd03a4f5 100644
+--- a/inst/include/boost/interprocess/detail/config_begin.hpp
++++ b/inst/include/boost/interprocess/detail/config_begin.hpp
+@@ -46,5 +46,5 @@
+ 
+ #if (defined(BOOST_GCC) && (BOOST_GCC >= 40600)) || (defined(BOOST_CLANG) && defined(_MSC_VER))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+diff --git a/inst/include/boost/interprocess/detail/config_external_begin.hpp b/inst/include/boost/interprocess/detail/config_external_begin.hpp
+index 67c05568..93446dac 100644
+--- a/inst/include/boost/interprocess/detail/config_external_begin.hpp
++++ b/inst/include/boost/interprocess/detail/config_external_begin.hpp
+@@ -14,10 +14,10 @@
+ 
+ #if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 406)
+ #  pragma GCC diagnostic push
+-#  pragma GCC diagnostic ignored "-Wshadow"
+-#  pragma GCC diagnostic ignored "-Wsign-conversion"
+-#  pragma GCC diagnostic ignored "-Wconversion"
++//#  pragma GCC diagnostic ignored "-Wshadow"
++//#  pragma GCC diagnostic ignored "-Wsign-conversion"
++//#  pragma GCC diagnostic ignored "-Wconversion"
+ #  if (BOOST_GCC >= 100000)
+-#     pragma GCC diagnostic ignored "-Warith-conversion"
++//#     pragma GCC diagnostic ignored "-Warith-conversion"
+ #  endif
+ #endif
+diff --git a/inst/include/boost/interprocess/detail/timed_utils.hpp b/inst/include/boost/interprocess/detail/timed_utils.hpp
+index 268b6925..b56567f2 100644
+--- a/inst/include/boost/interprocess/detail/timed_utils.hpp
++++ b/inst/include/boost/interprocess/detail/timed_utils.hpp
+@@ -109,7 +109,7 @@ struct enable_if_usduration
+ 
+    #if defined(__clang__) // Clang has to be checked before MSVC
+    #  pragma clang diagnostic push
+-   #  pragma clang diagnostic ignored "-Wdeprecated-declarations"
++  //   #  pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    #elif (defined(_MSC_VER) && (_MSC_VER >= 1400))
+    #  pragma warning(push) // preserve warning settings
+    #  pragma warning(disable : 4996) // disable depricated localtime/gmtime warning on vc8
+diff --git a/inst/include/boost/interprocess/detail/win32_api.hpp b/inst/include/boost/interprocess/detail/win32_api.hpp
+index 44b770d9..0ddbe0ac 100644
+--- a/inst/include/boost/interprocess/detail/win32_api.hpp
++++ b/inst/include/boost/interprocess/detail/win32_api.hpp
+@@ -61,17 +61,17 @@
+ #  if (BOOST_GCC >= 40600)
+ #     pragma GCC diagnostic push
+ #     if (BOOST_GCC >= 40800)
+-#        pragma GCC diagnostic ignored "-Wpedantic"
++//#        pragma GCC diagnostic ignored "-Wpedantic"
+ #     else
+-#        pragma GCC diagnostic ignored "-pedantic"
++//#        pragma GCC diagnostic ignored "-pedantic"
+ #     endif
+-#     pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
++//#     pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+ #  else
+ #     pragma GCC system_header
+ #  endif
+ //When loading DLLs we have no option but reinterpret casting function types  
+ #  if (BOOST_GCC >= 80000)
+-#        pragma GCC diagnostic ignored "-Wcast-function-type"
++//#        pragma GCC diagnostic ignored "-Wcast-function-type"
+ #  endif
+ #endif
+ 
+diff --git a/inst/include/boost/interprocess/detail/workaround.hpp b/inst/include/boost/interprocess/detail/workaround.hpp
+index af044b7c..f2aa7c9c 100644
+--- a/inst/include/boost/interprocess/detail/workaround.hpp
++++ b/inst/include/boost/interprocess/detail/workaround.hpp
+@@ -246,7 +246,7 @@
+ 
+ #ifdef __clang__
+    #define BOOST_INTERPROCESS_DISABLE_DEPRECATED_WARNING _Pragma("clang diagnostic push") \
+-                                                         _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
++//                                                         _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
+    #define BOOST_INTERPROCESS_RESTORE_WARNING            _Pragma("clang diagnostic pop")
+ #else // __clang__
+    #define BOOST_INTERPROCESS_DISABLE_DEPRECATED_WARNING __pragma(warning(push)) \
+diff --git a/inst/include/boost/interprocess/interprocess_printers.hpp b/inst/include/boost/interprocess/interprocess_printers.hpp
+index 263f964c..112bc14b 100644
+--- a/inst/include/boost/interprocess/interprocess_printers.hpp
++++ b/inst/include/boost/interprocess/interprocess_printers.hpp
+@@ -11,7 +11,7 @@
+ #if defined(__ELF__)
+ #ifdef __clang__
+ #pragma clang diagnostic push
+-#pragma clang diagnostic ignored "-Woverlength-strings"
++//#pragma clang diagnostic ignored "-Woverlength-strings"
+ #endif
+ __asm__(".pushsection \".debug_gdb_scripts\", \"MS\",@progbits,1\n"
+         ".ascii \"\\4gdb.inlined-script.BOOST_INTERPROCESS_INTERPROCESS_PRINTERS_HPP\\n\"\n"
+diff --git a/inst/include/boost/interprocess/offset_ptr.hpp b/inst/include/boost/interprocess/offset_ptr.hpp
+index 13d4a7fb..be4249dc 100644
+--- a/inst/include/boost/interprocess/offset_ptr.hpp
++++ b/inst/include/boost/interprocess/offset_ptr.hpp
+@@ -35,7 +35,7 @@
+ 
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 40700)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+ 
+ //!\file
+diff --git a/inst/include/boost/intrusive/pointer_plus_bits.hpp b/inst/include/boost/intrusive/pointer_plus_bits.hpp
+index b967bb63..6084ef08 100644
+--- a/inst/include/boost/intrusive/pointer_plus_bits.hpp
++++ b/inst/include/boost/intrusive/pointer_plus_bits.hpp
+@@ -29,9 +29,9 @@
+ #if defined(BOOST_GCC)
+ #  if (BOOST_GCC >= 40600)
+ #     pragma GCC diagnostic push
+-#     pragma GCC diagnostic ignored "-Wuninitialized"
++//#     pragma GCC diagnostic ignored "-Wuninitialized"
+ #     if (BOOST_GCC >= 40700)
+-#        pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//#        pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #     endif
+ #  endif
+ #endif
+diff --git a/inst/include/boost/iterator/advance.hpp b/inst/include/boost/iterator/advance.hpp
+index 2b742565..2f810ad7 100644
+--- a/inst/include/boost/iterator/advance.hpp
++++ b/inst/include/boost/iterator/advance.hpp
+@@ -32,7 +32,7 @@ namespace iterators {
+ #if BOOST_WORKAROUND(BOOST_GCC_VERSION, >= 40600)
+ // type-limits warning issued below when n is an unsigned integral
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wtype-limits"
++      //#pragma GCC diagnostic ignored "-Wtype-limits"
+ #endif
+ 
+         template <typename BidirectionalIterator, typename Distance>
+diff --git a/inst/include/boost/json/detail/charconv/detail/fast_float/parse_number.hpp b/inst/include/boost/json/detail/charconv/detail/fast_float/parse_number.hpp
+index a4944a28..f3cb49a9 100644
+--- a/inst/include/boost/json/detail/charconv/detail/fast_float/parse_number.hpp
++++ b/inst/include/boost/json/detail/charconv/detail/fast_float/parse_number.hpp
+@@ -30,7 +30,7 @@ namespace detail {
+ 
+ #if defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
++//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+ #endif
+ 
+ template <typename T, typename UC>
+@@ -128,10 +128,10 @@ BOOST_FORCEINLINE bool rounds_to_nearest() noexcept {
+   //  see https://stackoverflow.com/questions/46079446/is-there-a-warning-for-floating-point-equality-checking-in-visual-studio-2013
+   #elif defined(__clang__)
+   #   pragma clang diagnostic push
+-  #   pragma clang diagnostic ignored "-Wfloat-equal"
++//  #   pragma clang diagnostic ignored "-Wfloat-equal"
+   #elif defined(__GNUC__)
+   #   pragma GCC diagnostic push
+-  #   pragma GCC diagnostic ignored "-Wfloat-equal"
++//  #   pragma GCC diagnostic ignored "-Wfloat-equal"
+   #endif
+   return (fmini + 1.0f == 1.0f - fmini);
+   #ifdef BOOST_JSON_FASTFLOAT_VISUAL_STUDIO
+diff --git a/inst/include/boost/json/detail/charconv/detail/from_chars_float_impl.hpp b/inst/include/boost/json/detail/charconv/detail/from_chars_float_impl.hpp
+index 6ca5a250..dc9bede0 100644
+--- a/inst/include/boost/json/detail/charconv/detail/from_chars_float_impl.hpp
++++ b/inst/include/boost/json/detail/charconv/detail/from_chars_float_impl.hpp
+@@ -22,7 +22,7 @@ namespace boost { namespace json { namespace detail { namespace charconv { names
+ # pragma warning(disable: 4244) // Implict converion when BOOST_IF_CONSTEXPR expands to if
+ #elif defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
++//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+ #endif
+ 
+ template <typename T>
+diff --git a/inst/include/boost/json/detail/charconv/detail/from_chars_integer_impl.hpp b/inst/include/boost/json/detail/charconv/detail/from_chars_integer_impl.hpp
+index f709ab7e..f559736b 100644
+--- a/inst/include/boost/json/detail/charconv/detail/from_chars_integer_impl.hpp
++++ b/inst/include/boost/json/detail/charconv/detail/from_chars_integer_impl.hpp
+@@ -51,15 +51,15 @@ constexpr unsigned char digit_from_char(char val) noexcept
+ 
+ #elif defined(__clang__)
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wconstant-conversion"
++//# pragma clang diagnostic ignored "-Wconstant-conversion"
+ 
+ #elif defined(__GNUC__) && (__GNUC__ < 7)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Woverflow"
++//# pragma GCC diagnostic ignored "-Woverflow"
+ 
+ #elif defined(__GNUC__) && (__GNUC__ >= 7)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ 
+ #endif
+ 
+diff --git a/inst/include/boost/json/detail/charconv/detail/parser.hpp b/inst/include/boost/json/detail/charconv/detail/parser.hpp
+index b24f47fa..c8fc9881 100644
+--- a/inst/include/boost/json/detail/charconv/detail/parser.hpp
++++ b/inst/include/boost/json/detail/charconv/detail/parser.hpp
+@@ -20,7 +20,7 @@
+ 
+ #if defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
++//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+ #endif
+ 
+ namespace boost { namespace json { namespace detail { namespace charconv { namespace detail {
+diff --git a/inst/include/boost/json/detail/charconv/impl/from_chars.ipp b/inst/include/boost/json/detail/charconv/impl/from_chars.ipp
+index e3ae6482..f012d36c 100644
+--- a/inst/include/boost/json/detail/charconv/impl/from_chars.ipp
++++ b/inst/include/boost/json/detail/charconv/impl/from_chars.ipp
+@@ -21,7 +21,7 @@
+ #include <cstring>
+ 
+ #if defined(__GNUC__) && __GNUC__ < 5
+-# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
++//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+ #endif
+ 
+ std::errc boost::json::detail::charconv::detail::errno_to_errc(int errno_value) noexcept
+diff --git a/inst/include/boost/json/detail/gdb_printers.hpp b/inst/include/boost/json/detail/gdb_printers.hpp
+index ccc7f1eb..6307379d 100644
+--- a/inst/include/boost/json/detail/gdb_printers.hpp
++++ b/inst/include/boost/json/detail/gdb_printers.hpp
+@@ -16,10 +16,10 @@
+ 
+ #if defined(__clang__)
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Woverlength-strings"
++//# pragma clang diagnostic ignored "-Woverlength-strings"
+ #elif defined(__GNUC__)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Woverlength-strings"
++//# pragma GCC diagnostic ignored "-Woverlength-strings"
+ #endif
+ 
+ __asm__(
+diff --git a/inst/include/boost/json/detail/parse_into.hpp b/inst/include/boost/json/detail/parse_into.hpp
+index 3f7418a2..ad3fd554 100644
+--- a/inst/include/boost/json/detail/parse_into.hpp
++++ b/inst/include/boost/json/detail/parse_into.hpp
+@@ -141,7 +141,7 @@ protected:
+     P* parent_;
+ #if defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
++//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+ #endif
+     V next_value_ = {};
+     inner_handler_type inner_;
+@@ -567,7 +567,7 @@ public:
+         *inserter++ = std::move(this->next_value_);
+ #if defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
++//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+ #endif
+         this->next_value_ = {};
+ #if defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
+diff --git a/inst/include/boost/json/detail/sbo_buffer.hpp b/inst/include/boost/json/detail/sbo_buffer.hpp
+index 5529fa5a..6e486191 100644
+--- a/inst/include/boost/json/detail/sbo_buffer.hpp
++++ b/inst/include/boost/json/detail/sbo_buffer.hpp
+@@ -52,7 +52,7 @@ class sbo_buffer
+         delete[] data_;
+ #if defined(__GNUC__)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
++//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+ #endif
+         buffer_ = {};
+ #if defined(__GNUC__)
+diff --git a/inst/include/boost/json/detail/value_to.hpp b/inst/include/boost/json/detail/value_to.hpp
+index 29ae444f..5c4dbe28 100644
+--- a/inst/include/boost/json/detail/value_to.hpp
++++ b/inst/include/boost/json/detail/value_to.hpp
+@@ -306,7 +306,7 @@ try_make_tuple_like(
+             ...);
+ #if defined(BOOST_GCC)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+     if( ec.failed() )
+         return {boost::system::in_place_error, ec};
+@@ -379,8 +379,8 @@ struct to_described_member
+ 
+ #if defined(__GNUC__) && BOOST_GCC_VERSION >= 80000 && BOOST_GCC_VERSION < 11000
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wunused"
+-# pragma GCC diagnostic ignored "-Wunused-variable"
++//# pragma GCC diagnostic ignored "-Wunused"
++//# pragma GCC diagnostic ignored "-Wunused-variable"
+ #endif
+         auto member_res = try_value_to<M>( found->value(), ctx );
+ #if defined(__GNUC__) && BOOST_GCC_VERSION >= 80000 && BOOST_GCC_VERSION < 11000
+diff --git a/inst/include/boost/json/impl/serializer.hpp b/inst/include/boost/json/impl/serializer.hpp
+index 203c7ba5..f759d96c 100644
+--- a/inst/include/boost/json/impl/serializer.hpp
++++ b/inst/include/boost/json/impl/serializer.hpp
+@@ -111,10 +111,10 @@ write_impl(integral_conversion_tag, writer& w, stream& ss0)
+ 
+ #if defined(__clang__)
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wsign-compare"
++//# pragma clang diagnostic ignored "-Wsign-compare"
+ #elif defined(__GNUC__)
+ # pragma GCC diagnostic push
+-# pragma GCC  diagnostic ignored "-Wsign-compare"
++//# pragma GCC  diagnostic ignored "-Wsign-compare"
+ #elif defined(_MSC_VER)
+ # pragma warning( push )
+ # pragma warning( disable : 4018 )
+diff --git a/inst/include/boost/json/value.hpp b/inst/include/boost/json/value.hpp
+index 151b8e3e..ace92a9e 100644
+--- a/inst/include/boost/json/value.hpp
++++ b/inst/include/boost/json/value.hpp
+@@ -4779,7 +4779,7 @@ get<1>(key_value_pair&& kvp) noexcept
+ 
+ #ifdef __clang__
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wmismatched-tags"
++//# pragma clang diagnostic ignored "-Wmismatched-tags"
+ #endif
+ 
+ #ifndef BOOST_JSON_DOCS
+diff --git a/inst/include/boost/locale/detail/facet_id.hpp b/inst/include/boost/locale/detail/facet_id.hpp
+index 14ab4583..06bbea9d 100644
+--- a/inst/include/boost/locale/detail/facet_id.hpp
++++ b/inst/include/boost/locale/detail/facet_id.hpp
+@@ -14,7 +14,7 @@
+ namespace boost { namespace locale { namespace detail {
+ #if BOOST_CLANG_VERSION >= 40900
+ #    pragma clang diagnostic push
+-#    pragma clang diagnostic ignored "-Wundefined-var-template"
++//#    pragma clang diagnostic ignored "-Wundefined-var-template"
+ #endif
+     /// CRTP base class to hold the id required for facets
+     ///
+diff --git a/inst/include/boost/log/detail/header.hpp b/inst/include/boost/log/detail/header.hpp
+index 37495c00..784d0b7e 100644
+--- a/inst/include/boost/log/detail/header.hpp
++++ b/inst/include/boost/log/detail/header.hpp
+@@ -52,20 +52,20 @@
+ 
+ #pragma GCC diagnostic push
+ // 'var' defined but not used
+-#pragma GCC diagnostic ignored "-Wunused-variable"
++//#pragma GCC diagnostic ignored "-Wunused-variable"
+ // unused parameter 'arg'
+-#pragma GCC diagnostic ignored "-Wunused-parameter"
++//#pragma GCC diagnostic ignored "-Wunused-parameter"
+ // missing initializer for member var
+-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
++//#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+ 
+ #if (__GNUC__ * 100 + __GNUC_MINOR__) >= 407
+ // typedef 'foo' locally defined but not used
+-#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
++//#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+ #endif
+ 
+ #if defined(__clang__)
+ // the argument to '__builtin_assume' has side effects that will be discarded
+-#pragma clang diagnostic ignored "-Wassume"
++//#pragma clang diagnostic ignored "-Wassume"
+ #endif // defined(__clang__)
+ 
+ #endif
+diff --git a/inst/include/boost/math/ccmath/isinf.hpp b/inst/include/boost/math/ccmath/isinf.hpp
+index ecf0d620..1e868417 100644
+--- a/inst/include/boost/math/ccmath/isinf.hpp
++++ b/inst/include/boost/math/ccmath/isinf.hpp
+@@ -24,7 +24,7 @@ constexpr bool isinf BOOST_MATH_PREVENT_MACRO_SUBSTITUTION(T x) noexcept
+         {
+ #if defined(__clang_major__) && __clang_major__ >= 6
+ #pragma clang diagnostic push
+-#pragma clang diagnostic ignored "-Wtautological-constant-compare"
++//#pragma clang diagnostic ignored "-Wtautological-constant-compare"
+ #endif
+             return x == std::numeric_limits<T>::infinity() || -x == std::numeric_limits<T>::infinity();
+ #if defined(__clang_major__) && __clang_major__ >= 6
+diff --git a/inst/include/boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_ratio.hpp b/inst/include/boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_ratio.hpp
+deleted file mode 100644
+index 4414a75d..00000000
+--- a/inst/include/boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_ratio.hpp
++++ /dev/null
+@@ -1,70 +0,0 @@
+-
+-///////////////////////////////////////////////////////////////////////////////
+-//  Copyright 2018 John Maddock
+-//  Distributed under the Boost
+-//  Software License, Version 1.0. (See accompanying file
+-//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+-//
+-#ifndef BOOST_MATH_HYPERGEOMETRIC_1F1_SMALL_A_NEG_B_HPP
+-#define BOOST_MATH_HYPERGEOMETRIC_1F1_SMALL_A_NEG_B_HPP
+-
+-#include <algorithm>
+-#include <boost/math/tools/recurrence.hpp>
+-
+-  namespace boost { namespace math { namespace detail {
+-
+-     // forward declaration for initial values
+-     template <class T, class Policy>
+-     inline T hypergeometric_1F1_imp(const T& a, const T& b, const T& z, const Policy& pol);
+-
+-     template <class T, class Policy>
+-     inline T hypergeometric_1F1_imp(const T& a, const T& b, const T& z, const Policy& pol, long long& log_scaling);
+-
+-      template <class T>
+-      T max_b_for_1F1_small_a_negative_b_by_ratio(const T& z)
+-      {
+-         if (z < -998)
+-            return (z * 2) / 3;
+-         float max_b[][2] = 
+-         {
+-            { 0.0f, -47.3046f }, {-6.7275f, -52.0351f }, { -8.9543f, -57.2386f }, {-11.9182f, -62.9625f }, {-14.421f, -69.2587f }, {-19.1943f, -76.1846f }, {-23.2252f, -83.803f }, {-28.1024f, -92.1833f }, {-34.0039f, -101.402f }, {-37.4043f, -111.542f }, {-45.2593f, -122.696f }, {-54.7637f, -134.966f }, {-60.2401f, -148.462f }, {-72.8905f, -163.308f }, {-88.1975f, -179.639f }, {-88.1975f, -197.603f }, {-106.719f, -217.363f }, {-129.13f, -239.1f }, {-142.043f, -263.01f }, {-156.247f, -289.311f }, {-189.059f, -318.242f }, {-207.965f, -350.066f }, {-228.762f, -385.073f }, {-276.801f, -423.58f }, {-304.482f, -465.938f }, {-334.93f, -512.532f }, {-368.423f, -563.785f }, {-405.265f, -620.163f }, {-445.792f, -682.18f }, {-539.408f, -750.398f }, {-593.349f, -825.437f }, {-652.683f, -907.981f }, {-717.952f, -998.779f }
+-         };
+-         auto p = std::lower_bound(max_b, max_b + sizeof(max_b) / sizeof(max_b[0]), z, [](const float (&a)[2], const T& z) { return a[1] > z; });
+-         T b = p - max_b ? (*--p)[0] : 0;
+-         //
+-         // We need approximately an extra 10 recurrences per 50 binary digits precision above that of double:
+-         //
+-         b += (std::max)(0, boost::math::tools::digits<T>() - 53) / 5;
+-         return b;
+-      }
+-
+-      template <class T, class Policy>
+-      T hypergeometric_1F1_small_a_negative_b_by_ratio(const T& a, const T& b, const T& z, const Policy& pol, long long& log_scaling)
+-      {
+-         BOOST_MATH_STD_USING
+-         //
+-         // We grab the ratio for M[a, b, z] / M[a, b+1, z] and use it to seed 2 initial values,
+-         // then recurse until b > 0, compute a reference value and normalize (Millers method).
+-         //
+-         int iterations = itrunc(-b, pol);
+-         std::uintmax_t max_iter = boost::math::policies::get_max_series_iterations<Policy>();
+-         T ratio = boost::math::tools::function_ratio_from_forwards_recurrence(boost::math::detail::hypergeometric_1F1_recurrence_b_coefficients<T>(a, b, z), boost::math::tools::epsilon<T>(), max_iter);
+-         boost::math::policies::check_series_iterations<T>("boost::math::hypergeometric_1F1_small_a_negative_b_by_ratio<%1%>(%1%,%1%,%1%)", max_iter, pol);
+-         T first = 1;
+-         T second = 1 / ratio;
+-         long long scaling1 = 0;
+-         BOOST_MATH_ASSERT(b + iterations != a);
+-         second = boost::math::tools::apply_recurrence_relation_forward(boost::math::detail::hypergeometric_1F1_recurrence_b_coefficients<T>(a, b + 1, z), iterations, first, second, &scaling1);
+-         long long scaling2 = 0;
+-         first = hypergeometric_1F1_imp(a, T(b + iterations + 1), z, pol, scaling2);
+-         //
+-         // Result is now first/second * e^(scaling2 - scaling1)
+-         //
+-         log_scaling += scaling2 - scaling1;
+-         return first / second;
+-      }
+-
+-
+-  } } } // namespaces
+-
+-#endif // BOOST_MATH_HYPERGEOMETRIC_1F1_SMALL_A_NEG_B_HPP
+diff --git a/inst/include/boost/math/special_functions/hypergeometric_1F1.hpp b/inst/include/boost/math/special_functions/hypergeometric_1F1.hpp
+index fd53cddb..73444520 100644
+--- a/inst/include/boost/math/special_functions/hypergeometric_1F1.hpp
++++ b/inst/include/boost/math/special_functions/hypergeometric_1F1.hpp
+@@ -24,7 +24,7 @@
+ #include <boost/math/special_functions/detail/hypergeometric_pFq_checked_series.hpp>
+ #include <boost/math/special_functions/detail/hypergeometric_1F1_addition_theorems_on_z.hpp>
+ #include <boost/math/special_functions/detail/hypergeometric_1F1_large_abz.hpp>
+-#include <boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_ratio.hpp>
++#include <boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_r.hpp>
+ #include <boost/math/special_functions/detail/hypergeometric_1F1_negative_b_regions.hpp>
+ 
+ namespace boost { namespace math { namespace detail {
+diff --git a/inst/include/boost/move/algo/adaptive_merge.hpp b/inst/include/boost/move/algo/adaptive_merge.hpp
+index 5261d729..3631adef 100644
+--- a/inst/include/boost/move/algo/adaptive_merge.hpp
++++ b/inst/include/boost/move/algo/adaptive_merge.hpp
+@@ -18,8 +18,8 @@
+ 
+ #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
+-#pragma GCC diagnostic ignored "-Wconversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wconversion"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/move/algo/adaptive_sort.hpp b/inst/include/boost/move/algo/adaptive_sort.hpp
+index 54fa87b4..8e313ae2 100644
+--- a/inst/include/boost/move/algo/adaptive_sort.hpp
++++ b/inst/include/boost/move/algo/adaptive_sort.hpp
+@@ -19,8 +19,8 @@
+ 
+ #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
+-#pragma GCC diagnostic ignored "-Wconversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wconversion"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/move/algo/detail/adaptive_sort_merge.hpp b/inst/include/boost/move/algo/detail/adaptive_sort_merge.hpp
+index 2b45407d..b9b1fde3 100644
+--- a/inst/include/boost/move/algo/detail/adaptive_sort_merge.hpp
++++ b/inst/include/boost/move/algo/detail/adaptive_sort_merge.hpp
+@@ -59,8 +59,8 @@
+ 
+ #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
+-#pragma GCC diagnostic ignored "-Wconversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wconversion"
+ #endif
+ 
+ #ifndef BOOST_MOVE_ADAPTIVE_SORT_STATS_LEVEL
+diff --git a/inst/include/boost/move/algo/detail/heap_sort.hpp b/inst/include/boost/move/algo/detail/heap_sort.hpp
+index 4ed5a1c7..1158a2cb 100644
+--- a/inst/include/boost/move/algo/detail/heap_sort.hpp
++++ b/inst/include/boost/move/algo/detail/heap_sort.hpp
+@@ -32,7 +32,7 @@
+ 
+ #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
+ #endif
+ 
+ namespace boost {  namespace movelib{
+diff --git a/inst/include/boost/move/algo/detail/insertion_sort.hpp b/inst/include/boost/move/algo/detail/insertion_sort.hpp
+index 77f0b698..c5a6e501 100644
+--- a/inst/include/boost/move/algo/detail/insertion_sort.hpp
++++ b/inst/include/boost/move/algo/detail/insertion_sort.hpp
+@@ -35,7 +35,7 @@
+ 
+ #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
+ #endif
+ 
+ namespace boost {  namespace movelib{
+diff --git a/inst/include/boost/move/algo/detail/merge.hpp b/inst/include/boost/move/algo/detail/merge.hpp
+index f9f12757..3617da8c 100644
+--- a/inst/include/boost/move/algo/detail/merge.hpp
++++ b/inst/include/boost/move/algo/detail/merge.hpp
+@@ -23,7 +23,7 @@
+ 
+ #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/move/algo/detail/merge_sort.hpp b/inst/include/boost/move/algo/detail/merge_sort.hpp
+index dbc4797c..a9ec3e57 100644
+--- a/inst/include/boost/move/algo/detail/merge_sort.hpp
++++ b/inst/include/boost/move/algo/detail/merge_sort.hpp
+@@ -36,7 +36,7 @@
+ 
+ #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/move/algo/detail/pdqsort.hpp b/inst/include/boost/move/algo/detail/pdqsort.hpp
+index 1e927558..1b46b0af 100644
+--- a/inst/include/boost/move/algo/detail/pdqsort.hpp
++++ b/inst/include/boost/move/algo/detail/pdqsort.hpp
+@@ -59,7 +59,7 @@
+ 
+ #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/move/algo/detail/search.hpp b/inst/include/boost/move/algo/detail/search.hpp
+index 9433fbd4..10e89302 100644
+--- a/inst/include/boost/move/algo/detail/search.hpp
++++ b/inst/include/boost/move/algo/detail/search.hpp
+@@ -15,7 +15,7 @@
+ 
+ #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/move/algo/detail/set_difference.hpp b/inst/include/boost/move/algo/detail/set_difference.hpp
+index 812ca5f3..1d5163ed 100644
+--- a/inst/include/boost/move/algo/detail/set_difference.hpp
++++ b/inst/include/boost/move/algo/detail/set_difference.hpp
+@@ -17,7 +17,7 @@
+ 
+ #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wsign-conversion"
++//#pragma GCC diagnostic ignored "-Wsign-conversion"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/move/detail/std_ns_begin.hpp b/inst/include/boost/move/detail/std_ns_begin.hpp
+index de13cde5..49a7aba8 100644
+--- a/inst/include/boost/move/detail/std_ns_begin.hpp
++++ b/inst/include/boost/move/detail/std_ns_begin.hpp
+@@ -13,7 +13,7 @@
+    #if defined(__clang__)
+       #define BOOST_MOVE_STD_NS_GCC_DIAGNOSTIC_PUSH
+       #pragma GCC diagnostic push
+-      #pragma GCC diagnostic ignored "-Wc++11-extensions"
++//      #pragma GCC diagnostic ignored "-Wc++11-extensions"
+    #endif
+    #define BOOST_MOVE_STD_NS_BEG _LIBCPP_BEGIN_NAMESPACE_STD
+    #define BOOST_MOVE_STD_NS_END _LIBCPP_END_NAMESPACE_STD
+diff --git a/inst/include/boost/mp11/function.hpp b/inst/include/boost/mp11/function.hpp
+index e20b4520..6aa9c6f2 100644
+--- a/inst/include/boost/mp11/function.hpp
++++ b/inst/include/boost/mp11/function.hpp
+@@ -200,7 +200,7 @@ template<class... T> using mp_similar = typename detail::mp_similar_impl<T...>::
+ 
+ #if BOOST_MP11_GCC
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wsign-compare"
++  //# pragma GCC diagnostic ignored "-Wsign-compare"
+ #endif
+ 
+ // mp_less<T1, T2>
+diff --git a/inst/include/boost/mpl/assert.hpp b/inst/include/boost/mpl/assert.hpp
+index c7ecddf0..1143345c 100644
+--- a/inst/include/boost/mpl/assert.hpp
++++ b/inst/include/boost/mpl/assert.hpp
+@@ -187,7 +187,7 @@ template< typename P > struct assert_arg_pred_not
+ #if BOOST_WORKAROUND(BOOST_GCC_VERSION, >= 80000)
+ #define BOOST_MPL_IGNORE_PARENTHESES_WARNING
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wparentheses"
++//#pragma GCC diagnostic ignored "-Wparentheses"
+ #endif
+ 
+ template< typename Pred >
+diff --git a/inst/include/boost/mpl/print.hpp b/inst/include/boost/mpl/print.hpp
+index 36e25cd3..430aa797 100644
+--- a/inst/include/boost/mpl/print.hpp
++++ b/inst/include/boost/mpl/print.hpp
+@@ -48,7 +48,7 @@ struct print
+ {
+ #if defined(__clang__)
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wc++11-extensions"
++  //# pragma clang diagnostic ignored "-Wc++11-extensions"
+     const int m_x = 1 / (sizeof(T) - sizeof(T));
+ # pragma clang diagnostic pop
+ #elif defined(BOOST_MSVC)
+diff --git a/inst/include/boost/multi_array.hpp b/inst/include/boost/multi_array.hpp
+index c9ed215b..8b2ad940 100644
+--- a/inst/include/boost/multi_array.hpp
++++ b/inst/include/boost/multi_array.hpp
+@@ -23,7 +23,7 @@
+ 
+ #if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 406)
+ #  pragma GCC diagnostic push
+-#  pragma GCC diagnostic ignored "-Wshadow"
++//#  pragma GCC diagnostic ignored "-Wshadow"
+ #endif
+ 
+ #include "boost/multi_array/base.hpp"
+diff --git a/inst/include/boost/multi_index/detail/ignore_wstrict_aliasing.hpp b/inst/include/boost/multi_index/detail/ignore_wstrict_aliasing.hpp
+index ae398456..6524edc1 100644
+--- a/inst/include/boost/multi_index/detail/ignore_wstrict_aliasing.hpp
++++ b/inst/include/boost/multi_index/detail/ignore_wstrict_aliasing.hpp
+@@ -11,7 +11,7 @@
+ #if defined(BOOST_GCC)&&(BOOST_GCC>=4*10000+6*100)
+ #if !defined(BOOST_MULTI_INDEX_DETAIL_RESTORE_WSTRICT_ALIASING)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
++//#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+ #else
+ #pragma GCC diagnostic pop
+ #endif
+diff --git a/inst/include/boost/multiprecision/cpp_int.hpp b/inst/include/boost/multiprecision/cpp_int.hpp
+index efcf50ca..076a96a5 100644
+--- a/inst/include/boost/multiprecision/cpp_int.hpp
++++ b/inst/include/boost/multiprecision/cpp_int.hpp
+@@ -44,7 +44,7 @@ namespace multiprecision {
+ // see https://github.com/boostorg/multiprecision/issues/413
+ // and https://github.com/boostorg/multiprecision/issues/431
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++  //#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+ 
+ namespace detail {
+diff --git a/inst/include/boost/multiprecision/cpp_int/misc.hpp b/inst/include/boost/multiprecision/cpp_int/misc.hpp
+index a8a76400..5cc32f58 100644
+--- a/inst/include/boost/multiprecision/cpp_int/misc.hpp
++++ b/inst/include/boost/multiprecision/cpp_int/misc.hpp
+@@ -370,7 +370,7 @@ eval_msb(const cpp_int_backend<MinBits1, MaxBits1, SignType1, Checked1, Allocato
+ // spurious.  The warning appears only when in release mode, and asserts are on.
+ //
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Warray-bounds"
++//#pragma GCC diagnostic ignored "-Warray-bounds"
+ #endif
+ 
+ template <std::size_t MinBits1, std::size_t MaxBits1, cpp_integer_type SignType1, cpp_int_check_type Checked1, class Allocator1>
+diff --git a/inst/include/boost/numeric/odeint/stepper/generation.hpp b/inst/include/boost/numeric/odeint/stepper/generation.hpp
+index a051d13b..ed7a320d 100644
+--- a/inst/include/boost/numeric/odeint/stepper/generation.hpp
++++ b/inst/include/boost/numeric/odeint/stepper/generation.hpp
+@@ -24,12 +24,12 @@
+ #include <boost/numeric/odeint/stepper/generation/generation_controlled_runge_kutta.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_dense_output_runge_kutta.hpp>
+ 
+-#include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp>
++#include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_cl.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_dopri5.hpp>
+ #include <boost/numeric/odeint/stepper/generation/generation_runge_kutta_fehlberg78.hpp>
+ 
+-#include <boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_moulton.hpp>
++#include <boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_m.hpp>
+ 
+ #include <boost/numeric/odeint/stepper/generation/generation_rosenbrock4.hpp>
+ 
+diff --git a/inst/include/boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_moulton.hpp b/inst/include/boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_moulton.hpp
+deleted file mode 100644
+index ca95a1f5..00000000
+--- a/inst/include/boost/numeric/odeint/stepper/generation/generation_controlled_adams_bashforth_moulton.hpp
++++ /dev/null
+@@ -1,59 +0,0 @@
+-/*
+- boost/numeric/odeint/stepper/detail/generation_controlled_adams_bashforth_moulton.hpp
+-
+- [begin_description]
+- Spezialization of the generation functions for creation of the controlled adams bashforth moulton stepper.
+- [end_description]
+-
+- Copyright 2017 Valentin Noah Hartmann
+-
+- Distributed under the Boost Software License, Version 1.0.
+- (See accompanying file LICENSE_1_0.txt or
+- copy at http://www.boost.org/LICENSE_1_0.txt)
+- */
+-
+-#ifndef GENERATION_CONTROLLED_ADAMS_BASHFORTH_MOULTON_HPP_INCLUDED
+-#define GENERATION_CONTROLLED_ADAMS_BASHFORTH_MOULTON_HPP_INCLUDED
+-
+-#include <boost/numeric/odeint/stepper/adaptive_adams_bashforth_moulton.hpp>
+-#include <boost/numeric/odeint/stepper/controlled_adams_bashforth_moulton.hpp>
+-#include <boost/numeric/odeint/stepper/generation/make_controlled.hpp>
+-
+-namespace boost {
+-namespace numeric {
+-namespace odeint {
+-
+-template< size_t Steps, class State , class Value , class Deriv , class Time , class Algebra , class Operations , class Resizer >
+-struct get_controller< adaptive_adams_bashforth_moulton< Steps, State , Value , Deriv , Time , Algebra , Operations , Resizer > >
+-{
+-	typedef adaptive_adams_bashforth_moulton<Steps, State, Value, Deriv, Time, Algebra, Operations, Resizer> stepper_type;
+-    typedef controlled_adams_bashforth_moulton< stepper_type > type;
+-};
+-
+-// controller factory for controlled_adams_bashforth_moulton
+-template< class Stepper >
+-struct controller_factory< Stepper , controlled_adams_bashforth_moulton< Stepper > >
+-{
+-    typedef Stepper stepper_type;
+-    typedef controlled_adams_bashforth_moulton< stepper_type > controller_type;
+-    typedef typename controller_type::step_adjuster_type step_adjuster_type;
+-    typedef typename stepper_type::value_type value_type;
+-    typedef typename stepper_type::value_type time_type;
+-
+-    controller_type operator()( value_type abs_error , value_type rel_error , const stepper_type &stepper )
+-    {
+-        return controller_type(step_adjuster_type(abs_error, rel_error));
+-    }
+-
+-    controller_type operator()( value_type abs_error , value_type rel_error ,
+-                                time_type max_dt, const stepper_type &stepper )
+-    {
+-        return controller_type( step_adjuster_type(abs_error, rel_error, max_dt));
+-    }
+-};
+-
+-}
+-}
+-}
+-
+-#endif
+\ No newline at end of file
+diff --git a/inst/include/boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp b/inst/include/boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp
+deleted file mode 100644
+index 1cc0f91d..00000000
+--- a/inst/include/boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp
++++ /dev/null
+@@ -1,48 +0,0 @@
+-/*
+- [auto_generated]
+- boost/numeric/odeint/stepper/generation/generation_runge_kutta_cash_karp54_classic.hpp
+-
+- [begin_description]
+- Enable the factory functions for the controller and the dense output of the
+- Runge-Kutta-Cash-Karp 54 method with the classical implementation.
+- [end_description]
+-
+- Copyright 2011 Karsten Ahnert
+- Copyright 2011 Mario Mulansky
+-
+- Distributed under the Boost Software License, Version 1.0.
+- (See accompanying file LICENSE_1_0.txt or
+- copy at http://www.boost.org/LICENSE_1_0.txt)
+- */
+-
+-
+-#ifndef BOOST_NUMERIC_ODEINT_STEPPER_GENERATION_GENERATION_RUNGE_KUTTA_CASH_KARP54_CLASSIC_HPP_INCLUDED
+-#define BOOST_NUMERIC_ODEINT_STEPPER_GENERATION_GENERATION_RUNGE_KUTTA_CASH_KARP54_CLASSIC_HPP_INCLUDED
+-
+-#include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
+-#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54_classic.hpp>
+-#include <boost/numeric/odeint/stepper/generation/make_controlled.hpp>
+-
+-
+-namespace boost {
+-namespace numeric {
+-namespace odeint {
+-
+-
+-// Specializations for runge_kutta_cash_karp54
+-template< class State , class Value , class Deriv , class Time , class Algebra , class Operations , class Resize >
+-struct get_controller< runge_kutta_cash_karp54_classic< State , Value , Deriv , Time , Algebra , Operations , Resize > >
+-{
+-    typedef runge_kutta_cash_karp54_classic< State , Value , Deriv , Time , Algebra , Operations , Resize > stepper_type;
+-    typedef controlled_runge_kutta< stepper_type > type;
+-};
+-
+-
+-
+-
+-} // odeint
+-} // numeric
+-} // boost
+-
+-
+-#endif // BOOST_NUMERIC_ODEINT_STEPPER_GENERATION_GENERATION_RUNGE_KUTTA_CASH_KARP54_CLASSIC_HPP_INCLUDED
+diff --git a/inst/include/boost/optional/bad_optional_access.hpp b/inst/include/boost/optional/bad_optional_access.hpp
+index add78675..2555898a 100644
+--- a/inst/include/boost/optional/bad_optional_access.hpp
++++ b/inst/include/boost/optional/bad_optional_access.hpp
+@@ -21,7 +21,7 @@ namespace boost {
+ 
+ #if defined(__clang__)
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wweak-vtables"
++  //# pragma clang diagnostic ignored "-Wweak-vtables"
+ #endif
+ 
+ class bad_optional_access : public std::logic_error
+diff --git a/inst/include/boost/phoenix/core/actor.hpp b/inst/include/boost/phoenix/core/actor.hpp
+index 5a9fa0c5..b7b6dab2 100644
+--- a/inst/include/boost/phoenix/core/actor.hpp
++++ b/inst/include/boost/phoenix/core/actor.hpp
+@@ -132,7 +132,7 @@ namespace boost { namespace phoenix
+ #if defined __clang__ && defined __has_warning
+ #  pragma clang diagnostic push
+ #  if __has_warning("-Wdeprecated-copy")
+-#    pragma clang diagnostic ignored "-Wdeprecated-copy"
++  //#    pragma clang diagnostic ignored "-Wdeprecated-copy"
+ #  endif
+ #endif
+     template <typename Expr>
+diff --git a/inst/include/boost/proto/expr.hpp b/inst/include/boost/proto/expr.hpp
+index bbdb014a..25f5e73a 100644
+--- a/inst/include/boost/proto/expr.hpp
++++ b/inst/include/boost/proto/expr.hpp
+@@ -137,7 +137,7 @@ namespace boost { namespace proto
+             // The warning cannot be fixed for aggregates
+             // Sadly, GCC currently emits the warning at the use location:
+             // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94492
+-            #pragma GCC diagnostic ignored "-Wdeprecated-copy"
++      //            #pragma GCC diagnostic ignored "-Wdeprecated-copy"
+         #endif
+ 
+         // This is where the expr specialization are
+diff --git a/inst/include/boost/ptr_container/detail/reversible_ptr_container.hpp b/inst/include/boost/ptr_container/detail/reversible_ptr_container.hpp
+index f5eb396c..c802530a 100644
+--- a/inst/include/boost/ptr_container/detail/reversible_ptr_container.hpp
++++ b/inst/include/boost/ptr_container/detail/reversible_ptr_container.hpp
+@@ -48,7 +48,7 @@
+ 
+ #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+diff --git a/inst/include/boost/ptr_container/ptr_sequence_adapter.hpp b/inst/include/boost/ptr_container/ptr_sequence_adapter.hpp
+index eb907ba9..8c5f8a91 100644
+--- a/inst/include/boost/ptr_container/ptr_sequence_adapter.hpp
++++ b/inst/include/boost/ptr_container/ptr_sequence_adapter.hpp
+@@ -27,7 +27,7 @@
+ 
+ #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+diff --git a/inst/include/boost/ptr_container/ptr_vector.hpp b/inst/include/boost/ptr_container/ptr_vector.hpp
+index 87016297..9896baa7 100644
+--- a/inst/include/boost/ptr_container/ptr_vector.hpp
++++ b/inst/include/boost/ptr_container/ptr_vector.hpp
+@@ -24,7 +24,7 @@
+ 
+ #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+diff --git a/inst/include/boost/python/detail/wrap_python.hpp b/inst/include/boost/python/detail/wrap_python.hpp
+index 037e4bf2..a0aef791 100644
+--- a/inst/include/boost/python/detail/wrap_python.hpp
++++ b/inst/include/boost/python/detail/wrap_python.hpp
+@@ -166,7 +166,7 @@ typedef int pid_t;
+ // Python.h header uses `register` keyword until Python 3.4
+ #if BOOST_PYTHON_GCC_HAS_WREGISTER
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wregister"
++//# pragma GCC diagnostic ignored "-Wregister"
+ #elif defined(_MSC_VER)
+ # pragma warning(push)
+ # pragma warning(disable : 5033)  // 'register' is no longer a supported storage class
+diff --git a/inst/include/boost/random/detail/disable_warnings.hpp b/inst/include/boost/random/detail/disable_warnings.hpp
+index 4582dcb1..47c7b2e8 100644
+--- a/inst/include/boost/random/detail/disable_warnings.hpp
++++ b/inst/include/boost/random/detail/disable_warnings.hpp
+@@ -25,5 +25,5 @@
+ 
+ #if defined(BOOST_GCC) && BOOST_GCC >= 40600
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wlogical-op"
++//#pragma GCC diagnostic ignored "-Wlogical-op"
+ #endif
+diff --git a/inst/include/boost/range/adaptor/indexed.hpp b/inst/include/boost/range/adaptor/indexed.hpp
+index 8fd02890..b98fa3ac 100644
+--- a/inst/include/boost/range/adaptor/indexed.hpp
++++ b/inst/include/boost/range/adaptor/indexed.hpp
+@@ -373,7 +373,7 @@ namespace std {
+ 
+ #if defined(BOOST_CLANG)
+ #pragma clang diagnostic push
+-#pragma clang diagnostic ignored "-Wmismatched-tags"
++  //#pragma clang diagnostic ignored "-Wmismatched-tags"
+ #endif
+ 
+ template<size_t N, class T, class Indexable>
+diff --git a/inst/include/boost/scope/detail/header.hpp b/inst/include/boost/scope/detail/header.hpp
+index fc99f16c..ad392079 100644
+--- a/inst/include/boost/scope/detail/header.hpp
++++ b/inst/include/boost/scope/detail/header.hpp
+@@ -35,13 +35,13 @@
+ 
+ #pragma GCC diagnostic push
+ // unused parameter 'arg'
+-#pragma GCC diagnostic ignored "-Wunused-parameter"
++//#pragma GCC diagnostic ignored "-Wunused-parameter"
+ // unused function 'foo'
+-#pragma GCC diagnostic ignored "-Wunused-function"
++//#pragma GCC diagnostic ignored "-Wunused-function"
+ 
+ #if defined(__clang__)
+ // template argument uses unnamed type
+-#pragma clang diagnostic ignored "-Wunnamed-type-template-args"
++//#pragma clang diagnostic ignored "-Wunnamed-type-template-args"
+ #endif // defined(__clang__)
+ 
+ #endif
+diff --git a/inst/include/boost/smart_ptr/bad_weak_ptr.hpp b/inst/include/boost/smart_ptr/bad_weak_ptr.hpp
+index b0cc5109..c50259ec 100644
+--- a/inst/include/boost/smart_ptr/bad_weak_ptr.hpp
++++ b/inst/include/boost/smart_ptr/bad_weak_ptr.hpp
+@@ -26,7 +26,7 @@ namespace boost
+ #if defined(BOOST_CLANG)
+ // Intel C++ on Mac defines __clang__ but doesn't support the pragma
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wweak-vtables"
++  //# pragma clang diagnostic ignored "-Wweak-vtables"
+ #endif
+ 
+ class bad_weak_ptr: public std::exception
+diff --git a/inst/include/boost/smart_ptr/detail/shared_count.hpp b/inst/include/boost/smart_ptr/detail/shared_count.hpp
+index cafd3c2f..232ad850 100644
+--- a/inst/include/boost/smart_ptr/detail/shared_count.hpp
++++ b/inst/include/boost/smart_ptr/detail/shared_count.hpp
+@@ -39,7 +39,7 @@
+ 
+ #if defined( BOOST_SP_DISABLE_DEPRECATED )
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+diff --git a/inst/include/boost/smart_ptr/scoped_ptr.hpp b/inst/include/boost/smart_ptr/scoped_ptr.hpp
+index c71d70d0..6f58e2e9 100644
+--- a/inst/include/boost/smart_ptr/scoped_ptr.hpp
++++ b/inst/include/boost/smart_ptr/scoped_ptr.hpp
+@@ -25,7 +25,7 @@
+ 
+ #if defined( BOOST_SP_DISABLE_DEPRECATED )
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+diff --git a/inst/include/boost/smart_ptr/shared_ptr.hpp b/inst/include/boost/smart_ptr/shared_ptr.hpp
+index 2431a335..b4b6b7a5 100644
+--- a/inst/include/boost/smart_ptr/shared_ptr.hpp
++++ b/inst/include/boost/smart_ptr/shared_ptr.hpp
+@@ -37,7 +37,7 @@
+ 
+ #if defined( BOOST_SP_DISABLE_DEPRECATED )
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #endif
+ 
+ namespace boost
+diff --git a/inst/include/boost/static_string/static_string.hpp b/inst/include/boost/static_string/static_string.hpp
+index fce1ddb7..325a7742 100644
+--- a/inst/include/boost/static_string/static_string.hpp
++++ b/inst/include/boost/static_string/static_string.hpp
+@@ -13,16 +13,16 @@
+ 
+ #if defined(__GNUC__) && __GNUC__ >= 8
+ #pragma GCC diagnostic push
+-#pragma GCC system_header
++//#pragma GCC system_header
+ // false positives
+-#pragma GCC diagnostic ignored "-Warray-bounds"
+-#pragma GCC diagnostic ignored "-Wrestrict"
+-#pragma GCC diagnostic ignored "-Wstringop-overflow"
++//#pragma GCC diagnostic ignored "-Warray-bounds"
++//#pragma GCC diagnostic ignored "-Wrestrict"
++//#pragma GCC diagnostic ignored "-Wstringop-overflow"
+ #endif
+ 
+ #if defined(__GNUC__) && __GNUC__ >= 7
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wnoexcept-type"
++//#pragma GCC diagnostic ignored "-Wnoexcept-type"
+ #endif
+ 
+ // External include guard
+@@ -583,7 +583,7 @@ count_digits(std::size_t value)
+ // not need to be extremely precise.
+ #if defined(__GNUC__) && __GNUC__ >= 7
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wformat-truncation"
++//#pragma GCC diagnostic ignored "-Wformat-truncation"
+ #endif
+ 
+ template<std::size_t N>
+diff --git a/inst/include/boost/system/detail/error_category.hpp b/inst/include/boost/system/detail/error_category.hpp
+index e7042213..a1332111 100644
+--- a/inst/include/boost/system/detail/error_category.hpp
++++ b/inst/include/boost/system/detail/error_category.hpp
+@@ -43,7 +43,7 @@ class std_category;
+ 
+ #if ( defined( BOOST_GCC ) && BOOST_GCC >= 40600 ) || defined( BOOST_CLANG )
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
++  //#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+ #endif
+ 
+ #if defined(BOOST_MSVC) && BOOST_MSVC < 1900
+diff --git a/inst/include/boost/system/detail/error_category_impl.hpp b/inst/include/boost/system/detail/error_category_impl.hpp
+index 7d69f71d..94f4f843 100644
+--- a/inst/include/boost/system/detail/error_category_impl.hpp
++++ b/inst/include/boost/system/detail/error_category_impl.hpp
+@@ -113,7 +113,7 @@ inline void error_category::init_stdcat() const
+ 
+ #if defined( BOOST_GCC ) && BOOST_GCC >= 40800 && BOOST_GCC < 70000
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
++  //#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+ #endif
+ 
+ inline BOOST_NOINLINE error_category::operator std::error_category const & () const
+diff --git a/inst/include/boost/system/detail/error_code.hpp b/inst/include/boost/system/detail/error_code.hpp
+index a395c818..2a3f81e5 100644
+--- a/inst/include/boost/system/detail/error_code.hpp
++++ b/inst/include/boost/system/detail/error_code.hpp
+@@ -33,7 +33,7 @@
+ 
+ #if defined(BOOST_GCC) && BOOST_GCC >= 40600 && BOOST_GCC < 70000
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wstrict-aliasing"
++//# pragma GCC diagnostic ignored "-Wstrict-aliasing"
+ #endif
+ 
+ namespace boost
+diff --git a/inst/include/boost/system/detail/generic_category.hpp b/inst/include/boost/system/detail/generic_category.hpp
+index 6a1a0581..89c44cc0 100644
+--- a/inst/include/boost/system/detail/generic_category.hpp
++++ b/inst/include/boost/system/detail/generic_category.hpp
+@@ -28,7 +28,7 @@ namespace detail
+ 
+ #if ( defined( BOOST_GCC ) && BOOST_GCC >= 40600 ) || defined( BOOST_CLANG )
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
++  //#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+ #endif
+ 
+ class BOOST_SYMBOL_VISIBLE generic_error_category: public error_category
+diff --git a/inst/include/boost/system/detail/generic_category_message.hpp b/inst/include/boost/system/detail/generic_category_message.hpp
+index 611ce378..57761ff9 100644
+--- a/inst/include/boost/system/detail/generic_category_message.hpp
++++ b/inst/include/boost/system/detail/generic_category_message.hpp
+@@ -70,7 +70,7 @@ inline std::string generic_error_category_message( int ev )
+ # elif defined(__clang__) && defined(__has_warning)
+ #  pragma clang diagnostic push
+ #  if __has_warning("-Wdeprecated-declarations")
+-#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
++  //#   pragma clang diagnostic ignored "-Wdeprecated-declarations"
+ #  endif
+ # endif
+ 
+diff --git a/inst/include/boost/system/detail/interop_category.hpp b/inst/include/boost/system/detail/interop_category.hpp
+index 418c6918..fe35b99f 100644
+--- a/inst/include/boost/system/detail/interop_category.hpp
++++ b/inst/include/boost/system/detail/interop_category.hpp
+@@ -28,7 +28,7 @@ namespace detail
+ 
+ #if ( defined( BOOST_GCC ) && BOOST_GCC >= 40600 ) || defined( BOOST_CLANG )
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
++  //#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+ #endif
+ 
+ class BOOST_SYMBOL_VISIBLE interop_error_category: public error_category
+diff --git a/inst/include/boost/system/detail/system_category.hpp b/inst/include/boost/system/detail/system_category.hpp
+index 260894d4..0d8f3d03 100644
+--- a/inst/include/boost/system/detail/system_category.hpp
++++ b/inst/include/boost/system/detail/system_category.hpp
+@@ -27,7 +27,7 @@ namespace detail
+ 
+ #if ( defined( BOOST_GCC ) && BOOST_GCC >= 40600 ) || defined( BOOST_CLANG )
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
++  //#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+ #endif
+ 
+ class BOOST_SYMBOL_VISIBLE system_error_category: public error_category
+diff --git a/inst/include/boost/system/result.hpp b/inst/include/boost/system/result.hpp
+index 456a7929..21e68d67 100644
+--- a/inst/include/boost/system/result.hpp
++++ b/inst/include/boost/system/result.hpp
+@@ -31,7 +31,7 @@ namespace system
+ 
+ #if defined(__GNUC__) && __GNUC__ >= 7 && __GNUC__ <= 8
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wattributes"
++  //# pragma GCC diagnostic ignored "-Wattributes"
+ #endif
+ 
+ BOOST_NORETURN BOOST_NOINLINE inline void throw_exception_from_error( error_code const & e, boost::source_location const& loc )
+diff --git a/inst/include/boost/test/detail/suppress_warnings.hpp b/inst/include/boost/test/detail/suppress_warnings.hpp
+index 2145da5f..79ed3b25 100644
+--- a/inst/include/boost/test/detail/suppress_warnings.hpp
++++ b/inst/include/boost/test/detail/suppress_warnings.hpp
+@@ -28,14 +28,14 @@
+ 
+ #if defined(BOOST_CLANG) && (BOOST_CLANG == 1)
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wvariadic-macros"
+-# pragma clang diagnostic ignored "-Wmissing-declarations"
++//# pragma clang diagnostic ignored "-Wvariadic-macros"
++//# pragma clang diagnostic ignored "-Wmissing-declarations"
+ #endif
+ 
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 4 * 10000 + 6 * 100)
+ # pragma GCC diagnostic push
+-# pragma GCC diagnostic ignored "-Wvariadic-macros"
+-# pragma GCC diagnostic ignored "-Wmissing-declarations"
++//# pragma GCC diagnostic ignored "-Wvariadic-macros"
++//# pragma GCC diagnostic ignored "-Wmissing-declarations"
+ // # pragma GCC diagnostic ignored "-Wattributes"
+ #endif
+ 
+diff --git a/inst/include/boost/tuple/detail/tuple_basic.hpp b/inst/include/boost/tuple/detail/tuple_basic.hpp
+index ad488be7..a4969ae0 100644
+--- a/inst/include/boost/tuple/detail/tuple_basic.hpp
++++ b/inst/include/boost/tuple/detail/tuple_basic.hpp
+@@ -45,7 +45,7 @@
+ 
+ #if defined(BOOST_GCC) && (BOOST_GCC >= 40700)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
++//#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+ #endif
+ 
+ namespace boost {
+diff --git a/inst/include/boost/tuple/tuple.hpp b/inst/include/boost/tuple/tuple.hpp
+index cbebdf1b..8ed3e5fc 100644
+--- a/inst/include/boost/tuple/tuple.hpp
++++ b/inst/include/boost/tuple/tuple.hpp
+@@ -73,7 +73,7 @@ namespace std
+ 
+ #if defined(BOOST_CLANG)
+ # pragma clang diagnostic push
+-# pragma clang diagnostic ignored "-Wmismatched-tags"
++  //# pragma clang diagnostic ignored "-Wmismatched-tags"
+ #endif
+ 
+ // std::tuple_size
+diff --git a/inst/include/boost/type_traits/detail/has_prefix_operator.hpp b/inst/include/boost/type_traits/detail/has_prefix_operator.hpp
+index 77818c20..f423e391 100644
+--- a/inst/include/boost/type_traits/detail/has_prefix_operator.hpp
++++ b/inst/include/boost/type_traits/detail/has_prefix_operator.hpp
+@@ -20,7 +20,7 @@
+ 
+ #ifdef BOOST_GCC
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wdeprecated"
++//#pragma GCC diagnostic ignored "-Wdeprecated"
+ #endif
+ #if defined(BOOST_MSVC)
+ #   pragma warning ( push )
+diff --git a/inst/include/boost/type_traits/has_logical_not.hpp b/inst/include/boost/type_traits/has_logical_not.hpp
+index d36858e1..9e0f7065 100644
+--- a/inst/include/boost/type_traits/has_logical_not.hpp
++++ b/inst/include/boost/type_traits/has_logical_not.hpp
+@@ -11,7 +11,7 @@
+ 
+ #if defined(__GNUC__) && (__GNUC__*10000 + __GNUC_MINOR__*100 + __GNUC_PATCHLEVEL__ > 40800)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wunused-value"
++//#pragma GCC diagnostic ignored "-Wunused-value"
+ #endif
+ 
+ #define BOOST_TT_TRAIT_NAME has_logical_not
+diff --git a/inst/include/boost/unordered/detail/archive_constructed.hpp b/inst/include/boost/unordered/detail/archive_constructed.hpp
+index 341e2dbd..a6128a38 100644
+--- a/inst/include/boost/unordered/detail/archive_constructed.hpp
++++ b/inst/include/boost/unordered/detail/archive_constructed.hpp
+@@ -50,7 +50,7 @@ struct archive_constructed:private noncopyable
+ 
+ #if defined(BOOST_UNORDERED_IGNORE_WSTRICT_ALIASING)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
++  //#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+ #endif
+ 
+   T& get(){return *space.address();}
+diff --git a/inst/include/boost/unordered/detail/foa/core.hpp b/inst/include/boost/unordered/detail/foa/core.hpp
+index 062b7112..1d96644d 100644
+--- a/inst/include/boost/unordered/detail/foa/core.hpp
++++ b/inst/include/boost/unordered/detail/foa/core.hpp
+@@ -1461,7 +1461,7 @@ public:
+ 
+ #if defined(BOOST_GCC)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+ 
+   table_core(
+@@ -2092,7 +2092,7 @@ private:
+ 
+ #if defined(BOOST_GCC)
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+ 
+   /* used by allocator-extended move ctor */
+diff --git a/inst/include/boost/unordered/detail/foa/ignore_wshadow.hpp b/inst/include/boost/unordered/detail/foa/ignore_wshadow.hpp
+index f84262bc..c894fd02 100644
+--- a/inst/include/boost/unordered/detail/foa/ignore_wshadow.hpp
++++ b/inst/include/boost/unordered/detail/foa/ignore_wshadow.hpp
+@@ -28,7 +28,7 @@
+  */
+ 
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wshadow"
++//#pragma GCC diagnostic ignored "-Wshadow"
+ #else
+ #pragma GCC diagnostic pop
+ #endif
+diff --git a/inst/include/boost/unordered/unordered_printers.hpp b/inst/include/boost/unordered/unordered_printers.hpp
+index cace173b..28072202 100644
+--- a/inst/include/boost/unordered/unordered_printers.hpp
++++ b/inst/include/boost/unordered/unordered_printers.hpp
+@@ -11,7 +11,7 @@
+ #if defined(__ELF__)
+ #ifdef __clang__
+ #pragma clang diagnostic push
+-#pragma clang diagnostic ignored "-Woverlength-strings"
++//#pragma clang diagnostic ignored "-Woverlength-strings"
+ #endif
+ __asm__(".pushsection \".debug_gdb_scripts\", \"MS\",@progbits,1\n"
+         ".ascii \"\\4gdb.inlined-script.BOOST_UNORDERED_UNORDERED_PRINTERS_HPP\\n\"\n"
+diff --git a/inst/include/boost/variant/get.hpp b/inst/include/boost/variant/get.hpp
+index 085c6f23..652e57f9 100644
+--- a/inst/include/boost/variant/get.hpp
++++ b/inst/include/boost/variant/get.hpp
+@@ -32,7 +32,7 @@ namespace boost {
+ 
+ #if defined(BOOST_CLANG)
+ #   pragma clang diagnostic push
+-#   pragma clang diagnostic ignored "-Wweak-vtables"
++  //#   pragma clang diagnostic ignored "-Wweak-vtables"
+ #endif
+ //////////////////////////////////////////////////////////////////////////
+ // class bad_get
+diff --git a/inst/include/boost/variant2/variant.hpp b/inst/include/boost/variant2/variant.hpp
+index 3eb53424..233b94f3 100644
+--- a/inst/include/boost/variant2/variant.hpp
++++ b/inst/include/boost/variant2/variant.hpp
+@@ -688,10 +688,10 @@ template<class T1, class... T> union variant_storage_impl<mp11::mp_true, T1, T..
+ #if defined(BOOST_GCC) && (__GNUC__ >= 7)
+ # pragma GCC diagnostic push
+ // False positive in at least GCC 7 and GCC 10 ASAN triggered by monostate (via result<void>)
+-# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
++//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #if __GNUC__ >= 12
+ // False positive in at least GCC 12 and GCC 13 ASAN and -Og triggered by monostate (via result<void>)
+-# pragma GCC diagnostic ignored "-Wuninitialized"
++//# pragma GCC diagnostic ignored "-Wuninitialized"
+ #endif
+ #endif
+         *this = variant_storage_impl( mp11::mp_size_t<I>(), std::forward<A>(a)... );
+diff --git a/inst/include/boost/winapi/detail/header.hpp b/inst/include/boost/winapi/detail/header.hpp
+index c03c42a2..47376f4f 100644
+--- a/inst/include/boost/winapi/detail/header.hpp
++++ b/inst/include/boost/winapi/detail/header.hpp
+@@ -20,7 +20,7 @@
+ 
+ #pragma GCC diagnostic push
+ // ISO C++ 1998 does not support 'long long'
+-#pragma GCC diagnostic ignored "-Wlong-long"
++//#pragma GCC diagnostic ignored "-Wlong-long"
+ 
+ #endif
+ 
+diff --git a/inst/include/boost/winapi/get_proc_address.hpp b/inst/include/boost/winapi/get_proc_address.hpp
+index 897061ac..f6aba5ea 100644
+--- a/inst/include/boost/winapi/get_proc_address.hpp
++++ b/inst/include/boost/winapi/get_proc_address.hpp
+@@ -77,7 +77,7 @@ BOOST_FORCEINLINE FuncPtr get_proc_address(HMODULE_ hModule, LPCSTR_ lpProcName)
+ {
+ #if defined(BOOST_GCC) && BOOST_GCC >= 80000
+ #pragma GCC diagnostic push
+-#pragma GCC diagnostic ignored "-Wcast-function-type"
++//#pragma GCC diagnostic ignored "-Wcast-function-type"
+ #endif
+     return reinterpret_cast< FuncPtr >(boost::winapi::get_proc_address(hModule, lpProcName));
+ #if defined(BOOST_GCC) && BOOST_GCC >= 80000
