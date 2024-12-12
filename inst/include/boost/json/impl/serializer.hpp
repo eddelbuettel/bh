@@ -111,10 +111,10 @@ write_impl(integral_conversion_tag, writer& w, stream& ss0)
 
 #if defined(__clang__)
 # pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wsign-compare"
+//# pragma clang diagnostic ignored "-Wsign-compare"
 #elif defined(__GNUC__)
 # pragma GCC diagnostic push
-# pragma GCC  diagnostic ignored "-Wsign-compare"
+//# pragma GCC  diagnostic ignored "-Wsign-compare"
 #elif defined(_MSC_VER)
 # pragma warning( push )
 # pragma warning( disable : 4018 )

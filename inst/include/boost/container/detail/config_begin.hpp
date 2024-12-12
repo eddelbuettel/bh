@@ -57,6 +57,6 @@
 //Sign conversion warnings broken before GCC 9.3
 //(https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87519)
 #if BOOST_GCC < 90300
-#pragma GCC diagnostic ignored "-Wsign-conversion"
+//#pragma GCC diagnostic ignored "-Wsign-conversion"
 #endif
 #endif

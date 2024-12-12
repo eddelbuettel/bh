@@ -11,7 +11,7 @@
 #if defined(__ELF__)
 #ifdef __clang__
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Woverlength-strings"
+//#pragma clang diagnostic ignored "-Woverlength-strings"
 #endif
 __asm__(".pushsection \".debug_gdb_scripts\", \"MS\",@progbits,1\n"
         ".ascii \"\\4gdb.inlined-script.BOOST_UNORDERED_UNORDERED_PRINTERS_HPP\\n\"\n"

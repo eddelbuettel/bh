@@ -4779,7 +4779,7 @@ get<1>(key_value_pair&& kvp) noexcept
 
 #ifdef __clang__
 # pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wmismatched-tags"
+//# pragma clang diagnostic ignored "-Wmismatched-tags"
 #endif
 
 #ifndef BOOST_JSON_DOCS
