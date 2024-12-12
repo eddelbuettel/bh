@@ -27,7 +27,7 @@
 
 #if defined(BOOST_PTR_CONTAINER_DISABLE_DEPRECATED)
 #pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 namespace boost

@@ -145,14 +145,15 @@ inline void no_throw_failed_impl(const char* expr, const char* what, const char*
 #if defined(__clang__) && defined(__has_warning)
 # if __has_warning("-Wsign-compare")
 #  pragma clang diagnostic push
-  //#  pragma clang diagnostic ignored "-Wsign-compare"
+#  pragma clang diagnostic ignored "-Wsign-compare"
 # endif
 #elif defined(_MSC_VER)
 # pragma warning(push)
 # pragma warning(disable: 4389)
 #elif defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
 # pragma GCC diagnostic push
-  //# pragma GCC diagnostic ignored "-Wsign-compare"
+# pragma GCC diagnostic ignored "-Wsign-compare"
+# pragma GCC diagnostic ignored "-Wsign-conversion"
 #endif
 
 // specialize test output for char pointers to avoid printing as cstring

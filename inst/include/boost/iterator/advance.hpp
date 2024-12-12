@@ -32,7 +32,7 @@ namespace iterators {
 #if BOOST_WORKAROUND(BOOST_GCC_VERSION, >= 40600)
 // type-limits warning issued below when n is an unsigned integral
 #pragma GCC diagnostic push
-      //#pragma GCC diagnostic ignored "-Wtype-limits"
+#pragma GCC diagnostic ignored "-Wtype-limits"
 #endif
 
         template <typename BidirectionalIterator, typename Distance>

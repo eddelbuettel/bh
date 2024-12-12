@@ -55,17 +55,17 @@
 
 #pragma GCC diagnostic push
 // unused parameter 'arg'
-//#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 // missing initializer for member var
-//#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #elif defined(BOOST_CLANG)
 
 #pragma clang diagnostic push
 // unused parameter 'arg'
-//#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wunused-parameter"
 // missing initializer for member var
-//#pragma clang diagnostic ignored "-Wmissing-field-initializers"
+#pragma clang diagnostic ignored "-Wmissing-field-initializers"
 
 #endif
 

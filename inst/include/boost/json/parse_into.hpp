@@ -15,8 +15,8 @@
 
 #include <boost/json/basic_parser.hpp>
 #include <boost/json/string_view.hpp>
-#include <boost/json/system_error.hpp>
 #include <boost/json/detail/parse_into.hpp>
+#include <boost/system/result.hpp>
 
 namespace boost {
 namespace json {
@@ -75,7 +75,7 @@ void
 parse_into(
     V& v,
     string_view sv,
-    error_code& ec,
+    system::error_code& ec,
     parse_options const& opt = {} );
 
 template<class V>
@@ -105,7 +105,6 @@ parse_into(
 
     @par Exception Safety
     Basic guarantee.
-    Throws @ref system_error on failed parse.
     Calls to `memory_resource::allocate` may throw.
 
     @param v The type to parse into.
@@ -114,6 +113,8 @@ parse_into(
 
     @param opt The options for the parser. If this parameter
     is omitted, the parser will accept only standard JSON.
+
+    @throw `boost::system::system_error` on failed parse.
 */
 template<class V>
 void
@@ -159,7 +160,7 @@ void
 parse_into(
     V& v,
     std::istream& is,
-    error_code& ec,
+    system::error_code& ec,
     parse_options const& opt = {} );
 
 template<class V>
@@ -189,7 +190,6 @@ parse_into(
 
     @par Exception Safety
     Basic guarantee.
-    Throws @ref system_error on failed parse.
     Calls to `memory_resource::allocate` may throw.
     The stream may throw as described by
     [`std::ios::exceptions`](https://en.cppreference.com/w/cpp/io/basic_ios/exceptions).
@@ -200,6 +200,8 @@ parse_into(
 
     @param opt The options for the parser. If this parameter
     is omitted, the parser will accept only standard JSON.
+
+    @throw `boost::system::system_error` on failed parse.
 */
 template<class V>
 void

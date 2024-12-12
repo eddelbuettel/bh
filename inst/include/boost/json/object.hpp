@@ -11,12 +11,13 @@
 #define BOOST_JSON_OBJECT_HPP
 
 #include <boost/json/detail/config.hpp>
-#include <boost/json/kind.hpp>
-#include <boost/json/pilfer.hpp>
-#include <boost/json/storage_ptr.hpp>
-#include <boost/json/string_view.hpp>
 #include <boost/json/detail/object.hpp>
 #include <boost/json/detail/value.hpp>
+#include <boost/json/kind.hpp>
+#include <boost/json/pilfer.hpp>
+#include <boost/system/result.hpp>
+#include <boost/json/storage_ptr.hpp>
+#include <boost/json/string_view.hpp>
 #include <cstdlib>
 #include <initializer_list>
 #include <iterator>
@@ -94,16 +95,8 @@ class object
     object(detail::unchecked_object&& uo);
 
 public:
-    /** The type of _Allocator_ returned by @ref get_allocator
-
-        This type is a @ref polymorphic_allocator.
-    */
-#ifdef BOOST_JSON_DOCS
-    // VFALCO doc toolchain renders this incorrectly
-    using allocator_type = __see_below__;
-#else
-    using allocator_type = polymorphic_allocator<value>;
-#endif
+    /// Associated [Allocator](https://en.cppreference.com/w/cpp/named_req/Allocator)
+    using allocator_type = container::pmr::polymorphic_allocator<value>;
 
     /** The type of keys.
 
@@ -154,9 +147,9 @@ public:
 
     /** Destructor.
 
-        The destructor for each element is called if needed,
-        any used memory is deallocated, and shared ownership
-        of the @ref memory_resource is released.
+        The destructor for each element is called if needed, any used memory is
+        deallocated, and shared ownership of the
+        `boost::container::pmr::memory_resource` is released.
 
         @par Complexity
         Constant, or linear in @ref size().
@@ -198,9 +191,9 @@ public:
         @par Exception Safety
         No-throw guarantee.
 
-        @param sp A pointer to the @ref memory_resource
-        to use. The container will acquire shared
-        ownership of the memory resource.
+        @param sp A pointer to the `boost::container::pmr::memory_resource` to
+        use. The container will acquire shared ownership of the memory
+        resource.
     */
     explicit
     object(storage_ptr sp) noexcept
@@ -226,9 +219,9 @@ public:
         of elements for which capacity is guaranteed
         without a subsequent reallocation.
 
-        @param sp A pointer to the @ref memory_resource
-        to use. The container will acquire shared
-        ownership of the memory resource.
+        @param sp A pointer to the `boost::container::pmr::memory_resource` to
+        use. The container will acquire shared ownership of the memory
+        resource.
     */
     BOOST_JSON_DECL
     object(
@@ -272,9 +265,9 @@ public:
         Upon construction, @ref capacity() will be greater
         than or equal to this number.
 
-        @param sp A pointer to the @ref memory_resource
-        to use. The container will acquire shared
-        ownership of the memory resource.
+        @param sp A pointer to the `boost::container::pmr::memory_resource` to
+        use. The container will acquire shared ownership of the memory
+        resource.
 
         @tparam InputIt a type satisfying the requirements
         of __InputIterator__.
@@ -349,9 +342,9 @@ public:
 
         @param other The object to move.
 
-        @param sp A pointer to the @ref memory_resource
-        to use. The container will acquire shared
-        ownership of the memory resource.
+        @param sp A pointer to the `boost::container::pmr::memory_resource` to
+        use. The container will acquire shared ownership of the memory
+        resource.
     */
     BOOST_JSON_DECL
     object(
@@ -421,9 +414,9 @@ public:
 
         @param other The object to copy.
 
-        @param sp A pointer to the @ref memory_resource
-        to use. The container will acquire shared
-        ownership of the memory resource.
+        @param sp A pointer to the `boost::container::pmr::memory_resource` to
+        use. The container will acquire shared ownership of the memory
+        resource.
     */
     BOOST_JSON_DECL
     object(
@@ -449,9 +442,9 @@ public:
 
         @param init The initializer list to insert.
 
-        @param sp A pointer to the @ref memory_resource
-        to use. The container will acquire shared
-        ownership of the memory resource.
+        @param sp A pointer to the `boost::container::pmr::memory_resource` to
+        use. The container will acquire shared ownership of the memory
+        resource.
     */
     object(
         std::initializer_list<
@@ -488,9 +481,9 @@ public:
         Upon construction, @ref capacity() will be greater
         than or equal to this number.
 
-        @param sp A pointer to the @ref memory_resource
-        to use. The container will acquire shared
-        ownership of the memory resource.
+        @param sp A pointer to the `boost::container::pmr::memory_resource` to
+        use. The container will acquire shared ownership of the memory
+        resource.
     */
     BOOST_JSON_DECL
     object(
@@ -576,10 +569,10 @@ public:
 
     //------------------------------------------------------
 
-    /** Return the associated @ref memory_resource
+    /** Return the associated memory resource.
 
-        This returns the @ref memory_resource used by
-        the container.
+        This function returns the `boost::container::pmr::memory_resource` used
+        by the container.
 
         @par Complexity
         Constant.
@@ -593,11 +586,10 @@ public:
         return sp_;
     }
 
-    /** Return the associated @ref memory_resource
+    /** Return the associated allocator.
 
-        This function returns an instance of
-        @ref polymorphic_allocator constructed from the
-        associated @ref memory_resource.
+        This function returns an instance of @ref allocator_type constructed
+        from the associated `boost::container::pmr::memory_resource`.
 
         @par Complexity
         Constant.
@@ -896,7 +888,7 @@ public:
 
         @param new_capacity The new minimum capacity.
 
-        @throw system_error `new_capacity > max_size()`
+        @throw `boost::system::system_error`  `new_capacity > max_size()`.
     */
     inline
     void
@@ -952,9 +944,8 @@ public:
 
         @param p The value to insert.
 
-        @throw system_error key is too long.
-
-        @throw system_error @ref size() >= max_size().
+        @throw `boost::system::system_error` key is too long.
+        @throw `boost::system::system_error` @ref size() >= max_size().
 
         @return A pair where `first` is an iterator
         to the existing or inserted element, and `second`
@@ -1077,7 +1068,7 @@ public:
 
         @param m The value to insert or assign
 
-        @throw system_error if key is too long
+        @throw `boost::system::system_error` if key is too long.
     */
     template<class M>
     std::pair<iterator, bool>
@@ -1112,7 +1103,7 @@ public:
         This will be passed as `std::forward<Arg>(arg)` to
         the @ref value constructor.
 
-        @throw system_error if key is too long
+        @throw `boost::system::system_error` if key is too long.
     */
     template<class Arg>
     std::pair<iterator, bool>
@@ -1170,17 +1161,14 @@ public:
 
     /** Erase an element preserving order
 
-        Remove the element pointed to by `pos`, which must
-        be valid and dereferenceable.
-        References and iterators from `pos` to `end()`, both
-        included, are invalidated. Other iterators and references
-        are not invalidated.
-        The relative order of remaining elements is preserved.
+        Remove the element pointed to by `pos`, which must be valid and
+        dereferenceable. References and iterators from `pos` to @ref end(),
+        both included, are invalidated. Other iterators and references are not
+        invalidated. The relative order of remaining elements is preserved.
 
         @note
-
-        The @ref end() iterator (which is valid but cannot be
-        dereferenced) cannot be used as a value for `pos`.
+        The @ref end() iterator (which is valid but cannot be dereferenced)
+        cannot be used as a value for `pos`.
 
         @par Complexity
         Linear in @ref size().
@@ -1220,9 +1208,9 @@ public:
 
     /** Swap two objects.
 
-        Exchanges the contents of this object with another
-        object. Ownership of the respective @ref memory_resource
-        objects is not transferred.
+        Exchanges the contents of this object with another object. Ownership of
+        the respective `boost::container::pmr::memory_resource` objects is not
+        transferred.
 
         @li If `*other.storage() == *this->storage()`,
         ownership of the underlying memory is swapped in
@@ -1250,9 +1238,9 @@ public:
 
     /** Swap two objects.
 
-        Exchanges the contents of the object `lhs` with
-        another object `rhs`. Ownership of the respective
-        @ref memory_resource objects is not transferred.
+        Exchanges the contents of the object `lhs` with another object `rhs`.
+        Ownership of the respective `boost::container::pmr::memory_resource`
+        objects is not transferred.
 
         @li If `*lhs.storage() == *rhs.storage()`,
         ownership of the underlying memory is swapped in
@@ -1298,6 +1286,30 @@ public:
 
     /** Access the specified element, with bounds checking.
 
+        Returns `boost::system::result` containing a reference to the
+        mapped value of the element that matches `key`. Otherwise the result
+        contains an `error_code`.
+
+        @par Exception Safety
+        No-throw guarantee.
+
+        @param key The key of the element to find.
+
+        @par Complexity
+        Constant on average, worst case linear in @ref size().
+    */
+    /** @{ */
+    BOOST_JSON_DECL
+    system::result<value&>
+    try_at(string_view key) noexcept;
+
+    BOOST_JSON_DECL
+    system::result<value const&>
+    try_at(string_view key) const noexcept;
+    /** @} */
+
+    /** Access the specified element, with bounds checking.
+
         Returns a reference to the mapped value of the element
         that matches `key`, otherwise throws.
 
@@ -1311,21 +1323,30 @@ public:
 
         @param key The key of the element to find.
 
-        @throw system_error if no such element exists.
+        @param loc `source_location` to use in thrown exception; the source
+            location of the call site by default.
+
+        @throw `boost::system::system_error` if no such element exists.
     */
-    /* @{ */
+    /** @{ */
     inline
     value&
-    at(string_view key) &;
+    at(
+        string_view key,
+        source_location const& loc = BOOST_CURRENT_LOCATION) &;
 
     inline
     value&&
-    at(string_view key) &&;
+    at(
+        string_view key,
+        source_location const& loc = BOOST_CURRENT_LOCATION) &&;
 
-    inline
+    BOOST_JSON_DECL
     value const&
-    at(string_view key) const&;
-    /* @} */
+    at(
+        string_view key,
+        source_location const& loc = BOOST_CURRENT_LOCATION) const&;
+    /** @} */
 
     /** Access or insert the specified element
 

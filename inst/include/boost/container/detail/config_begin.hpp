@@ -41,6 +41,7 @@
    #pragma warning (disable : 4671) //  the copy constructor is inaccessible
    #pragma warning (disable : 4673) //  throwing '' the following types will not be considered at the catch site
    #pragma warning (disable : 4675) // "method" should be declared "static" and have exactly one parameter
+   #pragma warning (disable : 4702) // unreachable code
    #pragma warning (disable : 4706) // assignment within conditional expression
    #pragma warning (disable : 4710) // function not inlined
    #pragma warning (disable : 4714) // "function": marked as __forceinline not inlined
@@ -56,6 +57,6 @@
 //Sign conversion warnings broken before GCC 9.3
 //(https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87519)
 #if BOOST_GCC < 90300
-//#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
 #endif
 #endif

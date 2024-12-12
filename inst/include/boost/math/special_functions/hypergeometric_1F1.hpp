@@ -24,7 +24,7 @@
 #include <boost/math/special_functions/detail/hypergeometric_pFq_checked_series.hpp>
 #include <boost/math/special_functions/detail/hypergeometric_1F1_addition_theorems_on_z.hpp>
 #include <boost/math/special_functions/detail/hypergeometric_1F1_large_abz.hpp>
-#include <boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_r.hpp>
+#include <boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_ratio.hpp>
 #include <boost/math/special_functions/detail/hypergeometric_1F1_negative_b_regions.hpp>
 
 namespace boost { namespace math { namespace detail {
@@ -123,13 +123,13 @@ namespace boost { namespace math { namespace detail {
             {
                if (boost::math::policies::digits<T, Policy>() <= 64)
                   return hypergeometric_1F1_from_function_ratio_negative_b_forwards(a, b, z, pol, log_scaling);
-#ifndef BOOST_NO_EXCEPTIONS
+#ifndef BOOST_MATH_NO_EXCEPTIONS
                try
 #endif
                {
                   return hypergeometric_1F1_checked_series_impl(a, b, z, pol, log_scaling);
                }
-#ifndef BOOST_NO_EXCEPTIONS
+#ifndef BOOST_MATH_NO_EXCEPTIONS
                catch (const evaluation_error&)
                {
                   //
@@ -419,13 +419,13 @@ namespace boost { namespace math { namespace detail {
       if (detail::hypergeometric_1F1_asym_region(a, b, z, pol))
       {
          long long saved_scale = log_scaling;
-#ifndef BOOST_NO_EXCEPTIONS
+#ifndef BOOST_MATH_NO_EXCEPTIONS
          try
 #endif
          {
             return hypergeometric_1F1_asym_large_z_series(a, b, z, pol, log_scaling);
          }
-#ifndef BOOST_NO_EXCEPTIONS
+#ifndef BOOST_MATH_NO_EXCEPTIONS
          catch (const evaluation_error&)
          {
          }

@@ -32,7 +32,7 @@
 
 #if defined(BOOST_CLANG) || (defined(BOOST_GCC) && (BOOST_GCC >= 40600))
 #pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
 #endif
 
 namespace boost {  namespace movelib{
@@ -106,7 +106,7 @@ class heap_sort_helper
 };
 
 template <class RandomAccessIterator, class Compare>
-BOOST_MOVE_FORCEINLINE void heap_sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp)
+inline void heap_sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp)
 {
    heap_sort_helper<RandomAccessIterator, Compare>::sort(first, last, comp);
 }
