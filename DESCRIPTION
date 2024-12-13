@@ -1,8 +1,8 @@
 Package: BH
 Type: Package
 Title: Boost C++ Header Files
-Version: 1.84.0-0.1
-Date: 2024-08-02
+Version: 1.87.0-0
+Date: 2024-12-12
 Authors@R: c(person("Dirk", "Eddelbuettel", role = c("aut", "cre"), email = "edd@debian.org",
                     comment = c(ORCID = "0000-0001-6419-907X")),
              person("John W.", "Emerson", role = "aut"), 
