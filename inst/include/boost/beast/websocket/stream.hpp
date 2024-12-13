@@ -38,6 +38,25 @@
 namespace boost {
 namespace beast {
 namespace websocket {
+/** permessage-deflate extension status.
+
+    These settings indicate the status of the permessage-deflate
+    extension, showing if it is active and the window bits in use.
+
+    Objects of this type are used with
+    @ref beast::websocket::stream::get_status.
+*/
+struct permessage_deflate_status
+{
+    /// `true` if the permessage-deflate extension is active
+    bool active = false;
+
+    /// The number of window bits used by the client
+    int client_window_bits = 0;
+
+    /// The number of window bits used by the server
+    int server_window_bits = 0;
+};
 
 /** The type of received control frame.
 
@@ -398,6 +417,11 @@ public:
 
         @throws invalid_argument if `deflateSupported == false`, and either
         `client_enable` or `server_enable` is `true`.
+
+        @note
+
+        These settings should be configured before performing the WebSocket
+        handshake.
     */
     void
     set_option(permessage_deflate const& o);
@@ -405,6 +429,24 @@ public:
     /// Get the permessage-deflate extension options
     void
     get_option(permessage_deflate& o);
+
+    /** Get the status of the permessage-deflate extension.
+
+        Used to check the status of the permessage-deflate extension after
+        the WebSocket handshake.
+
+        @param status A reference to a `permessage_deflate_status` object
+        where the status will be stored.
+
+        @par Example
+        Checking the status of the permessage-deflate extension:
+        @code
+            permessage_deflate_status status;
+            ws.get_status(status);
+        @endcode
+    */
+    void
+    get_status(permessage_deflate_status &status) const noexcept;
 
     /** Set the automatic fragmentation option.
 
@@ -1376,7 +1418,13 @@ public:
     async_accept(
         AcceptHandler&& handler =
             net::default_completion_token_t<
-                executor_type>{});
+                executor_type>{}
+#ifndef BOOST_BEAST_DOXYGEN
+        , typename std::enable_if<
+            ! net::is_const_buffer_sequence<
+            AcceptHandler>::value>::type* = nullptr
+#endif
+    );
 
     /** Perform the WebSocket handshake asynchronously in the server role.
 
@@ -1449,6 +1497,9 @@ public:
             net::default_completion_token_t<
                 executor_type>{}
 #ifndef BOOST_BEAST_DOXYGEN
+        , typename std::enable_if<
+            net::is_const_buffer_sequence<
+            ConstBufferSequence>::value>::type* = 0
         , typename std::enable_if<
             ! http::detail::is_header<
             ConstBufferSequence>::value>::type* = 0
@@ -1639,7 +1690,8 @@ public:
         by dispatching to the immediate executor. If no
         immediate executor is specified, this is equivalent
         to using `net::post`.
-         @par Per-Operation Cancellation
+
+        @par Per-Operation Cancellation
 
         This asynchronous operation supports cancellation for the following
         net::cancellation_type values:
@@ -1649,6 +1701,7 @@ public:
 
         `total` cancellation succeeds if the operation is suspended due to ongoing
         control operations such as a ping/pong.
+
         `terminal` cancellation succeeds when supported by the underlying stream.
 
         @note `terminal` cancellation will may close the underlying socket.
@@ -1760,6 +1813,7 @@ public:
         by dispatching to the immediate executor. If no
         immediate executor is specified, this is equivalent
         to using `net::post`.
+
         @par Per-Operation Cancellation
 
         This asynchronous operation supports cancellation for the following
@@ -1770,6 +1824,7 @@ public:
 
         `total` cancellation succeeds if the operation is suspended due to ongoing
         control operations such as a ping/pong.
+
         `terminal` cancellation succeeds when supported by the underlying stream.
 
         `terminal` cancellation leaves the stream in an undefined state,
@@ -1885,6 +1940,7 @@ public:
         by dispatching to the immediate executor. If no
         immediate executor is specified, this is equivalent
         to using `net::post`.
+
         @par Per-Operation Cancellation
 
         This asynchronous operation supports cancellation for the following
@@ -1895,6 +1951,7 @@ public:
 
         `total` cancellation succeeds if the operation is suspended due to ongoing
         control operations such as a ping/pong.
+
         `terminal` cancellation succeeds when supported by the underlying stream.
 
         `terminal` cancellation leaves the stream in an undefined state,
@@ -2063,6 +2120,7 @@ public:
         by dispatching to the immediate executor. If no
         immediate executor is specified, this is equivalent
         to using `net::post`.
+
         @par Per-Operation Cancellation
 
         This asynchronous operation supports cancellation for the following
@@ -2073,6 +2131,7 @@ public:
 
         `total` cancellation succeeds if the operation is suspended due to ongoing
         control operations such as a ping/pong.
+
         `terminal` cancellation succeeds when supported by the underlying stream.
 
         `terminal` cancellation leaves the stream in an undefined state,
@@ -2259,6 +2318,7 @@ public:
         by dispatching to the immediate executor. If no
         immediate executor is specified, this is equivalent
         to using `net::post`.
+
         @par Per-Operation Cancellation
 
         This asynchronous operation supports cancellation for the following
@@ -2269,6 +2329,7 @@ public:
 
         `total` cancellation succeeds if the operation is suspended due to ongoing
         control operations such as a ping/pong.
+
         `terminal` cancellation succeeds when supported by the underlying stream.
 
         `terminal` cancellation leaves the stream in an undefined state,
@@ -2388,6 +2449,7 @@ public:
 
         `total` cancellation succeeds if the operation is suspended due to ongoing
         control operations such as a ping/pong.
+
         `terminal` cancellation succeeds when supported by the underlying stream.
 
         `terminal` cancellation leaves the stream in an undefined state,
@@ -2477,6 +2539,7 @@ public:
 
         `total` cancellation succeeds if the operation is suspended due to ongoing
         control operations such as a ping/pong.
+
         `terminal` cancellation succeeds when supported by the underlying stream.
 
         `terminal` cancellation leaves the stream in an undefined state,
@@ -2607,6 +2670,7 @@ public:
         by dispatching to the immediate executor. If no
         immediate executor is specified, this is equivalent
         to using `net::post`.
+
         @par Per-Operation Cancellation
 
         This asynchronous operation supports cancellation for the following
@@ -2617,6 +2681,7 @@ public:
 
         `total` cancellation succeeds if the operation is suspended due to ongoing
         control operations such as a ping/pong.
+
         `terminal` cancellation succeeds when supported by the underlying stream.
 
         `terminal` cancellation leaves the stream in an undefined state,
@@ -2756,6 +2821,7 @@ public:
         by dispatching to the immediate executor. If no
         immediate executor is specified, this is equivalent
         to using `net::post`.
+
         @par Per-Operation Cancellation
 
         This asynchronous operation supports cancellation for the following
@@ -2766,6 +2832,7 @@ public:
 
         `total` cancellation succeeds if the operation is suspended due to ongoing
         control operations such as a ping/pong.
+
         `terminal` cancellation succeeds when supported by the underlying stream.
 
         `terminal` cancellation leaves the stream in an undefined state,

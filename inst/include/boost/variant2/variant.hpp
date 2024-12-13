@@ -83,7 +83,7 @@ struct monostate
 {
 };
 
-#if !BOOST_WORKAROUND(BOOST_MSVC, < 1940)
+#if !BOOST_WORKAROUND(BOOST_MSVC, < 1950)
 
 constexpr bool operator<(monostate, monostate) noexcept { return false; }
 constexpr bool operator>(monostate, monostate) noexcept { return false; }
@@ -688,10 +688,10 @@ template<class T1, class... T> union variant_storage_impl<mp11::mp_true, T1, T..
 #if defined(BOOST_GCC) && (__GNUC__ >= 7)
 # pragma GCC diagnostic push
 // False positive in at least GCC 7 and GCC 10 ASAN triggered by monostate (via result<void>)
-# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #if __GNUC__ >= 12
 // False positive in at least GCC 12 and GCC 13 ASAN and -Og triggered by monostate (via result<void>)
-# pragma GCC diagnostic ignored "-Wuninitialized"
+//# pragma GCC diagnostic ignored "-Wuninitialized"
 #endif
 #endif
         *this = variant_storage_impl( mp11::mp_size_t<I>(), std::forward<A>(a)... );
@@ -1634,7 +1634,17 @@ public:
     template<class U,
         class Ud = typename std::decay<U>::type,
         class E1 = typename std::enable_if< !std::is_same<Ud, variant>::value && !std::is_base_of<variant, Ud>::value && !detail::is_in_place_index<Ud>::value && !detail::is_in_place_type<Ud>::value >::type,
+
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1950)
+
+        class V = mp11::mp_apply_q< mp11::mp_bind_front<detail::resolve_overload_type, U&&>, variant >,
+
+#else
+
         class V = detail::resolve_overload_type<U&&, T...>,
+
+#endif
+
         class E2 = typename std::enable_if<std::is_constructible<V, U&&>::value>::type
         >
     constexpr variant( U&& u )

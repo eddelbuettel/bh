@@ -22,13 +22,13 @@
 #include <cstddef>
 
 #include <boost/math/special_functions/fpclassify.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 
 #include <boost/geometry/arithmetic/determinant.hpp>
 #include <boost/geometry/core/coordinate_type.hpp>
 #include <boost/geometry/core/point_type.hpp>
 #include <boost/geometry/strategies/centroid.hpp>
 #include <boost/geometry/util/math.hpp>
+#include <boost/geometry/util/numeric_cast.hpp>
 #include <boost/geometry/util/select_most_precise.hpp>
 
 
@@ -48,8 +48,6 @@ namespace strategy { namespace centroid
 \ingroup strategies
 \details Calculates centroid using triangulation method published by
     Bashein / Detmer
-\tparam Point point type of centroid to calculate
-\tparam PointOfSegment point type of segments, defaults to Point
 \tparam CalculationType \tparam_calculation
 
 \author Adapted from  "Centroid of a Polygon" by
@@ -190,10 +188,10 @@ public :
         typedef typename calculation_type<GeometryPoint, ResultPoint>::type calc_type;
 
         // Get coordinates and promote them to calculation_type
-        calc_type const x1 = boost::numeric_cast<calc_type>(get<0>(p1));
-        calc_type const y1 = boost::numeric_cast<calc_type>(get<1>(p1));
-        calc_type const x2 = boost::numeric_cast<calc_type>(get<0>(p2));
-        calc_type const y2 = boost::numeric_cast<calc_type>(get<1>(p2));
+        calc_type const x1 = util::numeric_cast<calc_type>(get<0>(p1));
+        calc_type const y1 = util::numeric_cast<calc_type>(get<1>(p1));
+        calc_type const x2 = util::numeric_cast<calc_type>(get<0>(p2));
+        calc_type const y2 = util::numeric_cast<calc_type>(get<1>(p2));
         calc_type const ai = geometry::detail::determinant<calc_type>(p1, p2);
         state.count++;
         state.sum_a2 += ai;
@@ -225,9 +223,9 @@ public :
                 // which means that the centroid can still be filled with INF
                 // if e.g. calculation_type is double and centroid contains floats
                 set<0>(centroid,
-                    boost::numeric_cast<coordinate_type>(state.sum_x / a3));
+                    util::numeric_cast<coordinate_type>(state.sum_x / a3));
                 set<1>(centroid,
-                    boost::numeric_cast<coordinate_type>(state.sum_y / a3));
+                    util::numeric_cast<coordinate_type>(state.sum_y / a3));
                 return true;
             }
         }
@@ -249,7 +247,7 @@ struct default_strategy<cartesian_tag, areal_tag, 2, Point, Geometry>
     typedef bashein_detmer
         <
             Point,
-            typename point_type<Geometry>::type
+            point_type_t<Geometry>
         > type;
 };
 

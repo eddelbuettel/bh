@@ -11,8 +11,8 @@
 #ifndef BOOST_JSON_MONOTONIC_RESOURCE_HPP
 #define BOOST_JSON_MONOTONIC_RESOURCE_HPP
 
+#include <boost/container/pmr/memory_resource.hpp>
 #include <boost/json/detail/config.hpp>
-#include <boost/json/memory_resource.hpp>
 #include <boost/json/storage_ptr.hpp>
 #include <cstddef>
 #include <utility>
@@ -87,7 +87,7 @@ class
     BOOST_JSON_DECL
     BOOST_SYMBOL_VISIBLE
 monotonic_resource final
-    : public memory_resource
+    : public container::pmr::memory_resource
 {
     struct block;
     struct block_base

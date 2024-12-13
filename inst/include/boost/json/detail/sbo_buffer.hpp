@@ -52,7 +52,7 @@ class sbo_buffer
         delete[] data_;
 #if defined(__GNUC__)
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
         buffer_ = {};
 #if defined(__GNUC__)

@@ -1,3 +1,15 @@
+2024-12-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date):  Release 1.87.0-0 pre-release
+
+2024-12-12  Dirk Eddelbuettel  <edd@debian.org>
+
+	* inst/include/boost/*: Upgraded to Boost 1.87.0, as usual with
+	requested patch to comment out 'diagnostic ignored' for CRAN
+	* local/patches/bh_1.87.0-0.patch: Added new single patch file
+
+	* local/scripts/CreateBoost.sh: Update for 1.87.0, no additions
+
 2024-08-05  Dirk Eddelbuettel  <edd@debian.org>
 
 	* README.md: Switch two more some URLs from http to https

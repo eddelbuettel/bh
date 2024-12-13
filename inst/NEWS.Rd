@@ -7,6 +7,14 @@
 \newcommand{\ghit}{\href{https://github.com/eddelbuettel/bh/issues/#1}{##1}}
 \newcommand{\ghpr}{\href{https://github.com/eddelbuettel/bh/pull/#1}{##1}}
 
+\section{Changes in version 1.87.0-0 (2024-12-13 non-CRAN pre-release)}{
+  \itemize{
+    \item Upgrade to \boost 1.87.0, patched as usual to comment-out
+    diagnostic suppression messages per the request of CRAN
+    \item Switched to Authors@R
+  }
+}
+
 \section{Changes in version 1.84.0-0 (2024-01-09)}{
   \itemize{
     \item Upgrade to \boost 1.84.0 

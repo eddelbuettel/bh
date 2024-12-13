@@ -2,7 +2,7 @@
 // asio.hpp
 // ~~~~~~~~
 //
-// Copyright (c) 2003-2023 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -61,12 +61,17 @@
 #include <boost/asio/buffered_write_stream_fwd.hpp>
 #include <boost/asio/buffered_write_stream.hpp>
 #include <boost/asio/buffers_iterator.hpp>
+#include <boost/asio/cancel_after.hpp>
+#include <boost/asio/cancel_at.hpp>
 #include <boost/asio/cancellation_signal.hpp>
 #include <boost/asio/cancellation_state.hpp>
 #include <boost/asio/cancellation_type.hpp>
+#include <boost/asio/co_composed.hpp>
 #include <boost/asio/co_spawn.hpp>
 #include <boost/asio/completion_condition.hpp>
 #include <boost/asio/compose.hpp>
+#include <boost/asio/composed.hpp>
+#include <boost/asio/config.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/connect_pipe.hpp>
 #include <boost/asio/consign.hpp>
@@ -74,8 +79,10 @@
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/asio/defer.hpp>
 #include <boost/asio/deferred.hpp>
+#include <boost/asio/default_completion_token.hpp>
 #include <boost/asio/detached.hpp>
 #include <boost/asio/dispatch.hpp>
+#include <boost/asio/disposition.hpp>
 #include <boost/asio/error.hpp>
 #include <boost/asio/execution.hpp>
 #include <boost/asio/execution/allocator.hpp>
@@ -101,10 +108,9 @@
 #include <boost/asio/generic/stream_protocol.hpp>
 #include <boost/asio/handler_continuation_hook.hpp>
 #include <boost/asio/high_resolution_timer.hpp>
+#include <boost/asio/immediate.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/io_context_strand.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/io_service_strand.hpp>
 #include <boost/asio/ip/address.hpp>
 #include <boost/asio/ip/address_v4.hpp>
 #include <boost/asio/ip/address_v4_iterator.hpp>

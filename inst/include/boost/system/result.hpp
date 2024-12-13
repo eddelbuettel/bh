@@ -73,10 +73,10 @@ BOOST_NORETURN BOOST_NOINLINE inline void throw_exception_from_error( std::excep
 // in_place_*
 
 using in_place_value_t = variant2::in_place_index_t<0>;
-constexpr in_place_value_t in_place_value{};
+BOOST_INLINE_CONSTEXPR in_place_value_t in_place_value{};
 
 using in_place_error_t = variant2::in_place_index_t<1>;
-constexpr in_place_error_t in_place_error{};
+BOOST_INLINE_CONSTEXPR in_place_error_t in_place_error{};
 
 namespace detail
 {
@@ -450,6 +450,13 @@ public:
     }
 };
 
+#if defined(BOOST_NO_CXX17_INLINE_VARIABLES)
+
+template<class T, class E> constexpr in_place_value_t result<T, E>::in_place_value;
+template<class T, class E> constexpr in_place_error_t result<T, E>::in_place_error;
+
+#endif
+
 template<class Ch, class Tr, class T, class E> std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& os, result<T, E> const & r )
 {
     if( r.has_value() )
@@ -651,6 +658,13 @@ public:
         return !( r1 == r2 );
     }
 };
+
+#if defined(BOOST_NO_CXX17_INLINE_VARIABLES)
+
+template<class E> constexpr in_place_value_t result<void, E>::in_place_value;
+template<class E> constexpr in_place_error_t result<void, E>::in_place_error;
+
+#endif
 
 template<class Ch, class Tr, class E> std::basic_ostream<Ch, Tr>& operator<<( std::basic_ostream<Ch, Tr>& os, result<void, E> const & r )
 {
@@ -885,6 +899,13 @@ public:
     }
 };
 
+#if defined(BOOST_NO_CXX17_INLINE_VARIABLES)
+
+template<class U, class E> constexpr in_place_value_t result<U&, E>::in_place_value;
+template<class U, class E> constexpr in_place_error_t result<U&, E>::in_place_error;
+
+#endif
+
 // operator|
 
 namespace detail
@@ -1046,13 +1067,65 @@ U operator|( result<void, E>&& r, F&& f )
     }
 }
 
+// operator|=
+
+// result |= value
+
+template<class T, class E, class U,
+    class En = typename std::enable_if<detail::is_value_convertible_to<U, T>::value>::type
+>
+result<T, E>& operator|=( result<T, E>& r, U&& u )
+{
+    if( !r )
+    {
+        r = std::forward<U>( u );
+    }
+
+    return r;
+}
+
+// result |= nullary-returning-value
+
+template<class T, class E, class F,
+    class U = decltype( std::declval<F>()() ),
+    class En = typename std::enable_if<detail::is_value_convertible_to<U, T>::value>::type
+>
+result<T, E>& operator|=( result<T, E>& r, F&& f )
+{
+    if( !r )
+    {
+        r = std::forward<F>( f )();
+    }
+
+    return r;
+}
+
+// result |= nullary-returning-result
+
+template<class T, class E, class F,
+    class U = decltype( std::declval<F>()() ),
+    class En1 = typename std::enable_if<detail::is_result<U>::value>::type,
+    class En2 = typename std::enable_if<detail::is_value_convertible_to<typename U::value_type, T>::value>::type,
+    class En3 = typename std::enable_if<std::is_convertible<typename U::error_type, E>::value>::type
+>
+result<T, E>& operator|=( result<T, E>& r, F&& f )
+{
+    if( !r )
+    {
+        r = std::forward<F>( f )();
+    }
+
+    return r;
+}
+
 // operator&
 
 // result & unary-returning-value
 
 template<class T, class E, class F,
     class U = decltype( std::declval<F>()( std::declval<T const&>() ) ),
-    class En = typename std::enable_if<!detail::is_result<U>::value>::type
+    class En1 = typename std::enable_if<!detail::is_result<U>::value>::type,
+    class En2 = typename std::enable_if<!std::is_void<U>::value>::type
 >
 result<U, E> operator&( result<T, E> const& r, F&& f )
 {
@@ -1068,7 +1141,8 @@ result<U, E> operator&( result<T, E> const& r, F&& f )
 
 template<class T, class E, class F,
     class U = decltype( std::declval<F>()( std::declval<T>() ) ),
-    class En = typename std::enable_if<!detail::is_result<U>::value>::type
+    class En1 = typename std::enable_if<!detail::is_result<U>::value>::type,
+    class En2 = typename std::enable_if<!std::is_void<U>::value>::type
 >
 result<U, E> operator&( result<T, E>&& r, F&& f )
 {
@@ -1079,6 +1153,74 @@ result<U, E> operator&( result<T, E>&& r, F&& f )
     else
     {
         return std::forward<F>( f )( *std::move( r ) );
+    }
+}
+
+template<class T, class E, class F,
+    class U = decltype( std::declval<F>()( std::declval<T const&>() ) ),
+    class En = typename std::enable_if<std::is_void<U>::value>::type
+>
+result<U, E> operator&( result<T, E> const& r, F&& f )
+{
+    if( r.has_error() )
+    {
+        return r.error();
+    }
+    else
+    {
+        std::forward<F>( f )( *r );
+        return {};
+    }
+}
+
+template<class T, class E, class F,
+    class U = decltype( std::declval<F>()( std::declval<T>() ) ),
+    class En = typename std::enable_if<std::is_void<U>::value>::type
+>
+result<U, E> operator&( result<T, E>&& r, F&& f )
+{
+    if( r.has_error() )
+    {
+        return r.error();
+    }
+    else
+    {
+        std::forward<F>( f )( *std::move( r ) );
+        return {};
+    }
+}
+
+template<class E, class F,
+    class U = decltype( std::declval<F>()() ),
+    class En1 = typename std::enable_if<!detail::is_result<U>::value>::type,
+    class En2 = typename std::enable_if<!std::is_void<U>::value>::type
+>
+result<U, E> operator&( result<void, E> const& r, F&& f )
+{
+    if( r.has_error() )
+    {
+        return r.error();
+    }
+    else
+    {
+        return std::forward<F>( f )();
+    }
+}
+
+template<class E, class F,
+    class U = decltype( std::declval<F>()() ),
+    class En = typename std::enable_if<std::is_void<U>::value>::type
+>
+result<U, E> operator&( result<void, E> const& r, F&& f )
+{
+    if( r.has_error() )
+    {
+        return r.error();
+    }
+    else
+    {
+        std::forward<F>( f )();
+        return {};
     }
 }
 
@@ -1118,6 +1260,23 @@ U operator&( result<T, E>&& r, F&& f )
     }
 }
 
+template<class E, class F,
+    class U = decltype( std::declval<F>()() ),
+    class En1 = typename std::enable_if<detail::is_result<U>::value>::type,
+    class En2 = typename std::enable_if<std::is_convertible<E, typename U::error_type>::value>::type
+>
+U operator&( result<void, E> const& r, F&& f )
+{
+    if( r.has_error() )
+    {
+        return r.error();
+    }
+    else
+    {
+        return std::forward<F>( f )();
+    }
+}
+
 // operator&=
 
 // result &= unary-returning-value
@@ -1137,6 +1296,20 @@ result<T, E>& operator&=( result<T, E>& r, F&& f )
     return r;
 }
 
+template<class E, class F,
+    class U = decltype( std::declval<F>()() ),
+    class En = typename std::enable_if<!detail::is_result<U>::value>::type
+>
+result<void, E>& operator&=( result<void, E>& r, F&& f )
+{
+    if( r )
+    {
+        std::forward<F>( f )();
+    }
+
+    return r;
+}
+
 // result &= unary-returning-result
 
 template<class T, class E, class F,
@@ -1150,6 +1323,22 @@ result<T, E>& operator&=( result<T, E>& r, F&& f )
     if( r )
     {
         r = std::forward<F>( f )( *std::move( r ) );
+    }
+
+    return r;
+}
+
+template<class E, class F,
+    class U = decltype( std::declval<F>()() ),
+    class En1 = typename std::enable_if<detail::is_result<U>::value>::type,
+    class En2 = typename std::enable_if<std::is_void<typename U::value_type>::value>::type,
+    class En3 = typename std::enable_if<std::is_convertible<typename U::error_type, E>::value>::type
+>
+result<void, E>& operator&=( result<void, E>& r, F&& f )
+{
+    if( r )
+    {
+        r = std::forward<F>( f )();
     }
 
     return r;
