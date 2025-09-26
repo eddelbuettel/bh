@@ -199,7 +199,7 @@ struct wkt_poly
     static inline void apply(std::basic_ostream<Char, Traits>& os,
                 Polygon const& poly, bool force_closure)
     {
-        using ring = typename ring_type<Polygon const>::type;
+        using ring_t = ring_type_t<Polygon const>;
 
         auto const& exterior = exterior_ring(poly);
         auto const& rings = interior_rings(poly);
@@ -215,17 +215,41 @@ struct wkt_poly
         os << "(";
         if (point_count > 0)
         {
-            wkt_sequence<ring>::apply(os, exterior, force_closure);
+            wkt_sequence<ring_t>::apply(os, exterior, force_closure);
 
             for (auto it = boost::begin(rings); it != boost::end(rings); ++it)
             {
                 os << ",";
-                wkt_sequence<ring>::apply(os, *it, force_closure);
+                wkt_sequence<ring_t>::apply(os, *it, force_closure);
             }
         }
         os << ")";
     }
 
+};
+
+template <typename PolyhedralSurface, typename PrefixPolicy>
+struct wkt_polyhedral_surface
+{
+    template <typename Char, typename Traits>
+    static inline void apply(std::basic_ostream<Char, Traits>& os,
+                             PolyhedralSurface const& polyhedral, bool force_closure)
+    {
+        using polygon = typename PolyhedralSurface::polygon_type;
+
+        os << PrefixPolicy::apply();
+
+        os << "(";
+        for (auto it = boost::begin(polyhedral); it != boost::end(polyhedral); ++it)
+        {
+            if (it != boost::begin(polyhedral))
+            {
+                os << ",";
+            }
+            wkt_poly<polygon, detail::wkt::prefix_null>::apply(os, *it, force_closure);
+        }
+        os << ")";
+    }
 };
 
 template <typename Multi, typename StreamPolicy, typename PrefixPolicy>
@@ -330,7 +354,7 @@ struct wkt_segment
 namespace dispatch
 {
 
-template <typename Geometry, typename Tag = typename tag<Geometry>::type>
+template <typename Geometry, typename Tag = tag_t<Geometry>>
 struct wkt: not_implemented<Tag>
 {};
 
@@ -393,6 +417,15 @@ struct wkt<Polygon, polygon_tag>
         <
             Polygon,
             detail::wkt::prefix_polygon
+        >
+{};
+
+template <typename PolyhedralSurface>
+struct wkt<PolyhedralSurface, polyhedral_surface_tag>
+    : detail::wkt::wkt_polyhedral_surface
+        <
+            PolyhedralSurface,
+            detail::wkt::prefix_polyhedral_surface
         >
 {};
 

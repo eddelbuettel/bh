@@ -11,10 +11,10 @@
 ## -- on a standard git checkout, this repo it may be ~/git/bh
 pkgdir="${HOME}/git/bh"
 ## -- current boost sources, placed eg in ${pkgdir}/local/
-boosttargz="boost_1_87_0.tar.gz"
+boosttargz="boost_1_89_0.tar.gz"
 ## -- current package version and date (and other metadata as needed)
-version="1.87.0-0"
-date="2024-12-12"
+version="1.89.0-0"
+date="2025-08-15"
 
 
 

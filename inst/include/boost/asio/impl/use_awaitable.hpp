@@ -2,7 +2,7 @@
 // impl/use_awaitable.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -220,9 +220,9 @@ public:
       };
 
     for (;;) {} // Never reached.
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(__clang__)
     co_return dummy_return<typename return_type::value_type>();
-#endif // defined(_MSC_VER)
+#endif // defined(_MSC_VER) && !defined(__clang__)
   }
 };
 

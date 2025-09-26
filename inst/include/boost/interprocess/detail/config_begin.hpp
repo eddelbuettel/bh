@@ -46,5 +46,5 @@
 
 #if (defined(BOOST_GCC) && (BOOST_GCC >= 40600)) || (defined(BOOST_CLANG) && defined(_MSC_VER))
 #pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif

@@ -21,7 +21,7 @@
 #include <cstring>
 
 #if defined(__GNUC__) && __GNUC__ < 5
-//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
 
 std::errc boost::json::detail::charconv::detail::errno_to_errc(int errno_value) noexcept

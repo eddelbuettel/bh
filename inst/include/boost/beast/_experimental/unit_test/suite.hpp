@@ -18,7 +18,7 @@
 
 #if defined(BOOST_GCC) && BOOST_GCC >= 70000 && BOOST_GCC < 80000
 #pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wnoexcept-type"
+#pragma GCC diagnostic ignored "-Wnoexcept-type"
 #endif
 
 namespace boost {

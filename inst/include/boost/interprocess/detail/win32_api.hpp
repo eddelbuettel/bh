@@ -61,17 +61,17 @@
 #  if (BOOST_GCC >= 40600)
 #     pragma GCC diagnostic push
 #     if (BOOST_GCC >= 40800)
-//#        pragma GCC diagnostic ignored "-Wpedantic"
+#        pragma GCC diagnostic ignored "-Wpedantic"
 #     else
-//#        pragma GCC diagnostic ignored "-pedantic"
+#        pragma GCC diagnostic ignored "-pedantic"
 #     endif
-//#     pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#     pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #  else
 #     pragma GCC system_header
 #  endif
 //When loading DLLs we have no option but reinterpret casting function types  
 #  if (BOOST_GCC >= 80000)
-//#        pragma GCC diagnostic ignored "-Wcast-function-type"
+#        pragma GCC diagnostic ignored "-Wcast-function-type"
 #  endif
 #endif
 
@@ -1038,7 +1038,7 @@ struct function_address_holder
    }
 
    public:
-   static farproc_t get(const unsigned int id)
+   static void* get(const unsigned int id)
    {
       BOOST_ASSERT(id < (unsigned int)NumFunction);
       for(unsigned i = 0; FunctionStates[id] < 2; ++i){
@@ -1054,7 +1054,7 @@ struct function_address_holder
             sleep_tick();
          }
       }
-      return FunctionAddresses[id];
+      return reinterpret_cast<void*>(FunctionAddresses[id]);
    }
 };
 

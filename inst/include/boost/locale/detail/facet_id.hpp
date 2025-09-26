@@ -14,7 +14,7 @@
 namespace boost { namespace locale { namespace detail {
 #if BOOST_CLANG_VERSION >= 40900
 #    pragma clang diagnostic push
-//#    pragma clang diagnostic ignored "-Wundefined-var-template"
+#    pragma clang diagnostic ignored "-Wundefined-var-template"
 #endif
     /// CRTP base class to hold the id required for facets
     ///

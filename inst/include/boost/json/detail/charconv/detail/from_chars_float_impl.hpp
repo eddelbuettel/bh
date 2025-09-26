@@ -22,7 +22,7 @@ namespace boost { namespace json { namespace detail { namespace charconv { names
 # pragma warning(disable: 4244) // Implict converion when BOOST_IF_CONSTEXPR expands to if
 #elif defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
 # pragma GCC diagnostic push
-//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
 
 template <typename T>

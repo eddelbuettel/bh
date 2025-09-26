@@ -42,6 +42,10 @@
 #pragma warning(disable: 4456)
 // declaration of 'A' hides global declaration
 #pragma warning(disable: 4459)
+// copy constructor was implicitly defined as deleted because a base class copy constructor is inaccessible or deleted
+#pragma warning(disable: 4625)
+// assignment operator was implicitly defined as deleted because a base class assignment operator is inaccessible or deleted
+#pragma warning(disable: 4626)
 // 'X': This function or variable may be unsafe. Consider using Y instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 #pragma warning(disable: 4996)
 
@@ -52,20 +56,20 @@
 
 #pragma GCC diagnostic push
 // 'var' defined but not used
-//#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-variable"
 // unused parameter 'arg'
-//#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 // missing initializer for member var
-//#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #if (__GNUC__ * 100 + __GNUC_MINOR__) >= 407
 // typedef 'foo' locally defined but not used
-//#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #endif
 
 #if defined(__clang__)
 // the argument to '__builtin_assume' has side effects that will be discarded
-//#pragma clang diagnostic ignored "-Wassume"
+#pragma clang diagnostic ignored "-Wassume"
 #endif // defined(__clang__)
 
 #endif
