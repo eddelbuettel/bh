@@ -132,7 +132,7 @@ namespace boost { namespace phoenix
 #if defined __clang__ && defined __has_warning
 #  pragma clang diagnostic push
 #  if __has_warning("-Wdeprecated-copy")
-#    pragma clang diagnostic ignored "-Wdeprecated-copy"
+//#    pragma clang diagnostic ignored "-Wdeprecated-copy"
 #  endif
 #endif
     template <typename Expr>

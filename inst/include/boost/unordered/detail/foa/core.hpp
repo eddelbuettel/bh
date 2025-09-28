@@ -1461,7 +1461,7 @@ public:
 
 #if defined(BOOST_GCC)
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+//#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
 
   table_core(
@@ -2092,7 +2092,7 @@ private:
 
 #if defined(BOOST_GCC)
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+//#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
 
   /* used by allocator-extended move ctor */

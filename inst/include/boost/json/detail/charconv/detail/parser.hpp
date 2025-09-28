@@ -20,7 +20,7 @@
 
 #if defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
 
 namespace boost { namespace json { namespace detail { namespace charconv { namespace detail {

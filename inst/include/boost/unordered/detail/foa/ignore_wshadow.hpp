@@ -28,7 +28,7 @@
  */
 
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshadow"
+//#pragma GCC diagnostic ignored "-Wshadow"
 #else
 #pragma GCC diagnostic pop
 #endif

@@ -15,7 +15,7 @@ struct usage_requirements
 {
 #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
 #   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wnonnull"
+//#   pragma GCC diagnostic ignored "-Wnonnull"
 #   endif
     ~usage_requirements() { ((Model*)0)->~Model(); }
 #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)

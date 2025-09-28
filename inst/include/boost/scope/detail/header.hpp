@@ -35,13 +35,13 @@
 
 #pragma GCC diagnostic push
 // unused parameter 'arg'
-#pragma GCC diagnostic ignored "-Wunused-parameter"
+//#pragma GCC diagnostic ignored "-Wunused-parameter"
 // unused function 'foo'
-#pragma GCC diagnostic ignored "-Wunused-function"
+//#pragma GCC diagnostic ignored "-Wunused-function"
 
 #if defined(__clang__)
 // template argument uses unnamed type
-#pragma clang diagnostic ignored "-Wunnamed-type-template-args"
+//#pragma clang diagnostic ignored "-Wunnamed-type-template-args"
 #endif // defined(__clang__)
 
 #endif

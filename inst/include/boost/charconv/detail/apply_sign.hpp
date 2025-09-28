@@ -16,10 +16,10 @@
 # pragma warning(disable: 4146)
 #elif defined(__GNUC__) && __GNUC__ >= 5
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wconversion"
+//# pragma GCC diagnostic ignored "-Wconversion"
 #elif defined(__clang__)
 # pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wconversion"
+//# pragma clang diagnostic ignored "-Wconversion"
 #endif
 
 namespace boost { namespace charconv { namespace detail {

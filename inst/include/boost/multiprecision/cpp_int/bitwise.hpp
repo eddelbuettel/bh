@@ -566,7 +566,7 @@ inline BOOST_MP_CXX14_CONSTEXPR void right_shift_limb(Int& result, double_limb_t
 // see discussion at https://github.com/boostorg/multiprecision/issues/686 for logic in disabling this.
 #if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ >= 12)
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warray-bounds"
+//#pragma GCC diagnostic ignored "-Warray-bounds"
 #endif
 template <class Int>
 inline BOOST_MP_CXX14_CONSTEXPR void right_shift_generic(Int& result, double_limb_type s)

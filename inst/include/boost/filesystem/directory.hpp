@@ -39,7 +39,7 @@
 #pragma GCC diagnostic push
 // 'function' redeclared without dllimport attribute: previous dllimport ignored
 // gcc bug on MinGW-w64 and Cygwin: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106395
-#pragma GCC diagnostic ignored "-Wattributes"
+//#pragma GCC diagnostic ignored "-Wattributes"
 #endif
 
 //--------------------------------------------------------------------------------------//

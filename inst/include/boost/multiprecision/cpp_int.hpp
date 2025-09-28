@@ -44,7 +44,7 @@ namespace multiprecision {
 // see https://github.com/boostorg/multiprecision/issues/413
 // and https://github.com/boostorg/multiprecision/issues/431
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+//#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
 
 namespace detail {

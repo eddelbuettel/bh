@@ -306,7 +306,7 @@ try_make_tuple_like(
             ...);
 #if defined(BOOST_GCC)
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
     if( ec.failed() )
         return {boost::system::in_place_error, ec};
@@ -383,8 +383,8 @@ struct to_described_member
 
 #if defined(__GNUC__) && BOOST_GCC_VERSION >= 80000 && BOOST_GCC_VERSION < 11000
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wunused"
-# pragma GCC diagnostic ignored "-Wunused-variable"
+//# pragma GCC diagnostic ignored "-Wunused"
+//# pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
         auto member_res = try_value_to<M>( found->value(), ctx );
 #if defined(__GNUC__) && BOOST_GCC_VERSION >= 80000 && BOOST_GCC_VERSION < 11000

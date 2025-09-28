@@ -19,7 +19,7 @@
 // in a 128-bit int (39) so we can safely ignore
 #if defined(__GNUC__) && __GNUC__ >= 10
 #  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wstringop-overflow"
+//#  pragma GCC diagnostic ignored "-Wstringop-overflow"
 #  define BOOST_CHARCONV_STRINGOP_OVERFLOW_DISABLED
 #endif
 

@@ -51,8 +51,8 @@
 
 #if defined(BOOST_CONTAINER_GCC_COMPATIBLE_HAS_DIAGNOSTIC_IGNORED)
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-result"
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+//#pragma GCC diagnostic ignored "-Wunused-result"
+//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 #define BOOST_INTRUSIVE_HAS_MEMBER_FUNCTION_CALLABLE_WITH_FUNCNAME allocate
@@ -194,7 +194,7 @@ namespace allocator_traits_detail {
 
 #if defined(BOOST_CONTAINER_GCC_COMPATIBLE_HAS_DIAGNOSTIC_IGNORED)
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 BOOST_INTRUSIVE_HAS_STATIC_MEMBER_FUNC_SIGNATURE(has_max_size, max_size)
@@ -526,7 +526,7 @@ struct allocator_traits
 
    #if defined(BOOST_CONTAINER_GCC_COMPATIBLE_HAS_DIAGNOSTIC_IGNORED)
    #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+//   #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
    #endif
 
    template<class T>
@@ -543,7 +543,7 @@ struct allocator_traits
 
    #if defined(BOOST_CONTAINER_GCC_COMPATIBLE_HAS_DIAGNOSTIC_IGNORED)
    #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+//   #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
    #endif
 
    inline static size_type priv_max_size(dtl::true_type, const Allocator &a) BOOST_NOEXCEPT_OR_NOTHROW
@@ -565,7 +565,7 @@ struct allocator_traits
 
    #if defined(BOOST_CONTAINER_GCC_COMPATIBLE_HAS_DIAGNOSTIC_IGNORED)
    #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+//   #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
    #endif
 
    #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)

@@ -96,18 +96,18 @@ constexpr unsigned char digit_from_char(char val) noexcept
 # pragma warning(disable: 4127) // Conditional expression is constant (if constexpr pre-c++17)
 #elif defined(__clang__)
 # pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wconstant-conversion"
+//# pragma clang diagnostic ignored "-Wconstant-conversion"
 
 #elif defined(__GNUC__) && (__GNUC__ < 7)
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Woverflow"
-# pragma GCC diagnostic ignored "-Wconversion"
-# pragma GCC diagnostic ignored "-Wsign-conversion"
+//# pragma GCC diagnostic ignored "-Woverflow"
+//# pragma GCC diagnostic ignored "-Wconversion"
+//# pragma GCC diagnostic ignored "-Wsign-conversion"
 
 #elif defined(__GNUC__) && (__GNUC__ >= 7)
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-# pragma GCC diagnostic ignored "-Wconversion"
+//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+//# pragma GCC diagnostic ignored "-Wconversion"
 
 #endif
 

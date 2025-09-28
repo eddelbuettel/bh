@@ -373,7 +373,7 @@ namespace std {
 
 #if defined(BOOST_CLANG)
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmismatched-tags"
+//#pragma clang diagnostic ignored "-Wmismatched-tags"
 #endif
 
 template<size_t N, class T, class Indexable>
