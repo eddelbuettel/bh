@@ -2,7 +2,7 @@
 // detail/impl/socket_select_interrupter.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -36,7 +36,7 @@ namespace boost {
 namespace asio {
 namespace detail {
 
-socket_select_interrupter::socket_select_interrupter()
+socket_select_interrupter::socket_select_interrupter(bool)
 {
   open_descriptors();
 }

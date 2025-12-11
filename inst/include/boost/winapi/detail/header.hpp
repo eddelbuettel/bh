@@ -20,7 +20,7 @@
 
 #pragma GCC diagnostic push
 // ISO C++ 1998 does not support 'long long'
-//#pragma GCC diagnostic ignored "-Wlong-long"
+#pragma GCC diagnostic ignored "-Wlong-long"
 
 #endif
 

@@ -13,7 +13,6 @@
 #ifndef __BOOST_SORT_PARALLEL_DETAIL_UTIL_SPINLOCK_HPP
 #define __BOOST_SORT_PARALLEL_DETAIL_UTIL_SPINLOCK_HPP
 
-#include <ciso646>
 #include <atomic>
 #include <ctime>
 #include <functional>
@@ -48,7 +47,7 @@ class spinlock_t
     /// @brief  class constructor
     /// @param [in]
     //-------------------------------------------------------------------------
-    explicit spinlock_t ( ) noexcept { af.clear ( ); };
+    explicit spinlock_t ( ) noexcept { af.clear ( ); }
     //
     //-------------------------------------------------------------------------
     //  function : lock
@@ -59,8 +58,8 @@ class spinlock_t
     	while (af.test_and_set (std::memory_order_acquire))
         {
             std::this_thread::yield ( );
-        };
-    };
+        }
+    }
     //
     //-------------------------------------------------------------------------
     //  function : try_lock
@@ -71,19 +70,19 @@ class spinlock_t
     bool try_lock ( ) noexcept
     {
         return !af.test_and_set (std::memory_order_acquire);
-    };
+    }
     //
     //-------------------------------------------------------------------------
     //  function : unlock
     /// @brief  unlock the spinlock_t
     //-------------------------------------------------------------------------
-    void unlock ( ) noexcept { af.clear (std::memory_order_release); };
+    void unlock ( ) noexcept { af.clear (std::memory_order_release); }
 
 }; // E N D    C L A S S     S P I N L O C K
 //
 //***************************************************************************
-}; // end namespace common
-}; // end namespace sort
-}; // end namespace boost
+} // end namespace common
+} // end namespace sort
+} // end namespace boost
 //***************************************************************************
 #endif

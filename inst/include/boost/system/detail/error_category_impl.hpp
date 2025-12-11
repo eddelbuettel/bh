@@ -113,7 +113,7 @@ inline void error_category::init_stdcat() const
 
 #if defined( BOOST_GCC ) && BOOST_GCC >= 40800 && BOOST_GCC < 70000
 #pragma GCC diagnostic push
-  //#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif
 
 inline BOOST_NOINLINE error_category::operator std::error_category const & () const

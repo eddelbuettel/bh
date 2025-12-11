@@ -13,7 +13,6 @@
 #ifndef __BOOST_SORT_PARALLEL_DETAIL_UTIL_MERGE_FOUR_HPP
 #define __BOOST_SORT_PARALLEL_DETAIL_UTIL_MERGE_FOUR_HPP
 
-#include <ciso646>
 #include <functional>
 #include <iterator>
 #include <memory>
@@ -56,8 +55,8 @@ inline bool less_range(Iter_t it1, uint32_t pos1, Iter_t it2, uint32_t pos2,
                        Compare comp = Compare())
 {
     return (comp(*it1, *it2)) ? true :
-           (pos2 < pos1) ? false : not (comp(*it2, *it1));
-};
+           (pos2 < pos1) ? false : ! (comp(*it2, *it1));
+}
 
 //-----------------------------------------------------------------------------
 //  function : full_merge4
@@ -96,17 +95,17 @@ range<Iter1_t> full_merge4(const range<Iter1_t> &rdest,
             for (uint32_t k = i + 1; k < nrange_input; ++k)
             {
                 vrange_input[k - 1] = vrange_input[k];
-            };
+            }
             --nrange_input;
-        };
-    };
+        }
+    }
 
     if (nrange_input == 0) return range1_t(rdest.first, rdest.first);
     if (nrange_input == 1) return move_forward(rdest, vrange_input[0]);
     if (nrange_input == 2)
     {
         return merge(rdest, vrange_input[0], vrange_input[1], comp);
-    };
+    }
 
     //------------------------------------------------------------------------
     // Initial sort
@@ -122,28 +121,28 @@ range<Iter1_t> full_merge4(const range<Iter1_t> &rdest,
                     vrange_input[pos[0]].first, pos[0], comp))
     {
         swap(pos[0], pos[1]);
-    };
-    if (npos == 4 and less_range(vrange_input[pos[3]].first, pos[3],
+    }
+    if (npos == 4 && less_range(vrange_input[pos[3]].first, pos[3],
                                  vrange_input[pos[2]].first, pos[2], comp))
     {
         swap(pos[3], pos[2]);
-    };
+    }
     if (less_range (vrange_input[pos[2]].first, pos[2],
                     vrange_input[pos[0]].first, pos[0], comp))
     {
         swap(pos[0], pos[2]);
     };
     if (npos == 4
-                    and less_range (vrange_input[pos[3]].first, pos[3],
+                    && less_range (vrange_input[pos[3]].first, pos[3],
                                     vrange_input[pos[1]].first, pos[1], comp))
     {
         swap(pos[1], pos[3]);
-    };
+    }
     if (less_range (vrange_input[pos[2]].first, pos[2],
                     vrange_input[pos[1]].first, pos[1], comp))
     {
         swap(pos[1], pos[2]);
-    };
+    }
 
     Iter1_t it_dest = rdest.first;
     while (npos > 2)
@@ -167,17 +166,17 @@ range<Iter1_t> full_merge4(const range<Iter1_t> &rdest,
                 {
                     swap(pos[1], pos[2]);
                     if (npos == 4
-                                    and less_range(vrange_input[pos[3]].first,
+                                    && less_range(vrange_input[pos[3]].first,
                                                     pos[3],
                                                     vrange_input[pos[2]].first,
                                                     pos[2], comp))
                     {
                         swap(pos[2], pos[3]);
-                    };
-                };
-            };
-        };
-    };
+                    }
+                }
+            }
+        }
+    }
 
     range1_t raux1(rdest.first, it_dest), raux2(it_dest, rdest.last);
     if (pos[0] < pos[1])
@@ -189,8 +188,8 @@ range<Iter1_t> full_merge4(const range<Iter1_t> &rdest,
     {
         return concat(raux1, merge (raux2, vrange_input[pos[1]], 
                                     vrange_input[pos[0]], comp));
-    };
-};
+    }
+}
 
 //-----------------------------------------------------------------------------
 //  function : uninit_full_merge4
@@ -236,7 +235,7 @@ range<Value_t *> uninit_full_merge4(const range<Value_t *> &dest,
     if (nrange_input == 2)
     {
         return merge_construct(dest, vrange_input[0], vrange_input[1], comp);
-    };
+    }
 
     //------------------------------------------------------------------------
     // Initial sort
@@ -252,7 +251,7 @@ range<Value_t *> uninit_full_merge4(const range<Value_t *> &dest,
     {
         swap(pos[0], pos[1]);
     };
-    if (npos == 4  and less_range(vrange_input[pos[3]].first, pos[3],
+    if (npos == 4 && less_range(vrange_input[pos[3]].first, pos[3],
                                   vrange_input[pos[2]].first, pos[2], comp))
     {
         swap(pos[3], pos[2]);
@@ -262,7 +261,7 @@ range<Value_t *> uninit_full_merge4(const range<Value_t *> &dest,
     {
         swap(pos[0], pos[2]);
     };
-    if (npos == 4 and less_range(vrange_input[pos[3]].first, pos[3],
+    if (npos == 4 && less_range(vrange_input[pos[3]].first, pos[3],
                                  vrange_input[pos[1]].first, pos[1], comp))
     {
         swap(pos[1], pos[3]);
@@ -295,7 +294,7 @@ range<Value_t *> uninit_full_merge4(const range<Value_t *> &dest,
                                 vrange_input[pos[1]].first, pos[1], comp))
                 {
                     swap(pos[1], pos[2]);
-                    if (npos == 4 and less_range(vrange_input[pos[3]].first,
+                    if (npos == 4 && less_range(vrange_input[pos[3]].first,
                                                  pos[3],
                                                  vrange_input[pos[2]].first,
                                                  pos[2], comp))
@@ -319,13 +318,13 @@ range<Value_t *> uninit_full_merge4(const range<Value_t *> &dest,
         return concat(raux1,
                       merge_construct(raux2, vrange_input[pos[1]],
                                       vrange_input[pos[0]], comp));
-    };
-};
+    }
+}
 
 //****************************************************************************
-};//    End namespace common
-};//    End namespace sort
-};//    End namespace boost
+}//    End namespace common
+}//    End namespace sort
+}//    End namespace boost
 //****************************************************************************
 //
 #endif

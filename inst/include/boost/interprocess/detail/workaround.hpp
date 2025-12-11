@@ -246,7 +246,7 @@
 
 #ifdef __clang__
    #define BOOST_INTERPROCESS_DISABLE_DEPRECATED_WARNING _Pragma("clang diagnostic push") \
-//                                                         _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
+                                                         _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
    #define BOOST_INTERPROCESS_RESTORE_WARNING            _Pragma("clang diagnostic pop")
 #else // __clang__
    #define BOOST_INTERPROCESS_DISABLE_DEPRECATED_WARNING __pragma(warning(push)) \
@@ -374,5 +374,9 @@ namespace boost {
 #define BOOST_INTERPROCESS_EINTR_RETRY(RESULTTYPE, FAILUREVALUE, EXPRESSION) ((RESULTTYPE)(EXPRESSION))
 
 #endif   //!defined(DISABLE_BOOST_INTERPROCESS_EINTR_RETRY) && defined(__GNUC__)
+
+#if !defined(BOOST_INTERPROCESS_ATEXIT)
+   #define BOOST_INTERPROCESS_ATEXIT(f) std::atexit((f))
+#endif   //!defined(BOOST_INTERPROCESS_ATEXIT)
 
 #endif   //#ifndef BOOST_INTERPROCESS_DETAIL_WORKAROUND_HPP

@@ -10,6 +10,7 @@
 #ifndef BOOST_JSON_IMPL_SERIALIZER_HPP
 #define BOOST_JSON_IMPL_SERIALIZER_HPP
 
+#include <boost/core/detail/static_assert.hpp>
 #include <boost/describe/enum_to_string.hpp>
 #include <boost/json/conversion.hpp>
 #include <cstddef>
@@ -111,10 +112,10 @@ write_impl(integral_conversion_tag, writer& w, stream& ss0)
 
 #if defined(__clang__)
 # pragma clang diagnostic push
-//# pragma clang diagnostic ignored "-Wsign-compare"
+# pragma clang diagnostic ignored "-Wsign-compare"
 #elif defined(__GNUC__)
 # pragma GCC diagnostic push
-//# pragma GCC  diagnostic ignored "-Wsign-compare"
+# pragma GCC  diagnostic ignored "-Wsign-compare"
 #elif defined(_MSC_VER)
 # pragma warning( push )
 # pragma warning( disable : 4018 )
@@ -463,6 +464,10 @@ do_arr4:
 template< class T, bool StackEmpty >
 struct serialize_struct_elem_helper
 {
+    static_assert(
+        uniquely_named_members<T>::value,
+        "The type has several described members with the same name.");
+
     writer& w;
     local_stream& ss;
     T const* pt;
@@ -828,8 +833,8 @@ template<class T>
 void
 serializer::reset(T const* p) noexcept
 {
-    BOOST_STATIC_ASSERT( !std::is_pointer<T>::value );
-    BOOST_STATIC_ASSERT( std::is_object<T>::value );
+    BOOST_CORE_STATIC_ASSERT( !std::is_pointer<T>::value );
+    BOOST_CORE_STATIC_ASSERT( std::is_object<T>::value );
 
     p_ = p;
     fn0_ = &detail::write_impl<T, true>;

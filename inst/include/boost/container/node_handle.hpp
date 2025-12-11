@@ -36,7 +36,7 @@
 //GCC 12 is confused about maybe uninitialized allocators
 #if defined(BOOST_GCC) && (BOOST_GCC >= 120000) && (BOOST_GCC < 130000)
 #pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
 
 

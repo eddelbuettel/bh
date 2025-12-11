@@ -161,7 +161,7 @@ struct node
 
    #if defined(BOOST_GCC) && (BOOST_GCC >= 40600) && (BOOST_GCC < 80000)
       #pragma GCC diagnostic push
-  //      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+      #pragma GCC diagnostic ignored "-Wstrict-aliasing"
       #define BOOST_CONTAINER_DISABLE_ALIASING_WARNING
    #  endif
 
@@ -2250,6 +2250,28 @@ stable_vector(InputIterator, InputIterator, Allocator const&) ->
 #ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
 
 #undef BOOST_CONTAINER_STABLE_VECTOR_CHECK_INVARIANT
+
+//! <b>Effects</b>: Erases all elements that compare equal to v from the container c.
+//!
+//! <b>Complexity</b>: Linear.
+template <class T, class A, class U>
+inline typename stable_vector<T, A>::size_type erase(stable_vector<T, A>& c, const U& v)
+{
+   typename stable_vector<T, A>::size_type old_size = c.size();
+   c.erase(boost::container::remove(c.begin(), c.end(), v), c.end());
+   return old_size - c.size();
+}
+
+//! <b>Effects</b>: Erases all elements that satisfy the predicate pred from the container c.
+//!
+//! <b>Complexity</b>: Linear.
+template <class T, class A, class Pred>
+inline typename stable_vector<T, A>::size_type erase_if(stable_vector<T, A>& c, Pred pred)
+{
+   typename stable_vector<T, A>::size_type old_size = c.size();
+   c.erase(boost::container::remove_if(c.begin(), c.end(), pred), c.end());
+   return old_size - c.size();
+}
 
 }  //namespace container {
 

@@ -2,7 +2,7 @@
 // detail/socket_ops.hpp
 // ~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -53,7 +53,11 @@ enum
   datagram_oriented = 32,
 
   // The socket may have been dup()-ed.
-  possible_dup = 64
+  possible_dup = 64,
+
+  // When using an edge-triggered reactor (epoll) the user wants the edge to be
+  // reset following a partial read on a stream-oriented socket.
+  reset_edge_on_partial_read = 128
 };
 
 typedef unsigned char state_type;

@@ -51,15 +51,15 @@ constexpr unsigned char digit_from_char(char val) noexcept
 
 #elif defined(__clang__)
 # pragma clang diagnostic push
-//# pragma clang diagnostic ignored "-Wconstant-conversion"
+# pragma clang diagnostic ignored "-Wconstant-conversion"
 
 #elif defined(__GNUC__) && (__GNUC__ < 7)
 # pragma GCC diagnostic push
-//# pragma GCC diagnostic ignored "-Woverflow"
+# pragma GCC diagnostic ignored "-Woverflow"
 
 #elif defined(__GNUC__) && (__GNUC__ >= 7)
 # pragma GCC diagnostic push
-//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 
 #endif
 

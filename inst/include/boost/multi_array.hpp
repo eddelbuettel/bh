@@ -23,7 +23,7 @@
 
 #if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 406)
 #  pragma GCC diagnostic push
-//#  pragma GCC diagnostic ignored "-Wshadow"
+#  pragma GCC diagnostic ignored "-Wshadow"
 #endif
 
 #include "boost/multi_array/base.hpp"

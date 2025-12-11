@@ -28,7 +28,7 @@ namespace detail
 
 #if ( defined( BOOST_GCC ) && BOOST_GCC >= 40600 ) || defined( BOOST_CLANG )
 #pragma GCC diagnostic push
-  //#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #endif
 
 class BOOST_SYMBOL_VISIBLE interop_error_category: public error_category

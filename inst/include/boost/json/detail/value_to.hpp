@@ -12,6 +12,7 @@
 #ifndef BOOST_JSON_DETAIL_VALUE_TO_HPP
 #define BOOST_JSON_DETAIL_VALUE_TO_HPP
 
+#include <boost/core/detail/static_assert.hpp>
 #include <boost/json/value.hpp>
 #include <boost/json/conversion.hpp>
 #include <boost/json/result_for.hpp>
@@ -306,7 +307,7 @@ try_make_tuple_like(
             ...);
 #if defined(BOOST_GCC)
 # pragma GCC diagnostic push
-//# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
     if( ec.failed() )
         return {boost::system::in_place_error, ec};
@@ -349,6 +350,10 @@ value_to_impl(
 template< class Ctx, class T >
 struct to_described_member
 {
+    static_assert(
+        uniquely_named_members<T>::value,
+        "The type has several described members with the same name.");
+
     using Ds = described_members<T>;
 
     system::result<T>& res;
@@ -379,8 +384,8 @@ struct to_described_member
 
 #if defined(__GNUC__) && BOOST_GCC_VERSION >= 80000 && BOOST_GCC_VERSION < 11000
 # pragma GCC diagnostic push
-//# pragma GCC diagnostic ignored "-Wunused"
-//# pragma GCC diagnostic ignored "-Wunused-variable"
+# pragma GCC diagnostic ignored "-Wunused"
+# pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
         auto member_res = try_value_to<M>( found->value(), ctx );
 #if defined(__GNUC__) && BOOST_GCC_VERSION >= 80000 && BOOST_GCC_VERSION < 11000
@@ -402,7 +407,7 @@ value_to_impl(
     value const& jv,
     Ctx const& ctx )
 {
-    BOOST_STATIC_ASSERT( std::is_default_constructible<T>::value );
+    BOOST_CORE_STATIC_ASSERT( std::is_default_constructible<T>::value );
     system::result<T> res;
 
     auto* obj = jv.if_object();

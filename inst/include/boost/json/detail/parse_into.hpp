@@ -141,7 +141,7 @@ protected:
     P* parent_;
 #if defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
 # pragma GCC diagnostic push
-//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
     V next_value_ = {};
     inner_handler_type inner_;
@@ -567,7 +567,7 @@ public:
         *inserter++ = std::move(this->next_value_);
 #if defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
 # pragma GCC diagnostic push
-//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
         this->next_value_ = {};
 #if defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
@@ -1130,6 +1130,10 @@ class converting_handler<described_class_conversion_tag, V, P>
 #else
 
 private:
+    static_assert(
+        uniquely_named_members<V>::value,
+        "The type has several described members with the same name.");
+
     using Dm = described_members<V>;
     using Dt = struct_element_list<V>;
 

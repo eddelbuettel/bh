@@ -2,7 +2,7 @@
 // ssl/detail/io.hpp
 // ~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -79,18 +79,21 @@ std::size_t io(Stream& next_layer, stream_core& core,
 
     // Operation is complete. Return result to caller.
     core.engine_.map_error_code(ec);
+    op.complete_sync(ec);
     return bytes_transferred;
 
   default:
 
     // Operation is complete. Return result to caller.
     core.engine_.map_error_code(ec);
+    op.complete_sync(ec);
     return bytes_transferred;
 
   } while (!ec);
 
   // Operation failed. Return result to caller.
   core.engine_.map_error_code(ec);
+  op.complete_sync(ec);
   return 0;
 }
 

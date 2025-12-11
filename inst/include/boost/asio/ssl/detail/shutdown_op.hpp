@@ -2,7 +2,7 @@
 // ssl/detail/shutdown_op.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -40,6 +40,17 @@ public:
   {
     bytes_transferred = 0;
     return eng.shutdown(ec);
+  }
+
+  void complete_sync(boost::system::error_code& ec) const
+  {
+    if (ec == boost::asio::error::eof)
+    {
+      // The engine only generates an eof when the shutdown notification has
+      // been received from the peer. This indicates that the shutdown has
+      // completed successfully, and thus need not be returned to the caller.
+      ec = boost::system::error_code();
+    }
   }
 
   template <typename Handler>

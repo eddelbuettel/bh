@@ -12,7 +12,6 @@
 #ifndef __BOOST_SORT_COMMON_UTIL_TRAITS_HPP
 #define __BOOST_SORT_COMMON_UTIL_TRAITS_HPP
 
-#include <ciso646>
 #include <functional>
 #include <iterator>
 #include <type_traits>
@@ -116,9 +115,9 @@ struct constructor
 };
 //
 //****************************************************************************
-};// End namespace util
-};// End namespace common
-};// End namespace sort
-};// End namespace boost
+} // End namespace util
+} // End namespace common
+} // End namespace sort
+} // End namespace boost
 //****************************************************************************
 #endif

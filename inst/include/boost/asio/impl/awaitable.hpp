@@ -2,7 +2,7 @@
 // impl/awaitable.hpp
 // ~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -34,6 +34,7 @@
 
 #if defined(BOOST_ASIO_ENABLE_HANDLER_TRACKING)
 # if defined(BOOST_ASIO_HAS_SOURCE_LOCATION)
+#  include <boost/asio/detail/handler_tracking.hpp>
 #  include <boost/asio/detail/source_location.hpp>
 # endif // defined(BOOST_ASIO_HAS_SOURCE_LOCATION)
 #endif // defined(BOOST_ASIO_ENABLE_HANDLER_TRACKING)
@@ -44,7 +45,6 @@ namespace boost {
 namespace asio {
 namespace detail {
 
-struct awaitable_thread_has_context_switched {};
 template <typename, typename, typename> class awaitable_async_op_handler;
 template <typename, typename, typename> class awaitable_async_op;
 
@@ -84,8 +84,17 @@ template <typename, typename, typename> class awaitable_async_op;
 //                                                 |                 |
 //                                                 +-----------------+
 
+class awaitable_launch_context
+{
+public:
+  BOOST_ASIO_DECL void launch(void (*pump_fn)(void*), void* arg);
+  BOOST_ASIO_DECL bool is_launching();
+};
+
+struct awaitable_thread_is_launching {};
+
 template <typename Executor>
-class awaitable_frame_base
+class awaitable_frame_base : public awaitable_launch_context
 {
 public:
 #if !defined(BOOST_ASIO_DISABLE_AWAITABLE_FRAME_RECYCLING)
@@ -433,8 +442,8 @@ public:
     return result{std::move(f), this};
   }
 
-  // Access the awaitable thread's has_context_switched_ flag.
-  auto await_transform(detail::awaitable_thread_has_context_switched) noexcept
+  // Determine whether the awaitable thread is launching.
+  auto await_transform(detail::awaitable_thread_is_launching) noexcept
   {
     struct result
     {
@@ -449,9 +458,9 @@ public:
       {
       }
 
-      bool& await_resume() const noexcept
+      bool await_resume() const noexcept
       {
-        return this_->attached_thread_->entry_point()->has_context_switched_;
+        return this_->is_launching();
       }
     };
 
@@ -465,7 +474,6 @@ public:
 
   awaitable_thread<Executor>* detach_thread() noexcept
   {
-    attached_thread_->entry_point()->has_context_switched_ = true;
     return std::exchange(attached_thread_, nullptr);
   }
 
@@ -604,7 +612,6 @@ public:
   awaitable_frame()
     : top_of_stack_(0),
       has_executor_(false),
-      has_context_switched_(false),
       throw_if_cancelled_(true)
   {
   }
@@ -650,7 +657,6 @@ private:
   boost::asio::cancellation_slot parent_cancellation_slot_;
   boost::asio::cancellation_state cancellation_state_;
   bool has_executor_;
-  bool has_context_switched_;
   bool throw_if_cancelled_;
 };
 
@@ -755,7 +761,7 @@ public:
   void launch()
   {
     bottom_of_stack_.frame_->top_of_stack_->attach_thread(this);
-    pump();
+    bottom_of_stack_.frame_->launch(&awaitable_thread::do_pump, this);
   }
 
 protected:
@@ -775,6 +781,11 @@ protected:
           std::move(bottom_of_stack_));
       a.frame_->rethrow_exception();
     }
+  }
+
+  static void do_pump(void* self)
+  {
+    static_cast<awaitable_thread*>(self)->pump();
   }
 
   awaitable<awaitable_thread_entry_point, Executor> bottom_of_stack_;

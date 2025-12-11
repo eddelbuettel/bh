@@ -16,14 +16,14 @@
 
 #if defined(__clang__)
 # pragma clang diagnostic push
-//# pragma clang diagnostic ignored "-Woverlength-strings"
+# pragma clang diagnostic ignored "-Woverlength-strings"
 #elif defined(__GNUC__)
 # pragma GCC diagnostic push
-//# pragma GCC diagnostic ignored "-Woverlength-strings"
+# pragma GCC diagnostic ignored "-Woverlength-strings"
 #endif
 
 __asm__(
-  ".pushsection \".debug_gdb_scripts\", \"MS\",@progbits,1\n"
+  ".pushsection \".debug_gdb_scripts\", \"MS\",%progbits,1\n"
   ".ascii \"\\4gdb.inlined-script.BOOST_JSON_DETAIL_GDB_PRINTERS_HPP\\n\"\n"
   ".ascii \"import gdb\\n\"\n"
   ".ascii \"import gdb.printing\\n\"\n"

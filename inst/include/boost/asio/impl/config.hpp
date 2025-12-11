@@ -2,7 +2,7 @@
 // impl/config.hpp
 // ~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -29,26 +29,34 @@ namespace detail {
 
 template <typename T>
 T config_get(const config_service& service, const char* section,
-    const char* key, T default_value, false_type /*is_bool*/)
+    const char* key_name, T default_value, false_type /*is_bool*/)
 {
   if (is_unsigned<T>::value)
   {
-    char buf[std::numeric_limits<unsigned long long>::max_digits10 + 1];
-    if (const char* str = service.get_value(section, key, buf, sizeof(buf)))
+    char buf[std::numeric_limits<unsigned long long>::digits10
+        + 1 /* sign */ + 1 /* partial digit */ + 1 /* NUL */];
+    if (const char* str = service.get_value(
+          section, key_name, buf, sizeof(buf)))
     {
       char* end = nullptr;
+      errno = 0;
       unsigned long long result = std::strtoull(str, &end, 0);
-      if (errno == ERANGE || result > (std::numeric_limits<T>::max)())
+      if (errno == ERANGE
+          || result > static_cast<unsigned long long>(
+            (std::numeric_limits<T>::max)()))
         detail::throw_exception(std::out_of_range("config out of range"));
       return static_cast<T>(result);
     }
   }
   else
   {
-    char buf[std::numeric_limits<long long>::max_digits10 + 1];
-    if (const char* str = service.get_value(section, key, buf, sizeof(buf)))
+    char buf[std::numeric_limits<unsigned long long>::digits10
+        + 1 /* sign */ + 1 /* partial digit */ + 1 /* NUL */];
+    if (const char* str = service.get_value(
+          section, key_name, buf, sizeof(buf)))
     {
       char* end = nullptr;
+      errno = 0;
       long long result = std::strtoll(str, &end, 0);
       if (errno == ERANGE || result < (std::numeric_limits<T>::min)()
           || result > (std::numeric_limits<T>::max)())
@@ -61,12 +69,15 @@ T config_get(const config_service& service, const char* section,
 
 template <typename T>
 T config_get(const config_service& service, const char* section,
-    const char* key, T default_value, true_type /*is_bool*/)
+    const char* key_name, T default_value, true_type /*is_bool*/)
 {
-  char buf[std::numeric_limits<unsigned long long>::max_digits10 + 1];
-  if (const char* str = service.get_value(section, key, buf, sizeof(buf)))
+  char buf[std::numeric_limits<unsigned long long>::digits10
+      + 1 /* sign */ + 1 /* partial digit */ + 1 /* NUL */];
+  if (const char* str = service.get_value(
+        section, key_name, buf, sizeof(buf)))
   {
     char* end = nullptr;
+    errno = 0;
     unsigned long long result = std::strtoll(str, &end, 0);
     if (errno == ERANGE || (result != 0 && result != 1))
       detail::throw_exception(std::out_of_range("config out of range"));
@@ -79,10 +90,10 @@ T config_get(const config_service& service, const char* section,
 
 template <typename T>
 constraint_t<is_integral<T>::value, T>
-config::get(const char* section, const char* key, T default_value) const
+config::get(const char* section, const char* key_name, T default_value) const
 {
   return detail::config_get(service_, section,
-      key, default_value, is_same<T, bool>());
+      key_name, default_value, is_same<T, bool>());
 }
 
 } // namespace asio

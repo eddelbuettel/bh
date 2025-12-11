@@ -13,7 +13,6 @@
 #ifndef __BOOST_SORT_PARALLEL_DETAIL_UTIL_STACK_CNC_HPP
 #define __BOOST_SORT_PARALLEL_DETAIL_UTIL_STACK_CNC_HPP
 
-#include <ciso646>
 #include <vector>
 #include <boost/sort/common/spinlock.hpp>
 
@@ -73,7 +72,7 @@ public:
     //  function : stack_cnc
     /// @brief  constructor
     //-------------------------------------------------------------------------
-    explicit stack_cnc(void): v_t() { };
+    explicit stack_cnc(void): v_t() { }
 
     //
     //-------------------------------------------------------------------------
@@ -86,7 +85,7 @@ public:
     //  function : ~stack_cnc
     /// @brief  Destructor
     //-------------------------------------------------------------------------
-    virtual ~stack_cnc(void) { v_t.clear(); };
+    virtual ~stack_cnc(void) { v_t.clear(); }
 
     //-------------------------------------------------------------------------
     //  function : emplace_back
@@ -137,8 +136,8 @@ public:
 // end class stack_cnc
 
 //***************************************************************************
-};// end namespace common
-};// end namespace sort
-};// end namespace boost
+} // end namespace common
+} // end namespace sort
+} // end namespace boost
 //***************************************************************************
 #endif

@@ -2,7 +2,7 @@
 // async_result.hpp
 // ~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -344,34 +344,57 @@ private:
 
 /// An interface for customising the behaviour of an initiating function.
 /**
- * The async_result traits class is used for determining:
+ * The async_result trait is a customisation point that is used within the
+ * initiating function for an @ref asynchronous_operation. The trait combines:
+ *
+ * @li the completion signature (or signatures) that describe the arguments that
+ * an asynchronous operation will pass to a completion handler;
+ *
+ * @li the @ref completion_token type supplied by the caller; and
+ *
+ * @li the operation's internal implementation.
+ *
+ * Specialisations of the trait must satisfy the @ref async_result_requirements,
+ * and are reponsible for determining:
  *
  * @li the concrete completion handler type to be called at the end of the
  * asynchronous operation;
  *
- * @li the initiating function return type; and
+ * @li the initiating function return type;
  *
- * @li how the return value of the initiating function is obtained.
+ * @li how the return value of the initiating function is obtained; and
  *
- * The trait allows the handler and return types to be determined at the point
- * where the specific completion handler signature is known.
+ * @li how and when to launch the operation by invoking the supplied initiation
+ * function object.
  *
  * This template may be specialised for user-defined completion token types.
- * The primary template assumes that the CompletionToken is the completion
- * handler.
+ * The primary template assumes that the CompletionToken is the already a
+ * concrete completion handler.
+ *
+ * @note For backwards compatibility, the primary template implements member
+ * types and functions that are associated with legacy forms of the async_result
+ * trait. These are annotated as "Legacy" in the documentation below. User
+ * specialisations of this trait do not need to implement these in order to
+ * satisfy the @ref async_result_requirements.
+ *
+ * In general, implementers of asynchronous operations should use the
+ * async_initiate function rather than using the async_result trait directly.
+ *
+ * For a more detailed discussion of the role of async_result and
+ * async_initiate, see the overview documentation for @ref completion_token.
  */
 template <typename CompletionToken,
     BOOST_ASIO_COMPLETION_SIGNATURE... Signatures>
 class async_result
 {
 public:
-  /// The concrete completion handler type for the specific signature.
+  /// (Legacy.) The concrete completion handler type for the specific signature.
   typedef CompletionToken completion_handler_type;
 
-  /// The return type of the initiating function.
+  /// (Legacy.) The return type of the initiating function.
   typedef void return_type;
 
-  /// Construct an async result from a given handler.
+  /// (Legacy.) Construct an async result from a given handler.
   /**
    * When using a specalised async_result, the constructor has an opportunity
    * to initialise some state associated with the completion handler, which is
@@ -379,7 +402,7 @@ public:
    */
   explicit async_result(completion_handler_type& h);
 
-  /// Obtain the value to be returned from the initiating function.
+  /// (Legacy.) Obtain the value to be returned from the initiating function.
   return_type get();
 
   /// Initiate the asynchronous operation that will produce the result, and
@@ -432,8 +455,8 @@ class async_result<void, Signatures...>
 
 #endif // defined(GENERATING_DOCUMENTATION)
 
-/// Helper template to deduce the handler type from a CompletionToken, capture
-/// a local copy of the handler, and then create an async_result for the
+/// (Legacy.) Helper template to deduce the handler type from a CompletionToken,
+/// capture a local copy of the handler, and then create an async_result for the
 /// handler.
 template <typename CompletionToken,
     BOOST_ASIO_COMPLETION_SIGNATURE... Signatures>
@@ -601,6 +624,36 @@ struct async_result_has_initiate_memfn
 
 #if defined(GENERATING_DOCUMENTATION)
 
+/// Helper function for implementing an asynchronous operation's initiating
+/// function.
+/**
+ * The async_initiate function wraps the async_result trait. It automatically
+ * performs the necessary decay and forward of the completion token, and also
+ * enables backwards compatibility with legacy completion token implementations.
+ *
+ * @param initiation A function object that will be called to launch the
+ * asynchronous operation. It receives the concrete completion handler as its
+ * first argument, followed by any additional arguments passed to
+ * async_initiate.
+ *
+ * @param token The @ref completion_token provided by the user. This will be
+ * transformed into a concrete completion handler by the async_result trait.
+ *
+ * @param args Additional arguments to be forwarded to the initiation function
+ * object.
+ *
+ * @returns The return value is determined by the async_result specialisation
+ * for the completion token type. For callback-based tokens, returns @c void.
+ * For other tokens such as use_future or use_awaitable, returns the
+ * corresponding future or awaitable type.
+ *
+ * @note Asynchronous operation implementations should use this function rather
+ * than directly using the async_result trait, or the legacy async_completion
+ * helper template.
+ *
+ * For a more detailed discussion of the role of async_result and
+ * async_initiate, see the overview documentation for @ref completion_token.
+ */
 template <typename CompletionToken,
     completion_signature... Signatures,
     typename Initiation, typename... Args>

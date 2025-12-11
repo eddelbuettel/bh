@@ -145,15 +145,15 @@ inline void no_throw_failed_impl(const char* expr, const char* what, const char*
 #if defined(__clang__) && defined(__has_warning)
 # if __has_warning("-Wsign-compare")
 #  pragma clang diagnostic push
-//#  pragma clang diagnostic ignored "-Wsign-compare"
+#  pragma clang diagnostic ignored "-Wsign-compare"
 # endif
 #elif defined(_MSC_VER)
 # pragma warning(push)
 # pragma warning(disable: 4389)
 #elif defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
 # pragma GCC diagnostic push
-//# pragma GCC diagnostic ignored "-Wsign-compare"
-//# pragma GCC diagnostic ignored "-Wsign-conversion"
+# pragma GCC diagnostic ignored "-Wsign-compare"
+# pragma GCC diagnostic ignored "-Wsign-conversion"
 #endif
 
 // specialize test output for char pointers to avoid printing as cstring
@@ -551,39 +551,47 @@ inline void lwt_init()
 #define BOOST_TEST_ALL_EQ(begin1, end1, begin2, end2) ( ::boost::detail::test_all_eq_impl(BOOST_LIGHTWEIGHT_TEST_OSTREAM, __FILE__, __LINE__, BOOST_CURRENT_FUNCTION, begin1, end1, begin2, end2) )
 #define BOOST_TEST_ALL_WITH(begin1, end1, begin2, end2, predicate) ( ::boost::detail::test_all_with_impl(BOOST_LIGHTWEIGHT_TEST_OSTREAM, __FILE__, __LINE__, BOOST_CURRENT_FUNCTION, begin1, end1, begin2, end2, predicate) )
 
-#ifndef BOOST_NO_EXCEPTIONS
-   #define BOOST_TEST_THROWS( EXPR, EXCEP )                           \
-      try {                                                           \
-         EXPR;                                                        \
-         ::boost::detail::throw_failed_impl                           \
-         (#EXPR, #EXCEP, __FILE__, __LINE__, BOOST_CURRENT_FUNCTION); \
-      }                                                               \
-      catch(EXCEP const&) {                                           \
-         ::boost::detail::test_results();                             \
-      }                                                               \
-      catch(...) {                                                    \
-         ::boost::detail::throw_failed_impl                           \
-         (#EXPR, #EXCEP, __FILE__, __LINE__, BOOST_CURRENT_FUNCTION); \
-      }                                                               \
-   //
+#if defined(BOOST_MSVC) && BOOST_MSVC < 1900
+# define BOOST_LWT_DETAIL_WHILE_FALSE __pragma(warning(push)) __pragma(warning(disable:4127)) while(false) __pragma(warning(pop))
 #else
-   #define BOOST_TEST_THROWS( EXPR, EXCEP )
+# define BOOST_LWT_DETAIL_WHILE_FALSE while(false)
 #endif
 
 #ifndef BOOST_NO_EXCEPTIONS
-#  define BOOST_TEST_NO_THROW(EXPR)                                    \
-    try {                                                              \
-        EXPR;                                                          \
-    } catch (const std::exception& e) {                                \
-        ::boost::detail::no_throw_failed_impl                          \
-        (#EXPR, e.what(), __FILE__, __LINE__, BOOST_CURRENT_FUNCTION); \
-    } catch (...) {                                                    \
-        ::boost::detail::no_throw_failed_impl                          \
-        (#EXPR, __FILE__, __LINE__, BOOST_CURRENT_FUNCTION);           \
-    }
-    //
+   #define BOOST_TEST_THROWS( EXPR, EXCEP )                              \
+      do {                                                               \
+         try {                                                           \
+            EXPR;                                                        \
+            ::boost::detail::throw_failed_impl                           \
+            (#EXPR, #EXCEP, __FILE__, __LINE__, BOOST_CURRENT_FUNCTION); \
+         }                                                               \
+         catch(EXCEP const&) {                                           \
+            ::boost::detail::test_results();                             \
+         }                                                               \
+         catch(...) {                                                    \
+            ::boost::detail::throw_failed_impl                           \
+            (#EXPR, #EXCEP, __FILE__, __LINE__, BOOST_CURRENT_FUNCTION); \
+         }                                                               \
+      } BOOST_LWT_DETAIL_WHILE_FALSE
 #else
-#  define BOOST_TEST_NO_THROW(EXPR) { EXPR; }
+   #define BOOST_TEST_THROWS( EXPR, EXCEP ) do {} BOOST_LWT_DETAIL_WHILE_FALSE
+#endif
+
+#ifndef BOOST_NO_EXCEPTIONS
+#  define BOOST_TEST_NO_THROW(EXPR)                                        \
+    do {                                                                   \
+        try {                                                              \
+            EXPR;                                                          \
+        } catch (const std::exception& e) {                                \
+            ::boost::detail::no_throw_failed_impl                          \
+            (#EXPR, e.what(), __FILE__, __LINE__, BOOST_CURRENT_FUNCTION); \
+        } catch (...) {                                                    \
+            ::boost::detail::no_throw_failed_impl                          \
+            (#EXPR, __FILE__, __LINE__, BOOST_CURRENT_FUNCTION);           \
+        }                                                                  \
+    } BOOST_LWT_DETAIL_WHILE_FALSE
+#else
+#  define BOOST_TEST_NO_THROW(EXPR) do { EXPR; } BOOST_LWT_DETAIL_WHILE_FALSE
 #endif
 
 #endif // #ifndef BOOST_CORE_LIGHTWEIGHT_TEST_HPP

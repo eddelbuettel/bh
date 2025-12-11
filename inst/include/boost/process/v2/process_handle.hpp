@@ -13,7 +13,7 @@
 
 #if defined(BOOST_PROCESS_V2_PIDFD_OPEN)
 #include <boost/process/v2/detail/process_handle_fd.hpp>
-#elif defined(BOOST_PROCESS_V2_PDFORK)
+#elif defined(BOOST_PROCESS_V2_PDFORK) || defined(BOOST_PROCESS_V2_PIPEFORK)
 #include <boost/process/v2/detail/process_handle_fd_or_signal.hpp>
 #else
 // with asio support we could use EVFILT_PROC:NOTE_EXIT as well.
@@ -26,7 +26,7 @@ BOOST_PROCESS_V2_BEGIN_NAMESPACE
 
 #if defined(GENERATING_DOCUMENTATION)
 /** A process handle is an unmanaged version of a process.
- * This means it does not terminate the proces on destruction and
+ * This means it does not terminate the process on destruction and
  * will not keep track of the exit-code. 
  * 
  * Note that the exit code might be discovered early, during a call to `running`.
@@ -107,9 +107,9 @@ struct basic_process_handle
     void request_exit()
 
     /// Unconditionally terminates the process and stores the exit code in exit_status.
-    void terminate(native_exit_code_type &exit_status, error_code &ec);\
+    void terminate(native_exit_code_type &exit_status, error_code &ec);
     /// Throwing @overload void terminate(native_exit_code_type &exit_code, error_code & ec)
-    void terminate(native_exit_code_type &exit_status);/
+    void terminate(native_exit_code_type &exit_status);
 
     /// Checks if the current process is running. 
     /**If it has already completed, it assigns the exit code to `exit_code`.
@@ -137,7 +137,7 @@ using basic_process_handle = detail::basic_process_handle_win<Executor>;
 #if defined(BOOST_PROCESS_V2_PIDFD_OPEN)
 template<typename Executor = net::any_io_executor>
 using basic_process_handle = detail::basic_process_handle_fd<Executor>;
-#elif defined(BOOST_PROCESS_V2_PDFORK)
+#elif defined(BOOST_PROCESS_V2_PDFORK) || defined(BOOST_PROCESS_V2_PIPEFORK)
 template<typename Executor = net::any_io_executor>
 using basic_process_handle = detail::basic_process_handle_fd_or_signal<Executor>;
 #else

@@ -14,7 +14,6 @@
 #ifndef __BOOST_SORT_PARALLEL_DETAIL_PARALLEL_SORT_HPP
 #define __BOOST_SORT_PARALLEL_DETAIL_PARALLEL_SORT_HPP
 
-#include <ciso646>
 #include <boost/sort/block_indirect_sort/blk_detail/backbone.hpp>
 #include <boost/sort/pdqsort/pdqsort.hpp>
 #include <boost/sort/common/pivot.hpp>
@@ -94,7 +93,7 @@ struct parallel_sort
         bscu::atomic_add(counter, 1);
         function_t f1 = [this, first, last, level, &counter, &error]( )
         {
-            if (not error)
+            if (! error)
             {
                 try
                 {
@@ -103,12 +102,12 @@ struct parallel_sort
                 catch (std::bad_alloc &)
                 {
                     error = true;
-                };
-            };
+                }
+            }
             bscu::atomic_sub (counter, 1);
         };
         bk.works.emplace_back(f1);
-    };
+    }
 
 //--------------------------------------------------------------------------
 };// end struct parallel_sort
@@ -141,13 +140,13 @@ parallel_sort<Block_size, Iter_t, Compare>
     //------------------- check if sort --------------------------------------
     bool sorted = true;
     for (Iter_t it1 = first, it2 = first + 1;
-         it2 != last and (sorted = not bk.cmp(*it2, *it1)); it1 = it2++);
+         it2 != last && (sorted = ! bk.cmp(*it2, *it1)); it1 = it2++);
     if (sorted) return;
 
     //------------------- check if reverse sort ---------------------------
     sorted = true;
     for (Iter_t it1 = first, it2 = first + 1;
-         it2 != last and (sorted = not bk.cmp(*it1, *it2)); it1 = it2++);
+         it2 != last && (sorted = ! bk.cmp(*it1, *it2)); it1 = it2++);
 
     if (sorted)
     {
@@ -156,7 +155,7 @@ parallel_sort<Block_size, Iter_t, Compare>
         for (size_t i = 0; i < nelem2; ++i)
             swap(*(it1++), *(it2--));
         return;
-    };
+    }
 
     //-------------------max_per_thread ---------------------------
     uint32_t nbits_size = (nbits64(sizeof(value_t))) >> 1;
@@ -170,12 +169,12 @@ parallel_sort<Block_size, Iter_t, Compare>
     {
         pdqsort(first, last, bk.cmp);
         return;
-    };
-    if (not bk.error) divide_sort(first, last, level);
+    }
+    if (! bk.error) divide_sort(first, last, level);
 
     // wait until all the parts are finished
     bk.exec(counter);
-};
+}
 
 //------------------------------------------------------------------------
 //  function : divide_sort
@@ -193,15 +192,15 @@ void parallel_sort<Block_size, Iter_t, Compare>
     //------------------- check if sort -----------------------------------
     bool sorted = true;
     for (Iter_t it1 = first, it2 = first + 1;
-         it2 != last and (sorted = not bk.cmp(*it2, *it1)); it1 = it2++);
+         it2 != last && (sorted = ! bk.cmp(*it2, *it1)); it1 = it2++);
     if (sorted) return;
 
     //---------------- check if finish the subdivision -------------------
     size_t nelem = last - first;
-    if (level == 0 or nelem < (max_per_thread))
+    if (level == 0 || nelem < (max_per_thread))
     {
         return pdqsort(first, last, bk.cmp);
-    };
+    }
 
     //-------------------- pivoting  ----------------------------------
     pivot9(first, last, bk.cmp);
@@ -218,7 +217,7 @@ void parallel_sort<Block_size, Iter_t, Compare>
             ++c_first;
         while (bk.cmp(val, *c_last))
             --c_last;
-    };
+    }
 
     swap(*first, *c_last);
 
@@ -228,12 +227,12 @@ void parallel_sort<Block_size, Iter_t, Compare>
 
     // The first half is done by the same thread
     function_divide_sort(first, c_last, level - 1, counter, bk.error);
-};
+}
 //
 //****************************************************************************
-};//    End namespace blk_detail
-};//    End namespace sort
-};//    End namespace boost
+} //    End namespace blk_detail
+} //    End namespace sort
+} //    End namespace boost
 //****************************************************************************
 //
 #endif

@@ -25,20 +25,11 @@
 
 #if defined( BOOST_SP_DISABLE_DEPRECATED )
 #pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 namespace boost
 {
-
-// Debug hooks
-
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-
-void sp_scalar_constructor_hook(void * p);
-void sp_scalar_destructor_hook(void * p);
-
-#endif
 
 //  scoped_ptr mimics a built-in pointer except that it guarantees deletion
 //  of the object pointed to, either on destruction of the scoped_ptr or via
@@ -65,27 +56,18 @@ public:
 
     explicit scoped_ptr( T * p = 0 ) noexcept : px( p )
     {
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_constructor_hook( px );
-#endif
     }
 
 #ifndef BOOST_NO_AUTO_PTR
 
     explicit scoped_ptr( std::auto_ptr<T> p ) noexcept : px( p.release() )
     {
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_constructor_hook( px );
-#endif
     }
 
 #endif
 
     ~scoped_ptr() noexcept
     {
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_destructor_hook( px );
-#endif
         boost::checked_delete( px );
     }
 
