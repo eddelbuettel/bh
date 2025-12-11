@@ -24,7 +24,7 @@
 #include <boost/math/special_functions/detail/hypergeometric_pFq_checked_series.hpp>
 #include <boost/math/special_functions/detail/hypergeometric_1F1_addition_theorems_on_z.hpp>
 #include <boost/math/special_functions/detail/hypergeometric_1F1_large_abz.hpp>
-#include <boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_ratio.hpp>
+#include <boost/math/special_functions/detail/hypergeometric_1F1_small_a_negative_b_by_r.hpp>
 #include <boost/math/special_functions/detail/hypergeometric_1F1_negative_b_regions.hpp>
 
 namespace boost { namespace math { namespace detail {

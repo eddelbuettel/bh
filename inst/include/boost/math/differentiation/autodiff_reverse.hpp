@@ -23,7 +23,7 @@
 #include <boost/math/differentiation/detail/reverse_mode_autodiff_stl_no_et.hpp>
 #endif
 
-#include <boost/math/differentiation/detail/reverse_mode_autodiff_comparison_operator_overloads.hpp>
+#include <boost/math/differentiation/detail/reverse_mode_autodiff_comp_ops_overloads.hpp>
 #include <boost/math/differentiation/detail/reverse_mode_autodiff_erf_overloads.hpp>
 #include <boost/math/differentiation/detail/reverse_mode_autodiff_expression_template_base.hpp>
 #include <boost/math/differentiation/detail/reverse_mode_autodiff_memory_management.hpp>

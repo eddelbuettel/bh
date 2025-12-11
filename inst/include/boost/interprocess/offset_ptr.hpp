@@ -35,7 +35,7 @@
 
 #if defined(BOOST_GCC) && (BOOST_GCC >= 40700)
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+//#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
 
 //!\file

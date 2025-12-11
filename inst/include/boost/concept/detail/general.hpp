@@ -30,7 +30,7 @@ struct requirement
 {
 #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
 #   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wnonnull"
+  //#   pragma GCC diagnostic ignored "-Wnonnull"
 #   endif
     static void failed() { ((Model*)0)->~Model(); }
 #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
@@ -45,7 +45,7 @@ struct requirement<failed ************ Model::************>
 {
 #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
 #   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wnonnull"
+  //#   pragma GCC diagnostic ignored "-Wnonnull"
 #   endif
     static void failed() { ((Model*)0)->~Model(); }
 #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
@@ -60,7 +60,7 @@ struct constraint
 {
 #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)
 #   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wnonnull"
+  //#   pragma GCC diagnostic ignored "-Wnonnull"
 #   endif
     static void failed() { ((Model*)0)->constraints(); }
 #   if defined(BOOST_GCC) && (BOOST_GCC >= 110000)

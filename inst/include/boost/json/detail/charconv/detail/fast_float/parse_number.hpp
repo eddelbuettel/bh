@@ -30,7 +30,7 @@ namespace detail {
 
 #if defined(__GNUC__) && __GNUC__ < 5 && !defined(__clang__)
 # pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+//# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
 
 template <typename T, typename UC>
@@ -128,10 +128,10 @@ BOOST_FORCEINLINE bool rounds_to_nearest() noexcept {
   //  see https://stackoverflow.com/questions/46079446/is-there-a-warning-for-floating-point-equality-checking-in-visual-studio-2013
   #elif defined(__clang__)
   #   pragma clang diagnostic push
-  #   pragma clang diagnostic ignored "-Wfloat-equal"
+//  #   pragma clang diagnostic ignored "-Wfloat-equal"
   #elif defined(__GNUC__)
   #   pragma GCC diagnostic push
-  #   pragma GCC diagnostic ignored "-Wfloat-equal"
+//  #   pragma GCC diagnostic ignored "-Wfloat-equal"
   #endif
   return (fmini + 1.0f == 1.0f - fmini);
   #ifdef BOOST_JSON_FASTFLOAT_VISUAL_STUDIO

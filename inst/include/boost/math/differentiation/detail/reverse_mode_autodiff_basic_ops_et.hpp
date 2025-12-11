@@ -6,7 +6,7 @@
 #ifndef REVERSE_MODE_AUTODIFF_BASIC_OPS_ET_HPP
 #define REVERSE_MODE_AUTODIFF_BASIC_OPS_ET_HPP
 
-#include <boost/math/differentiation/detail/reverse_mode_autodiff_basic_operator_expressions.hpp>
+#include <boost/math/differentiation/detail/reverse_mode_autodiff_basic_ops_expr.hpp>
 namespace boost {
 namespace math {
 namespace differentiation {

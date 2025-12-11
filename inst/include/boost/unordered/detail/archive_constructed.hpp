@@ -50,7 +50,7 @@ struct archive_constructed:private noncopyable
 
 #if defined(BOOST_UNORDERED_IGNORE_WSTRICT_ALIASING)
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+  //#pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif
 
   T& get(){return *space.address();}

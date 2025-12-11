@@ -77,7 +77,7 @@ BOOST_FORCEINLINE FuncPtr get_proc_address(HMODULE_ hModule, LPCSTR_ lpProcName)
 {
 #if defined(BOOST_GCC) && BOOST_GCC >= 80000
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcast-function-type"
+//#pragma GCC diagnostic ignored "-Wcast-function-type"
 #endif
     return reinterpret_cast< FuncPtr >(boost::winapi::get_proc_address(hModule, lpProcName));
 #if defined(BOOST_GCC) && BOOST_GCC >= 80000

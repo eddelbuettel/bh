@@ -32,7 +32,7 @@ inline void lwt_unattended()
 
 # if defined(__clang__)
 #  pragma clang diagnostic push
-#  pragma clang diagnostic ignored "-Wdeprecated-declarations"
+//#  pragma clang diagnostic ignored "-Wdeprecated-declarations"
 # endif
 
 #if !defined(WINAPI_FAMILY) || WINAPI_FAMILY == 100 /*WINAPI_FAMILY_DESKTOP_APP*/

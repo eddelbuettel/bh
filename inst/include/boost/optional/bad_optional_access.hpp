@@ -21,7 +21,7 @@ namespace boost {
 
 #if defined(__clang__)
 # pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wweak-vtables"
+  //# pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 
 class bad_optional_access : public std::logic_error

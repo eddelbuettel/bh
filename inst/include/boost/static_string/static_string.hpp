@@ -13,16 +13,16 @@
 
 #if defined(__GNUC__) && __GNUC__ >= 8
 #pragma GCC diagnostic push
-#pragma GCC system_header
+//#pragma GCC system_header
 // false positives
-#pragma GCC diagnostic ignored "-Warray-bounds"
-#pragma GCC diagnostic ignored "-Wrestrict"
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
+//#pragma GCC diagnostic ignored "-Warray-bounds"
+//#pragma GCC diagnostic ignored "-Wrestrict"
+//#pragma GCC diagnostic ignored "-Wstringop-overflow"
 #endif
 
 #if defined(__GNUC__) && __GNUC__ >= 7
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnoexcept-type"
+//#pragma GCC diagnostic ignored "-Wnoexcept-type"
 #endif
 
 // External include guard
@@ -608,7 +608,7 @@ count_digits(std::size_t value)
 // not need to be extremely precise.
 #if defined(__GNUC__) && __GNUC__ >= 7
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-truncation"
+//#pragma GCC diagnostic ignored "-Wformat-truncation"
 #endif
 
 #if defined(BOOST_STATIC_STRING_USE_STD_FORMAT)
