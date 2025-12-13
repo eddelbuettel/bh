@@ -221,10 +221,10 @@ struct buffer_range
     {
         boost::ignore_unused(segment_strategy);
 
-        typedef typename std::iterator_traits
+        using point_type = typename std::iterator_traits
         <
             Iterator
-        >::value_type point_type;
+        >::value_type;
 
         point_type second_point, penultimate_point, ultimate_point; // last two points from begin/end
 
@@ -363,6 +363,11 @@ struct visit_pieces_default_policy
     template <typename Collection>
     static inline void apply(Collection const&, int)
     {}
+
+    template <typename Turns, typename Cluster, typename Connections>
+    inline void visit_cluster_connections(signed_size_type cluster_id,
+            Turns const& turns, Cluster const& cluster, Connections const& connections) {}
+
 };
 
 template
@@ -469,7 +474,7 @@ struct buffer_inserter_ring
     {
         output_point_type first_p1, first_p2, last_p1, last_p2;
 
-        typedef detail::buffer::buffer_range<RingOutput> buffer_range;
+        using buffer_range = detail::buffer::buffer_range<RingOutput>;
 
         geometry::strategy::buffer::result_code result
             = buffer_range::iterate(collection, begin, end,
@@ -747,11 +752,10 @@ template
 struct buffer_inserter<polygon_tag, PolygonInput, PolygonOutput>
 {
 private:
-    typedef typename ring_type<PolygonInput>::type input_ring_type;
-    typedef typename ring_type<PolygonOutput>::type output_ring_type;
+    using input_ring_type = ring_type_t<PolygonInput>;
+    using output_ring_type = ring_type_t<PolygonOutput>;
 
-    typedef buffer_inserter_ring<input_ring_type, output_ring_type> policy;
-
+    using policy = buffer_inserter_ring<input_ring_type, output_ring_type>;
 
     template
     <
@@ -873,12 +877,9 @@ struct buffer_inserter<multi_tag, Multi, PolygonOutput>
                 PolygonOutput,
                 dispatch::buffer_inserter
                 <
-                    typename single_tag_of
-                                <
-                                    typename tag<Multi>::type
-                                >::type,
+                    typename single_tag_of<tag_t<Multi>>::type,
                     typename boost::range_value<Multi const>::type,
-                    typename geometry::ring_type<PolygonOutput>::type
+                    geometry::ring_type_t<PolygonOutput>
                 >
             >
 {};
@@ -918,7 +919,7 @@ inline void buffer_inserter(GeometryInput const& geometry_input, OutputIterator 
 
     using collection_type = detail::buffer::buffered_piece_collection
         <
-            typename geometry::ring_type<GeometryOutput>::type,
+            geometry::ring_type_t<GeometryOutput>,
             Strategies,
             DistanceStrategy
         >;
@@ -944,6 +945,7 @@ inline void buffer_inserter(GeometryInput const& geometry_input, OutputIterator 
     }
     collection.handle_colocations();
     collection.check_turn_in_pieces();
+    collection.assign_side_counts(visit_pieces_policy);
     collection.make_traversable_consistent_per_cluster();
 
     // Visit the piece collection. This does nothing (by default), but
@@ -953,7 +955,7 @@ inline void buffer_inserter(GeometryInput const& geometry_input, OutputIterator 
     visit_pieces_policy.apply(const_collection, 0);
 
     collection.discard_rings();
-    collection.block_turns();
+    collection.discard_non_traversable_turns();
     collection.enrich();
 
     // phase 1: turns (after enrichment/clustering)
@@ -964,7 +966,7 @@ inline void buffer_inserter(GeometryInput const& geometry_input, OutputIterator 
         collection.deflate_check_turns();
     }
 
-    collection.traverse();
+    collection.traverse(visit_pieces_policy);
 
     // Reverse all offsetted rings / traversed rings if:
     // - they were generated on the negative side (deflate) of polygons

@@ -13,7 +13,6 @@
 #ifndef __BOOST_SORT_PARALLEL_DETAIL_SAMPLE_SORT_HPP
 #define __BOOST_SORT_PARALLEL_DETAIL_SAMPLE_SORT_HPP
 
-#include <ciso646>
 #include <functional>
 #include <future>
 #include <iterator>
@@ -124,22 +123,22 @@ struct sample_sort
 
     sample_sort(Iter_t first, Iter_t last)
     : sample_sort (first, last, Compare(), std::thread::hardware_concurrency(),
-                   nullptr, 0) { };
+                   nullptr, 0) { }
 
     sample_sort(Iter_t first, Iter_t last, Compare cmp)
     : sample_sort(first, last, cmp, std::thread::hardware_concurrency(),
-                  nullptr, 0) { };
+                  nullptr, 0) { }
 
     sample_sort(Iter_t first, Iter_t last, uint32_t num_thread)
-    : sample_sort(first, last, Compare(), num_thread, nullptr, 0) { };
+    : sample_sort(first, last, Compare(), num_thread, nullptr, 0) { }
 
     sample_sort(Iter_t first, Iter_t last, Compare cmp, uint32_t num_thread)
-    : sample_sort(first, last, cmp, num_thread, nullptr, 0) { };
+    : sample_sort(first, last, cmp, num_thread, nullptr, 0) { }
 
     sample_sort(Iter_t first, Iter_t last, Compare cmp, uint32_t num_thread,
                 range_buf range_buf_initial)
     : sample_sort(first, last, cmp, num_thread,
-                  range_buf_initial.first, range_buf_initial.size()) { };
+                  range_buf_initial.first, range_buf_initial.size()) { }
 
     void destroy_all(void);
     //
@@ -148,7 +147,7 @@ struct sample_sort
     /// @brief destructor of the class. The utility is to destroy the temporary
     ///        buffer used in the sorting process
     //-----------------------------------------------------------------------------
-    ~sample_sort(void) { destroy_all(); };
+    ~sample_sort(void) { destroy_all(); }
     //
     //-----------------------------------------------------------------------
     //  function : execute first
@@ -161,8 +160,8 @@ struct sample_sort
         {
             uninit_merge_level4(vrange_buf_ini[job], vv_range_it[job],
                             vv_range_buf[job], comp);
-        };
-    };
+        }
+    }
     //
     //-----------------------------------------------------------------------
     //  function : execute
@@ -175,8 +174,8 @@ struct sample_sort
         {
             merge_vector4(vrange_buf_ini[job], vrange_it_ini[job],
                             vv_range_buf[job], vv_range_it[job], comp);
-        };
-    };
+        }
+    }
     //
     //-----------------------------------------------------------------------
     //  function : first merge
@@ -193,7 +192,7 @@ struct sample_sort
         };
         for (uint32_t i = 0; i < nthread; ++i)
             vfuture[i].get();
-    };
+    }
     //
     //-----------------------------------------------------------------------
     //  function : final merge
@@ -206,10 +205,10 @@ struct sample_sort
         for (uint32_t i = 0; i < nthread; ++i)
         {
             vfuture[i] = std::async(std::launch::async, &this_t::execute, this);
-        };
+        }
         for (uint32_t i = 0; i < nthread; ++i)
             vfuture[i].get();
-    };
+    }
     //----------------------------------------------------------------------------
 };
 //                    End class sample_sort
@@ -249,28 +248,28 @@ sample_sort<Iter_t, Compare>
     vfuture.resize(nthread);
 
     // Adjust when have many threads and only a few elements
-    while (nelem > thread_min and (nthread * nthread) > (nelem >> 3))
+    while (nelem > thread_min && (nthread * nthread) > (nelem >> 3))
     {
         nthread /= 2;
     };
     ninterval = (nthread << 3);
 
-    if (nthread < 2 or nelem <= (thread_min))
+    if (nthread < 2 || nelem <= (thread_min))
     {
         bss::spinsort<Iter_t, Compare>(first, last, comp);
         return;
-    };
+    }
 
     //------------------- check if sort --------------------------------------
     bool sw = true;
     for (Iter_t it1 = first, it2 = first + 1;
-                    it2 != last and (sw = not comp(*it2, *it1)); it1 = it2++);
+                    it2 != last && (sw = ! comp(*it2, *it1)); it1 = it2++);
     if (sw) return;
 
     //------------------- check if reverse sort ---------------------------
     sw = true;
     for (Iter_t it1 = first, it2 = first + 1;
-                    it2 != last and (sw = comp(*it2, *it1)); it1 = it2++);
+                    it2 != last && (sw = comp(*it2, *it1)); it1 = it2++);
     if (sw)
     {
 	using std::swap;
@@ -279,7 +278,7 @@ sample_sort<Iter_t, Compare>
         for (size_t i = 0; i < nelem2; ++i)
             swap(*(it1++), *(it2--));
         return;
-    };
+    }
 
     if (paux != nullptr)
     {
@@ -296,7 +295,7 @@ sample_sort<Iter_t, Compare>
         if (ptr == nullptr) throw std::bad_alloc();
         owner = true;
         global_buf = range_buf(ptr, ptr + nelem);
-    };
+    }
     //------------------------------------------------------------------------
     //                    PROCESS
     //------------------------------------------------------------------------
@@ -306,20 +305,20 @@ sample_sort<Iter_t, Compare>
     } catch (std::bad_alloc &)
     {
         error = true;
-    };
-    if (not error)
+    }
+    if (! error)
     {
         first_merge();
         construct = true;
         final_merge();
-    };
+    }
     if (error)
     {
         destroy_all();
         throw std::bad_alloc();
-    };
+    }
 }
-;
+
 //
 //-----------------------------------------------------------------------------
 //  function : destroy_all
@@ -334,7 +333,7 @@ void sample_sort<Iter_t, Compare>::destroy_all(void)
         destroy(global_buf);
         construct = false;
     }
-    if (global_buf.first != nullptr and owner)
+    if (global_buf.first != nullptr && owner)
         std::free(global_buf.first);
 }
 //
@@ -464,22 +463,22 @@ void sample_sort<Iter_t, Compare>::initial_configuration(void)
             if (nelem_range != 0)
             {
                 vv_range_it[k].push_back(vv_range_first[i][k]);
-            };
+            }
             nelem_interval += nelem_range;
-        };
+        }
 
         vrange_it_ini.emplace_back(it, it + nelem_interval);
         vrange_buf_ini.emplace_back(it_buf, it_buf + nelem_interval);
 
         it += nelem_interval;
         it_buf += nelem_interval;
-    };
+    }
 }
-;
+
 //
 //****************************************************************************
 }
-;
+
 //    End namespace sample_detail
 //****************************************************************************
 //
@@ -505,7 +504,7 @@ void sample_sort(Iter_t first, Iter_t last)
 {
     typedef compare_iter<Iter_t> Compare;
     sample_detail::sample_sort<Iter_t, Compare>(first, last);
-};
+}
 //
 //-----------------------------------------------------------------------------
 //  function : sample_sort
@@ -521,7 +520,7 @@ void sample_sort(Iter_t first, Iter_t last, uint32_t nthread)
 {
     typedef compare_iter<Iter_t> Compare;
     sample_detail::sample_sort<Iter_t, Compare>(first, last, nthread);
-};
+}
 //
 //-----------------------------------------------------------------------------
 //  function : sample_sort
@@ -537,7 +536,7 @@ template<class Iter_t, class Compare, bscu::enable_if_not_integral<Compare> * =
 void sample_sort(Iter_t first, Iter_t last, Compare comp)
 {
     sample_detail::sample_sort<Iter_t, Compare>(first, last, comp);
-};
+}
 //
 //-----------------------------------------------------------------------------
 //  function : sample_sort
@@ -554,11 +553,11 @@ template<class Iter_t, class Compare>
 void sample_sort(Iter_t first, Iter_t last, Compare comp, uint32_t nthread)
 {
     sample_detail::sample_sort<Iter_t, Compare>(first, last, comp, nthread);
-};
+}
 //
 //****************************************************************************
-};//    End namespace sort
-};//    End namespace boost
+}//    End namespace sort
+}//    End namespace boost
 //****************************************************************************
 //
 #endif

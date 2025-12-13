@@ -2,7 +2,7 @@
 // detail/bind_handler.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -489,6 +489,14 @@ public:
   Handler handler_;
   Arg1 arg1_;
 };
+
+template <typename Handler, typename Arg1>
+inline move_binder1<decay_t<Handler>, decay_t<Arg1>> move_bind_handler(
+    Handler&& handler, Arg1&& arg1)
+{
+  return move_binder1<decay_t<Handler>, decay_t<Arg1>>(0,
+      static_cast<Handler&&>(handler), static_cast<Arg1&&>(arg1));
+}
 
 template <typename Handler, typename Arg1>
 inline bool asio_handler_is_continuation(

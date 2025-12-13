@@ -2,7 +2,7 @@
 // detail/impl/io_uring_service.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -48,7 +48,7 @@ io_uring_service::io_uring_service(boost::asio::execution_context& ctx)
         config(ctx).get("reactor", "io_locking_spin_count", 0)),
     timeout_(),
     registration_mutex_(mutex_.enabled()),
-    registered_io_objects_(
+    registered_io_objects_(execution_context::allocator<void>(ctx),
         config(ctx).get("reactor", "preallocated_io_objects", 0U),
         io_locking_, io_locking_spin_count_),
     reactor_(use_service<reactor>(ctx)),

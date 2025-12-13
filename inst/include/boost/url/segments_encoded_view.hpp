@@ -167,6 +167,77 @@ public:
     segments_encoded_view(
         core::string_view s);
 
+    /** Constructor
+
+        This function creates a new @ref segments_encoded_view
+        from a pair of iterators referring to
+        elements of another encoded segments
+        view. The resulting view references
+        the same underlying character buffer
+        as the original.
+
+        The constructed view preserves the
+        original absolute flag when `first`
+        selects the first segment and otherwise
+        produces an absolute subview: if the
+        source path is relative and `first ==
+        ps.begin()` the new view is relative,
+        and in every other case the subview is
+        absolute with the separator immediately
+        preceding `*first` retained at the front.
+        This ensures the underlying text can be
+        reconstructed by concatenating the buffers
+        of adjacent subviews.
+
+        The caller is responsible for ensuring
+        that the lifetime of the original buffer
+        extends until the constructed view
+        is no longer referenced.
+
+        @par Example
+        @code
+        segments_encoded_view ps( "/path/to/file.txt" );
+
+        segments_encoded_view sub(
+            std::next(ps.begin()),
+            ps.end());
+
+        segments_encoded_view first_half(
+            ps.begin(),
+            std::next(ps.begin()));
+
+        // sub represents "/to/file.txt"
+        std::string combined(
+            first_half.buffer().data(),
+            first_half.buffer().size());
+        combined.append(
+            sub.buffer().data(),
+            sub.buffer().size());
+        BOOST_ASSERT(combined == ps.buffer());
+        @endcode
+
+        @par Preconditions
+        The iterators must be valid and belong to
+        the same @ref segments_encoded_view.
+
+        @par Postconditions
+        `sub.buffer()` references characters in the
+        original `ps.buffer()`.
+
+        @par Complexity
+        Constant
+
+        @par Exception Safety
+        Throws nothing.
+
+        @param first The beginning iterator.
+        @param last The ending iterator.
+    */
+    BOOST_URL_DECL
+    segments_encoded_view(
+        iterator first,
+        iterator last) noexcept;
+
     /** Assignment
 
         After assignment, both views
@@ -188,10 +259,13 @@ public:
 
         @par Exception Safety
         Throws nothing
+
+        @param other The segments to copy.
+        @return Reference to this object
     */
     segments_encoded_view&
     operator=(
-        segments_encoded_view const&) = default;
+        segments_encoded_view const& other) = default;
 
     /** Conversion
 
@@ -221,6 +295,8 @@ public:
 
         @par Exception Safety
         Throws nothing
+
+        @return A view of the segments.
     */
     BOOST_URL_DECL
     operator
@@ -228,32 +304,6 @@ public:
 
     //--------------------------------------------
 
-    /** Parse a string and return an encoded segment view
-
-        This function parses the string and returns the
-        corresponding path object if the string is valid,
-        otherwise returns an error.
-
-        @par BNF
-        @code
-        path          = [ "/" ] segment *( "/" segment )
-        @endcode
-
-        @par Exception Safety
-        No-throw guarantee.
-
-        @return A valid view on success, otherwise an
-        error code.
-
-        @param s The string to parse
-
-        @par Specification
-        @li <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-3.3"
-            >3.3.  Path (rfc3986)</a>
-
-        @see
-            @ref segments_encoded_view.
-    */
     BOOST_URL_DECL
     friend
     system::result<segments_encoded_view>

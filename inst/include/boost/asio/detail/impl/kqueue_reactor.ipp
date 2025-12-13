@@ -2,7 +2,7 @@
 // detail/impl/kqueue_reactor.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 // Copyright (c) 2005 Stefan Arentz (stefan at soze dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -57,7 +57,7 @@ kqueue_reactor::kqueue_reactor(boost::asio::execution_context& ctx)
     io_locking_spin_count_(
         config(ctx).get("reactor", "io_locking_spin_count", 0)),
     registered_descriptors_mutex_(mutex_.enabled()),
-    registered_descriptors_(
+    registered_descriptors_(execution_context::allocator<void>(ctx),
         config(ctx).get("reactor", "preallocated_io_objects", 0U),
         io_locking_, io_locking_spin_count_)
 {
@@ -455,6 +455,9 @@ void kqueue_reactor::run(long usec, op_queue<operation>& ops)
   struct kevent events[128];
   int num_events = kevent(kqueue_fd_, 0, 0, events, 128, timeout);
 
+  if (num_events > 0)
+    (void)ref_count_read_acquire(allocation_counter_);
+
 #if defined(BOOST_ASIO_ENABLE_HANDLER_TRACKING)
   // Trace the waiting events.
   for (int i = 0; i < num_events; ++i)
@@ -570,7 +573,9 @@ int kqueue_reactor::do_kqueue_create()
 kqueue_reactor::descriptor_state* kqueue_reactor::allocate_descriptor_state()
 {
   mutex::scoped_lock descriptors_lock(registered_descriptors_mutex_);
-  return registered_descriptors_.alloc(io_locking_, io_locking_spin_count_);
+  auto* s = registered_descriptors_.alloc(io_locking_, io_locking_spin_count_);
+  ref_count_up_release(allocation_counter_);
+  return s;
 }
 
 void kqueue_reactor::free_descriptor_state(kqueue_reactor::descriptor_state* s)

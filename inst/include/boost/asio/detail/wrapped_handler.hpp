@@ -2,7 +2,7 @@
 // detail/wrapped_handler.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -100,55 +100,62 @@ public:
   void operator()()
   {
     detail::initiate_dispatch_with_executor<executor_type>(
-        this->get_executor())(static_cast<Handler&&>(handler_));
+        this->get_executor())(static_cast<Handler&&>(handler_),
+        empty_work_function());
   }
 
   void operator()() const
   {
     detail::initiate_dispatch_with_executor<executor_type>(
-        this->get_executor())(handler_);
+        this->get_executor())(handler_, empty_work_function());
   }
 
   template <typename Arg1>
   void operator()(const Arg1& arg1)
   {
     detail::initiate_dispatch_with_executor<executor_type>(
-        this->get_executor())(detail::bind_handler(handler_, arg1));
+        this->get_executor())(detail::bind_handler(handler_, arg1),
+        empty_work_function());
   }
 
   template <typename Arg1>
   void operator()(const Arg1& arg1) const
   {
     detail::initiate_dispatch_with_executor<executor_type>(
-        this->get_executor())(detail::bind_handler(handler_, arg1));
+        this->get_executor())(detail::bind_handler(handler_, arg1),
+        empty_work_function());
   }
 
   template <typename Arg1, typename Arg2>
   void operator()(const Arg1& arg1, const Arg2& arg2)
   {
     detail::initiate_dispatch_with_executor<executor_type>(
-        this->get_executor())(detail::bind_handler(handler_, arg1, arg2));
+        this->get_executor())(detail::bind_handler(handler_, arg1, arg2),
+        empty_work_function());
   }
 
   template <typename Arg1, typename Arg2>
   void operator()(const Arg1& arg1, const Arg2& arg2) const
   {
     detail::initiate_dispatch_with_executor<executor_type>(
-        this->get_executor())(detail::bind_handler(handler_, arg1, arg2));
+        this->get_executor())(detail::bind_handler(handler_, arg1, arg2),
+        empty_work_function());
   }
 
   template <typename Arg1, typename Arg2, typename Arg3>
   void operator()(const Arg1& arg1, const Arg2& arg2, const Arg3& arg3)
   {
     detail::initiate_dispatch_with_executor<executor_type>(
-        this->get_executor())(detail::bind_handler(handler_, arg1, arg2, arg3));
+        this->get_executor())(detail::bind_handler(handler_, arg1, arg2, arg3),
+        empty_work_function());
   }
 
   template <typename Arg1, typename Arg2, typename Arg3>
   void operator()(const Arg1& arg1, const Arg2& arg2, const Arg3& arg3) const
   {
     detail::initiate_dispatch_with_executor<executor_type>(
-        this->get_executor())(detail::bind_handler(handler_, arg1, arg2, arg3));
+        this->get_executor())(detail::bind_handler(handler_, arg1, arg2, arg3),
+        empty_work_function());
   }
 
   template <typename Arg1, typename Arg2, typename Arg3, typename Arg4>
@@ -157,7 +164,8 @@ public:
   {
     detail::initiate_dispatch_with_executor<executor_type>(
         this->get_executor())(
-          detail::bind_handler(handler_, arg1, arg2, arg3, arg4));
+          detail::bind_handler(handler_, arg1, arg2, arg3, arg4),
+          empty_work_function());
   }
 
   template <typename Arg1, typename Arg2, typename Arg3, typename Arg4>
@@ -166,7 +174,8 @@ public:
   {
     detail::initiate_dispatch_with_executor<executor_type>(
         this->get_executor())(
-          detail::bind_handler(handler_, arg1, arg2, arg3, arg4));
+          detail::bind_handler(handler_, arg1, arg2, arg3, arg4),
+          empty_work_function());
   }
 
   template <typename Arg1, typename Arg2, typename Arg3, typename Arg4,
@@ -176,7 +185,8 @@ public:
   {
     detail::initiate_dispatch_with_executor<executor_type>(
         this->get_executor())(
-          detail::bind_handler(handler_, arg1, arg2, arg3, arg4, arg5));
+          detail::bind_handler(handler_, arg1, arg2, arg3, arg4, arg5),
+          empty_work_function());
   }
 
   template <typename Arg1, typename Arg2, typename Arg3, typename Arg4,
@@ -186,7 +196,8 @@ public:
   {
     detail::initiate_dispatch_with_executor<executor_type>(
         this->get_executor())(
-          detail::bind_handler(handler_, arg1, arg2, arg3, arg4, arg5));
+          detail::bind_handler(handler_, arg1, arg2, arg3, arg4, arg5),
+          empty_work_function());
   }
 
 //private:

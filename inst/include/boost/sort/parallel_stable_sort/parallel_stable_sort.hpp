@@ -13,7 +13,6 @@
 #ifndef __BOOST_SORT_PARALLEL_DETAIL_PARALLEL_STABLE_SORT_HPP
 #define __BOOST_SORT_PARALLEL_DETAIL_PARALLEL_STABLE_SORT_HPP
 
-#include <ciso646>
 #include <functional>
 #include <future>
 #include <iterator>
@@ -131,7 +130,7 @@ parallel_stable_sort <Iter_t, Compare>
     nelem = range_initial.size();
     size_t nptr = (nelem + 1) >> 1;
 
-    if (nelem < nelem_min or nthread < 2)
+    if (nelem < nelem_min || nthread < 2)
     {
         bss::spinsort<Iter_t, Compare>
             (range_initial.first, range_initial.last, comp);
@@ -141,13 +140,13 @@ parallel_stable_sort <Iter_t, Compare>
     //------------------- check if sort --------------------------------------
     bool sw = true;
     for (Iter_t it1 = first, it2 = first + 1;
-         it2 != last and (sw = not comp(*it2, *it1)); it1 = it2++);
+         it2 != last && (sw = ! comp(*it2, *it1)); it1 = it2++);
     if (sw) return;
 
     //------------------- check if reverse sort ---------------------------
     sw = true;
     for (Iter_t it1 = first, it2 = first + 1;
-         it2 != last and (sw = comp(*it2, *it1)); it1 = it2++);
+         it2 != last && (sw = comp(*it2, *it1)); it1 = it2++);
     if (sw)
     {
 	using std::swap;
@@ -200,11 +199,11 @@ parallel_stable_sort <Iter_t, Compare>
 
 
     
-}; // end of constructor
+} // end of constructor
 
 //
 //****************************************************************************
-};//    End namespace stable_detail
+}//    End namespace stable_detail
 //****************************************************************************
 //
 
@@ -237,7 +236,7 @@ void parallel_stable_sort(Iter_t first, Iter_t last)
 {
     typedef bscu::compare_iter<Iter_t> Compare;
     stable_detail::parallel_stable_sort<Iter_t, Compare>(first, last);
-};
+}
 //
 //-----------------------------------------------------------------------------
 //  function : parallel_stable_sort
@@ -254,7 +253,7 @@ void parallel_stable_sort(Iter_t first, Iter_t last, uint32_t nthread)
 {
     typedef bscu::compare_iter<Iter_t> Compare;
     stable_detail::parallel_stable_sort<Iter_t, Compare>(first, last, nthread);
-};
+}
 //
 //-----------------------------------------------------------------------------
 //  function : parallel_stable_sort
@@ -271,7 +270,7 @@ template <class Iter_t, class Compare,
 void parallel_stable_sort(Iter_t first, Iter_t last, Compare comp)
 {
     stable_detail::parallel_stable_sort<Iter_t, Compare>(first, last, comp);
-};
+}
 
 //
 //-----------------------------------------------------------------------------
@@ -294,8 +293,8 @@ void parallel_stable_sort (Iter_t first, Iter_t last, Compare comp,
 }
 //
 //****************************************************************************
-};//    End namespace sort
-};//    End namespace boost
+}//    End namespace sort
+}//    End namespace boost
 //****************************************************************************
 //
 #endif

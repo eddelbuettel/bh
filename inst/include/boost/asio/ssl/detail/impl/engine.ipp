@@ -2,7 +2,7 @@
 // ssl/detail/impl/engine.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -101,6 +101,12 @@ engine& engine::operator=(engine&& other) noexcept
 {
   if (this != &other)
   {
+    if (ssl_ && SSL_get_app_data(ssl_))
+    {
+      delete static_cast<verify_callback_base*>(SSL_get_app_data(ssl_));
+      SSL_set_app_data(ssl_, 0);
+    }
+
     if (ext_bio_)
       ::BIO_free(ext_bio_);
 

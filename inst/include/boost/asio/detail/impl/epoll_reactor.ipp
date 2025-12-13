@@ -2,7 +2,7 @@
 // detail/impl/epoll_reactor.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -42,15 +42,16 @@ epoll_reactor::epoll_reactor(boost::asio::execution_context& ctx)
     scheduler_(use_service<scheduler>(ctx)),
     mutex_(config(ctx).get("reactor", "registration_locking", true),
         config(ctx).get("reactor", "registration_locking_spin_count", 0)),
-    interrupter_(),
+    interrupter_(config(ctx).get("reactor", "use_eventfd", true)),
     epoll_fd_(do_epoll_create()),
-    timer_fd_(do_timerfd_create()),
+    timer_fd_(config(ctx).get("reactor", "use_timerfd", true)
+        ? do_timerfd_create() : -1),
     shutdown_(false),
     io_locking_(config(ctx).get("reactor", "io_locking", true)),
     io_locking_spin_count_(
         config(ctx).get("reactor", "io_locking_spin_count", 0)),
     registered_descriptors_mutex_(mutex_.enabled(), mutex_.spin_count()),
-    registered_descriptors_(
+    registered_descriptors_(execution_context::allocator<void>(ctx),
         config(ctx).get("reactor", "preallocated_io_objects", 0U),
         io_locking_, io_locking_spin_count_)
 {
@@ -110,9 +111,11 @@ void epoll_reactor::notify_fork(
     epoll_fd_ = do_epoll_create();
 
     if (timer_fd_ != -1)
+    {
       ::close(timer_fd_);
-    timer_fd_ = -1;
-    timer_fd_ = do_timerfd_create();
+      timer_fd_ = -1;
+      timer_fd_ = do_timerfd_create();
+    }
 
     interrupter_.recreate();
 
@@ -228,7 +231,11 @@ int epoll_reactor::register_internal_descriptor(
   ev.data.ptr = descriptor_data;
   int result = epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, descriptor, &ev);
   if (result != 0)
+  {
+    // Don't try to re-register internal descriptor after fork().
+    descriptor_data->registered_events_ = 0;
     return errno;
+  }
 
   return 0;
 }

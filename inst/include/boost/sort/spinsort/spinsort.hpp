@@ -13,8 +13,6 @@
 #ifndef __BOOST_SORT_PARALLEL_ALGORITHM_SPIN_SORT_HPP
 #define __BOOST_SORT_PARALLEL_ALGORITHM_SPIN_SORT_HPP
 
-
-#include <ciso646>
 #include <cstdlib>
 #include <functional>
 #include <iterator>
@@ -134,7 +132,7 @@ static void insert_partial_sort (Iter1_t first, Iter1_t mid, Iter1_t last,
         *(viter[i - 1] + (i - 1)) = std::move(*(data + (i - 1)));
     };
 }
-;
+
 //-----------------------------------------------------------------------------
 //  function : check_stable_sort
 /// @brief check if the elements between first and last are osted or reverse
@@ -183,7 +181,7 @@ static bool check_stable_sort(const range<Iter1_t> &rng_data,
     bool sw = true;
     Iter1_t it2 = rng_data.first + 1;
     for (Iter1_t it1 = rng_data.first;
-                    it2 != rng_data.last and (sw = not comp(*it2, *it1)); it1 =
+                    it2 != rng_data.last && (sw = ! comp(*it2, *it1)); it1 =
                                     it2++)
         ;
     if (sw) return true;
@@ -200,7 +198,7 @@ static bool check_stable_sort(const range<Iter1_t> &rng_data,
     if ((it2 != (rng_data.first + 1))) return false;
     sw = true;
     for (Iter1_t it1 = rng_data.first;
-                    it2 != rng_data.last and (sw = comp(*it2, *it1)); it1 =
+                    it2 != rng_data.last && (sw = comp(*it2, *it1)); it1 =
                                     it2++)
         ;
     if (size_t(rng_data.last - it2) >= min_insert_partial_sort) return false;
@@ -222,7 +220,7 @@ static bool check_stable_sort(const range<Iter1_t> &rng_data,
     };
     return true;
 }
-;
+
 //-----------------------------------------------------------------------------
 //  function : range_sort
 /// @brief this function divide r_input in two parts, sort it,and merge moving
@@ -257,7 +255,7 @@ static void range_sort(const range<Iter1_t> &range1,
     //-----------------------------------------------------------------------
     typedef range<Iter1_t> range_it1;
     typedef range<Iter2_t> range_it2;
-    assert(range1.size() == range2.size() and level != 0);
+    assert(range1.size() == range2.size() && level != 0);
 
     //------------------- check if sort --------------------------------------
     if (range1.size() > 1024)
@@ -297,7 +295,7 @@ static void range_sort(const range<Iter1_t> &range1,
 
     merge(range2, range_input1, range_input2, comp);
 }
-;
+
 //-----------------------------------------------------------------------------
 //  function : sort_range_sort
 /// @brief this sort elements using the range_sort function and receiving a
@@ -349,7 +347,7 @@ static void sort_range_sort(const range<Iter1_t> &rng_data,
         move_forward(rng_data, rng_buffer);
     };
 }
-;
+
 //
 //############################################################################
 //                                                                          ##
@@ -420,9 +418,10 @@ public:
             destroy(range<value_t *>(ptr, ptr + nptr));
             construct = false;
         };
-        if (owner and ptr != nullptr) std::free (ptr);
+        if (owner  && ptr != nullptr) std::free (ptr);
     };
 };
+
 //----------------------------------------------------------------------------
 //        End of class spinsort
 //----------------------------------------------------------------------------
@@ -463,13 +462,13 @@ spinsort <Iter_t, Compare>
     //------------------- check if sort ---------------------------------
     bool sw = true;
     for (Iter_t it1 = first, it2 = first + 1; it2 != last
-         and (sw = not comp(*it2, *it1)); it1 = it2++) ;
+         && (sw = ! comp(*it2, *it1)); it1 = it2++) ;
     if (sw) return;
 
     //------------------- check if reverse sort -------------------------
     sw = true;
     for (Iter_t it1 = first, it2 = first + 1;
-         it2 != last and (sw = comp(*it2, *it1)); it1 = it2++);
+         it2 != last && (sw = comp(*it2, *it1)); it1 = it2++);
     if (sw)
     {
 	using std::swap;
@@ -532,10 +531,10 @@ spinsort <Iter_t, Compare>
         range_sort(range_1, range_2, comp, nlevel);
         merge_half(range_input, range_aux, range_2, comp);
     };
-};
+}
 
 //****************************************************************************
-};//    End namepspace spin_detail
+}//    End namepspace spin_detail
 //****************************************************************************
 //
 namespace bsc = boost::sort::common;
@@ -552,7 +551,7 @@ template <class Iter_t, class Compare = compare_iter<Iter_t>>
 inline void spinsort (Iter_t first, Iter_t last, Compare comp = Compare())
 {
     spin_detail::spinsort <Iter_t, Compare> (first, last, comp);
-};
+}
 
 template <class Iter_t, class Compare = compare_iter<Iter_t>>
 inline void indirect_spinsort (Iter_t first, Iter_t last,
@@ -561,11 +560,11 @@ inline void indirect_spinsort (Iter_t first, Iter_t last,
     typedef typename std::vector<Iter_t>::iterator itx_iter;
     typedef common::less_ptr_no_null <Iter_t, Compare> itx_comp;
     common::indirect_sort (spinsort<itx_iter, itx_comp>, first, last, comp);
-};
+}
 
 //****************************************************************************
-};//    End namespace sort
-};//    End namepspace boost
+}//    End namespace sort
+}//    End namepspace boost
 //****************************************************************************
 //
 #endif

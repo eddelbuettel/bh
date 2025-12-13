@@ -363,9 +363,9 @@ namespace resolve_collection
 template
 <
     typename Geometry1, typename Geometry2, typename GeometryOut,
-    typename Tag1 = typename geometry::tag<Geometry1>::type,
-    typename Tag2 = typename geometry::tag<Geometry2>::type,
-    typename TagOut = typename geometry::tag<GeometryOut>::type
+    typename Tag1 = geometry::tag_t<Geometry1>,
+    typename Tag2 = geometry::tag_t<Geometry2>,
+    typename TagOut = geometry::tag_t<GeometryOut>
 >
 struct union_
 {
@@ -720,8 +720,8 @@ namespace resolve_dynamic
 template
 <
     typename Geometry1, typename Geometry2,
-    typename Tag1 = typename geometry::tag<Geometry1>::type,
-    typename Tag2 = typename geometry::tag<Geometry2>::type
+    typename Tag1 = geometry::tag_t<Geometry1>,
+    typename Tag2 = geometry::tag_t<Geometry2>
 >
 struct union_
 {
@@ -811,7 +811,7 @@ struct union_<DynamicGeometry1, DynamicGeometry2, dynamic_geometry_tag, dynamic_
 
 
 /*!
-\brief Combines two geometries which each other
+\brief Combines two geometries with each other
 \ingroup union
 \details \details_calc2{union, spatial set theoretic union}.
 \tparam Geometry1 \tparam_geometry
@@ -849,7 +849,7 @@ inline void union_(Geometry1 const& geometry1,
 
 
 /*!
-\brief Combines two geometries which each other
+\brief Combines two geometries with each other
 \ingroup union
 \details \details_calc2{union, spatial set theoretic union}.
 \tparam Geometry1 \tparam_geometry

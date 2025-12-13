@@ -74,34 +74,7 @@ public:
         it is no longer referenced by any
         container or iterator.
     */
-#ifdef BOOST_URL_DOCS
-    using iterator = __see_below__;
-#else
-
-    /** A Bidirectional iterator to a query parameter
-
-        Objects of this type allow iteration
-        through the parameters in the query.
-        Strings returned by iterators may
-        contain percent escapes.
-        The values returned are read-only;
-        changes to parameters must be made
-        through the container instead, if the
-        container supports modification.
-
-        <br>
-
-        The strings produced when iterators
-        are dereferenced refer to the underlying
-        character buffer.
-        Ownership is not transferred; the caller
-        is responsible for ensuring that the
-        lifetime of the buffer extends until
-        it is no longer referenced by any
-        container or iterator.
-    */
     class iterator;
-#endif
 
     /// @copydoc iterator
     using const_iterator = iterator;
@@ -157,6 +130,8 @@ public:
 
         @par Exception Safety
         Throws nothing.
+
+        @return The maximum number of characters possible.
     */
     static
     constexpr
@@ -195,6 +170,9 @@ public:
         @par Specification
         @li <a href="https://en.wikipedia.org/wiki/Query_string"
             >Query string (Wikipedia)</a>
+
+        @return The query string.
+
     */
     pct_string_view
     buffer() const noexcept;
@@ -211,6 +189,8 @@ public:
 
         @par Exception Safety
         Throws nothing.
+
+        @return `true` if there are no params.
     */
     bool
     empty() const noexcept;
@@ -227,6 +207,8 @@ public:
 
         @par Exception Safety
         Throws nothing.
+
+        @return The number of params.
     */
     std::size_t
     size() const noexcept;
@@ -238,6 +220,8 @@ public:
 
         @par Exception Safety
         Throws nothing.
+
+        @return An iterator to the beginning.
     */
     iterator
     begin() const noexcept;
@@ -249,6 +233,8 @@ public:
 
         @par Exception Safety
         Throws nothing.
+
+        @return An iterator to the end.
     */
     iterator
     end() const noexcept;
@@ -286,6 +272,8 @@ public:
         the value @ref ignore_case is passed
         here, the comparison is
         case-insensitive.
+
+        @return `true` if a matching key exists.
     */
     bool
     contains(
@@ -323,6 +311,8 @@ public:
         the value @ref ignore_case is passed
         here, the comparison is
         case-insensitive.
+
+        @return The number of matching keys.
     */
     std::size_t
     count(
@@ -557,6 +547,10 @@ private:
     @code
     return os << ps.buffer();
     @endcode
+
+    @param os The output stream to write to
+    @param qp The params to write
+    @return A reference to the output stream, for chaining
 */
 BOOST_URL_DECL
 std::ostream&

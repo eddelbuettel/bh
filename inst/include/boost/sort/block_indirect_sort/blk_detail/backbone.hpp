@@ -14,7 +14,6 @@
 #ifndef __BOOST_SORT_PARALLEL_DETAIL_BACKBONE_HPP
 #define __BOOST_SORT_PARALLEL_DETAIL_BACKBONE_HPP
 
-#include <ciso646>
 #include <atomic>
 #include <future>
 #include <iostream>
@@ -107,7 +106,7 @@ struct backbone
     block_t get_block (size_t pos) const
     {
         return block_t (global_range.first + (pos * Block_size));
-    };
+    }
     //-------------------------------------------------------------------------
     //  function : get_range
     /// @brief obtain the range in the position pos
@@ -120,7 +119,7 @@ struct backbone
         Iter_t it2 =
             (pos == (nblock - 1)) ? global_range.last : it1 + Block_size;
         return range_it (it1, it2);
-    };
+    }
     //-------------------------------------------------------------------------
     //  function : get_range_buf
     /// @brief obtain the auxiliary buffer of the thread
@@ -128,7 +127,7 @@ struct backbone
     range_buf get_range_buf ( ) const
     {
         return range_buf (buf, buf + Block_size);
-    };
+    }
 
     //-------------------------------------------------------------------------
     //  function : exec
@@ -144,7 +143,7 @@ struct backbone
     {
         buf = ptr_buf;
         exec (counter);
-    };
+    }
 
     void exec (atomic_t &counter);
 
@@ -192,7 +191,7 @@ backbone< Block_size, Iter_t, Compare >
     range_tail.first =
         (ntail == 0) ? last : (first + ((nblock - 1) * Block_size));
     range_tail.last = last;
-};
+}
 //
 //-------------------------------------------------------------------------
 //  function : exec
@@ -208,12 +207,12 @@ void backbone< Block_size, Iter_t, Compare >::exec (atomic_t &counter)
     {
         if (works.pop_move_back (func_exec)) func_exec ( );
         else std::this_thread::yield ( );
-    };
-};
+    }
+}
 //
 //****************************************************************************
-}; //    End namespace blk_detail
-}; //    End namespace sort
-}; //    End namespace boost
+} //    End namespace blk_detail
+} //    End namespace sort
+} //    End namespace boost
 //****************************************************************************
 #endif

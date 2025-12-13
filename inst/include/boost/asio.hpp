@@ -2,7 +2,7 @@
 // asio.hpp
 // ~~~~~~~~
 //
-// Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -30,7 +30,6 @@
 #include <boost/asio/async_result.hpp>
 #include <boost/asio/awaitable.hpp>
 #include <boost/asio/basic_datagram_socket.hpp>
-#include <boost/asio/basic_deadline_timer.hpp>
 #include <boost/asio/basic_file.hpp>
 #include <boost/asio/basic_io_object.hpp>
 #include <boost/asio/basic_random_access_file.hpp>
@@ -76,7 +75,6 @@
 #include <boost/asio/connect_pipe.hpp>
 #include <boost/asio/consign.hpp>
 #include <boost/asio/coroutine.hpp>
-#include <boost/asio/deadline_timer.hpp>
 #include <boost/asio/defer.hpp>
 #include <boost/asio/deferred.hpp>
 #include <boost/asio/default_completion_token.hpp>
@@ -109,6 +107,8 @@
 #include <boost/asio/handler_continuation_hook.hpp>
 #include <boost/asio/high_resolution_timer.hpp>
 #include <boost/asio/immediate.hpp>
+#include <boost/asio/inline_executor.hpp>
+#include <boost/asio/inline_or_executor.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/io_context_strand.hpp>
 #include <boost/asio/ip/address.hpp>
@@ -163,6 +163,7 @@
 #include <boost/asio/read_until.hpp>
 #include <boost/asio/readable_pipe.hpp>
 #include <boost/asio/recycling_allocator.hpp>
+#include <boost/asio/redirect_disposition.hpp>
 #include <boost/asio/redirect_error.hpp>
 #include <boost/asio/registered_buffer.hpp>
 #include <boost/asio/require.hpp>
@@ -182,7 +183,6 @@
 #include <boost/asio/system_timer.hpp>
 #include <boost/asio/this_coro.hpp>
 #include <boost/asio/thread_pool.hpp>
-#include <boost/asio/time_traits.hpp>
 #include <boost/asio/use_awaitable.hpp>
 #include <boost/asio/use_future.hpp>
 #include <boost/asio/uses_executor.hpp>

@@ -170,7 +170,7 @@ void eval_sin(T& result, const T& x)
 
    using si_type = typename boost::multiprecision::detail::canonical<std::int32_t, T>::type ;
    using ui_type = typename boost::multiprecision::detail::canonical<std::uint32_t, T>::type;
-   using fp_type = typename std::tuple_element<0, typename T::float_types>::type                         ;
+   using fp_type = typename std::tuple_element<0, typename T::float_types>::type;
 
    switch (eval_fpclassify(x))
    {
@@ -716,6 +716,8 @@ inline void eval_acos(T& result, const T& x)
       result = get_constant_pi<T>();
       eval_ldexp(result, result, -1); // divide by two.
       return;
+   default:
+      break;
    }
 
    T xx;
@@ -986,6 +988,8 @@ void eval_atan2(T& result, const T& y, const T& x)
       }
       return;
    }
+   default:
+      break;
    }
 
    switch (eval_fpclassify(x))
@@ -1009,6 +1013,8 @@ void eval_atan2(T& result, const T& y, const T& x)
       if (eval_get_sign(y) < 0)
          result.negate();
       return;
+   default:
+      break;
    }
 
    T xx;

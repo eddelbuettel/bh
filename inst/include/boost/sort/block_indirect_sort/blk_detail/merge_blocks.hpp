@@ -14,7 +14,6 @@
 #ifndef __BOOST_SORT_PARALLEL_DETAIL_MERGE_BLOCKS_HPP
 #define __BOOST_SORT_PARALLEL_DETAIL_MERGE_BLOCKS_HPP
 
-#include <ciso646>
 #include <atomic>
 #include <future>
 #include <iostream>
@@ -99,7 +98,7 @@ struct merge_blocks
         bscu::atomic_add(counter, 1);
         function_t f1 = [this, rng_input, &counter, &error]( ) -> void
         {
-            if (not error)
+            if (! error)
             {
                 try
                 {
@@ -108,7 +107,7 @@ struct merge_blocks
                 catch (std::bad_alloc &)
                 {
                     error = true;
-                };
+                }
             }
             bscu::atomic_sub (counter, 1);
         };
@@ -134,7 +133,7 @@ struct merge_blocks
         bscu::atomic_add(counter, 1);
         function_t f1 = [this, rng_input, &counter, &error]( ) -> void
         {
-            if (not error)
+            if (! error)
             {
                 try
                 {
@@ -143,7 +142,7 @@ struct merge_blocks
                 catch (std::bad_alloc &)
                 {
                     error = true;
-                };
+                }
             }
             bscu::atomic_sub (counter, 1);
         };
@@ -178,12 +177,12 @@ struct merge_blocks
 //-------------------------------------------------------------------------
 template<uint32_t Block_size, uint32_t Group_size, class Iter_t, class Compare>
 merge_blocks<Block_size, Group_size, Iter_t, Compare>
-::merge_blocks( backbone_t &bkb, size_t pos_index1, size_t pos_index2,
-                size_t pos_index3) : bk(bkb)
+::merge_blocks( backbone_t &bkb, const size_t pos_index1, const size_t pos_index2,
+                const size_t pos_index3) : bk(bkb)
 {
     size_t nblock1 = pos_index2 - pos_index1;
     size_t nblock2 = pos_index3 - pos_index2;
-    if (nblock1 == 0 or nblock2 == 0) return;
+    if (nblock1 == 0 || nblock2 == 0) return;
 
     //-----------------------------------------------------------------------
     // Merging of the two intervals
@@ -195,22 +194,22 @@ merge_blocks<Block_size, Group_size, Iter_t, Compare>
     for (size_t i = pos_index1; i < pos_index2; ++i)
     {
         vpos1.emplace_back(bk.index[i].pos(), true);
-    };
+    }
 
     for (size_t i = pos_index2; i < pos_index3; ++i)
     {
         vpos2.emplace_back(bk.index[i].pos(), false);
-    };
+    }
     //-------------------------------------------------------------------
     //  tail process
     //-------------------------------------------------------------------
     if (vpos2.back().pos() == (bk.nblock - 1)
-                    and bk.range_tail.first != bk.range_tail.last)
+                    && bk.range_tail.first != bk.range_tail.last)
     {
         tail_process(vpos1, vpos2);
         nblock1 = vpos1.size();
         nblock2 = vpos2.size();
-    };
+    }
 
     compare_block_pos_t cmp_blk(bk.global_range.first, bk.cmp);
     if (bk.error) return;
@@ -236,7 +235,7 @@ void merge_blocks<Block_size, Group_size, Iter_t, Compare>
 ::tail_process( std::vector<block_pos> &vblkpos1,
                 std::vector<block_pos> &vblkpos2 )
 {
-    if (vblkpos1.size() == 0 or vblkpos2.size() == 0) return;
+    if (vblkpos1.size() == 0 || vblkpos2.size() == 0) return;
 
     vblkpos2.pop_back();
 
@@ -256,9 +255,9 @@ void merge_blocks<Block_size, Group_size, Iter_t, Compare>
             {
                 vblkpos2.emplace_back(posback1, false);
                 vblkpos1.pop_back();
-            };
-        };
-    };
+            }
+        }
+    }
 }
 
 //
@@ -278,7 +277,7 @@ void merge_blocks<Block_size, Group_size, Iter_t, Compare>
     {
         merge_range_pos(rng_input);
         return;
-    };
+    }
 
     atomic_t counter(0);
     size_t npart = (rng_input.size() + Group_size - 1) / Group_size;
@@ -291,10 +290,10 @@ void merge_blocks<Block_size, Group_size, Iter_t, Compare>
     {
         size_t pos = pos_ini + size_part;
         while (pos < pos_last
-                        and bk.index[pos - 1].side() == bk.index[pos].side())
+                        && bk.index[pos - 1].side() == bk.index[pos].side())
         {
             ++pos;
-        };
+        }
         if (pos < pos_last)
         {
             merge_uncontiguous(bk.get_range(bk.index[pos - 1].pos()),
@@ -306,9 +305,9 @@ void merge_blocks<Block_size, Group_size, Iter_t, Compare>
         {
             range_pos rng_aux(pos_ini, pos);
             function_merge_range_pos(rng_aux, counter, bk.error);
-        };
+        }
         pos_ini = pos;
-    };
+    }
     bk.exec(counter); // wait until finish all the ranges
 }
 
@@ -337,7 +336,7 @@ void merge_blocks<Block_size, Group_size, Iter_t, Compare>
         bsc::merge_flow(rng_prev, rbuf, rng_posx, bk.cmp);
         rng_prev = rng_posx;
 
-    };
+    }
     move_forward(rng_posx, rbuf);
 }
 //
@@ -377,16 +376,16 @@ void merge_blocks<Block_size, Group_size, Iter_t, Compare>
         bool final = (posx == range_input.last);
         bool mergeable = false;
 
-        if (not final)
+        if (! final)
         {
             bp_posx = bk.index[posx];
             rng_posx = bk.get_range(bp_posx.pos());
             side_posx = bp_posx.side();
             mergeable = (side_max != side_posx
-                            and is_mergeable(rng_max, rng_posx, bk.cmp));
-        };
+                            && is_mergeable(rng_max, rng_posx, bk.cmp));
+        }
         if (bk.error) return;
-        if (final or not mergeable)
+        if (final || ! mergeable)
         {
             range_pos rp_final(posx_ini, posx);
             if (rp_final.size() > 1)
@@ -398,14 +397,14 @@ void merge_blocks<Block_size, Group_size, Iter_t, Compare>
                 else
                 {
                     function_merge_range_pos(rp_final, counter, bk.error);
-                };
-            };
+                }
+            }
             posx_ini = posx;
-            if (not final)
+            if (! final)
             {
                 rng_max = rng_posx;
                 side_max = side_posx;
-            };
+            }
         }
         else
         {
@@ -413,16 +412,16 @@ void merge_blocks<Block_size, Group_size, Iter_t, Compare>
             {
                 rng_max = rng_posx;
                 side_max = side_posx;
-            };
-        };
-    };
+            }
+        }
+    }
     bk.exec(counter);
 }
 //
 //****************************************************************************
-}; //    End namespace blk_detail
-}; //    End namespace sort
-}; //    End namespace boost
+} //    End namespace blk_detail
+} //    End namespace sort
+} //    End namespace boost
 //****************************************************************************
 //
 #endif

@@ -132,7 +132,7 @@ struct parsing_assigner
                              Point& point,
                              std::string const& wkt)
     {
-        using coordinate_type = typename coordinate_type<Point>::type;
+        using coordinate_type = coordinate_type_t<Point>;
 
         // Stop at end of tokens, or at "," ot ")"
         bool finished = (it == end || *it == "," || *it == ")");
@@ -263,7 +263,7 @@ template <typename Geometry,
 struct stateful_range_appender
 {
     // NOTE: Geometry is a reference
-    inline void append(Geometry geom, typename geometry::point_type<Geometry>::type const& point, bool)
+    inline void append(Geometry geom, geometry::point_type_t<Geometry> const& point, bool)
     {
         geometry::append(geom, point);
     }
@@ -272,11 +272,8 @@ struct stateful_range_appender
 template <typename Geometry>
 struct stateful_range_appender<Geometry, open>
 {
-    using point_type = typename geometry::point_type<Geometry>::type;
-    using size_type = typename boost::range_size
-        <
-            typename util::remove_cptrref<Geometry>::type
-        >::type;
+    using point_type = geometry::point_type_t<Geometry>;
+    using size_type = typename boost::range_size<util::remove_cptrref_t<Geometry>>::type;
 
     BOOST_STATIC_ASSERT((util::is_ring<Geometry>::value));
 
@@ -329,7 +326,7 @@ private:
 template <typename Geometry>
 struct container_appender
 {
-    using point_type = typename geometry::point_type<Geometry>::type;
+    using point_type = geometry::point_type_t<Geometry>;
 
     template <typename TokenizerIterator>
     static inline void apply(TokenizerIterator& it,
@@ -422,8 +419,7 @@ struct ring_parser
 template <typename Polygon>
 struct polygon_parser
 {
-    using ring_return_type = typename ring_return_type<Polygon>::type;
-    using appender = container_appender<ring_return_type>;
+    using appender = container_appender<ring_return_type_t<Polygon>>;
 
     template <typename TokenizerIterator>
     static inline void apply(TokenizerIterator& it,
@@ -446,7 +442,7 @@ struct polygon_parser
             }
             else
             {
-                typename ring_type<Polygon>::type ring;
+                ring_type_t<Polygon> ring;
                 appender::apply(it, end, wkt, ring);
                 range::push_back(geometry::interior_rings(poly), std::move(ring));
             }
@@ -454,6 +450,35 @@ struct polygon_parser
             if (it != end && *it == ",")
             {
                 // Skip "," after ring is parsed
+                ++it;
+            }
+        }
+
+        handle_close_parenthesis(it, end, wkt);
+    }
+};
+
+template<typename PolyhedralSurface>
+struct polyhedral_surface_parser
+{
+    using polygon_t = typename PolyhedralSurface::polygon_type;
+
+    template <typename TokenizerIterator>
+    static inline void apply(TokenizerIterator& it,
+                             TokenizerIterator const& end,
+                             std::string const& wkt,
+                             PolyhedralSurface& polyhedral)
+    {
+        handle_open_parenthesis(it, end, wkt);
+
+        // Parse polygons
+        while (it != end && *it != ")")
+        {
+            traits::resize<PolyhedralSurface>::apply(polyhedral, boost::size(polyhedral) + 1);
+            polygon_parser<polygon_t>::apply(it, end, wkt, *(boost::end(polyhedral) - 1));
+            if (it != end && *it == ",")
+            {
+                // Skip "," after multi-element is parsed
                 ++it;
             }
         }
@@ -521,7 +546,7 @@ inline void handle_empty_z_m(TokenizerIterator& it,
 }
 
 
-template <typename Geometry, typename Tag = typename geometry::tag<Geometry>::type>
+template <typename Geometry, typename Tag = geometry::tag_t<Geometry>>
 struct dimension
     : geometry::dimension<Geometry>
 {};
@@ -982,7 +1007,7 @@ private:
                                bool = true)
     {
         Geom g;
-        ReadWkt<Geom, typename tag<Geom>::type>::apply(it, end, wkt, g);
+        ReadWkt<Geom, tag_t<Geom>>::apply(it, end, wkt, g);
         AppendPolicy::apply(geometry, g);
         return true;
     }
@@ -1022,7 +1047,7 @@ private:
 namespace dispatch
 {
 
-template <typename Geometry, typename Tag = typename tag<Geometry>::type>
+template <typename Geometry, typename Tag = tag_t<Geometry>>
 struct read_wkt {};
 
 
@@ -1067,6 +1092,15 @@ struct read_wkt<Geometry, polygon_tag>
         >
 {};
 
+template <typename Geometry>
+struct read_wkt<Geometry, polyhedral_surface_tag>
+    : detail::wkt::geometry_parser
+        <
+            Geometry,
+            detail::wkt::polyhedral_surface_parser,
+            detail::wkt::prefix_polyhedral_surface
+        >
+{};
 
 template <typename MultiGeometry>
 struct read_wkt<MultiGeometry, multi_point_tag>
