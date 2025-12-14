@@ -1,3 +1,7 @@
+2025-12-13  Dirk Eddelbuettel  <edd@debian.org>
+
+	* DESCRIPTION (Version, Date):  Release 1.90.0-1
+
 2025-12-11  Dirk Eddelbuettel  <edd@debian.org>
 
 	* inst/include/boost/*: Upgraded to Boost 1.90.0, as usual with
