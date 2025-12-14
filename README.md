@@ -1,7 +1,7 @@
 ## bh: Boost Headers for R
 
 [![CI](https://github.com/eddelbuettel/bh/workflows/ci/badge.svg)](https://github.com/eddelbuettel/bh/actions?query=workflow%3Aci)
-[![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](https://www.boost.org/users/license.html)
+[![License](https://img.shields.io/badge/license-BSL--1.0-brightgreen.svg?style=flat)](https://www.boost.org/doc/user-guide/bsl.html)
 [![CRAN](https://www.r-pkg.org/badges/version/BH)](https://cran.r-project.org/package=BH)
 [![Dependencies](https://tinyverse.netlify.app/badge/BH)](https://cran.r-project.org/package=BH)
 [![Last Commit](https://img.shields.io/github/last-commit/eddelbuettel/bh)](https://github.com/eddelbuettel/bh)
